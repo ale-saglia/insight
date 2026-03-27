@@ -6,8 +6,6 @@ category: homelab
 permalink: /homelab/why-homelab-matters/
 ---
 
-# Why I Built a Homelab (and Why It Matters)
-
 ## Context
 
 My homelab journey started, I think, around 2018.
