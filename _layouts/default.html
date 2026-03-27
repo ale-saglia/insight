@@ -11,7 +11,7 @@
     <header class="site-header">
       <div class="wrap">
         <h1 class="site-title"><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
-        <p class="site-subtitle">{{ site.description }}</p>
+        <p class="site-subtitle">Notes on AI, governance, and infrastructure systems.</p>
         {% include nav.html %}
       </div>
     </header>
@@ -22,7 +22,15 @@
 
     <footer class="site-footer">
       <div class="wrap">
-        <p>Published occasionally. Written for clarity over volume.</p>
+        <p class="site-footer-note">Published occasionally. Written for clarity over volume.</p>
+        <p class="site-footer-meta">
+          Maintained by Alessandro Saglia
+          {% if site.github.repository_url %}
+            · <a href="{{ site.github.repository_url }}">GitHub</a>
+          {% else %}
+            · <a href="https://github.com/ale-saglia/insight">GitHub</a>
+          {% endif %}
+        </p>
       </div>
     </footer>
   </body>
