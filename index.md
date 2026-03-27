@@ -3,9 +3,9 @@ layout: default
 title: Home
 ---
 
-This site is a curated collection of occasional insights.
-It is designed for depth, not publishing cadence.
-Articles are published only when there is a meaningful argument to preserve.
+This site collects occasional notes on technical and strategic topics.
+Most entries focus on AI, governance, and infrastructure systems.
+Articles are published when ideas have been worked through and written clearly.
 The repository is the source of truth; GitHub Pages is the presentation layer.
 
 ## Latest Articles {#articles}
