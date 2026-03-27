@@ -1,69 +1,60 @@
 # Insight (Source)
 
-This repository contains the source files for a curated collection of technical and strategic articles on digital systems.
-The objective is low-frequency, high-signal publishing with a clear separation between content, structure, and presentation.
+Repository for occasional technical and strategic notes on AI, governance, and infrastructure systems.
 
-Repository note: documentation and published content are kept in English for consistency.
+Published via GitHub Pages. Documentation and content are in English.
+
+---
+
+## 🧭 Approach
+
+Articles are published with intent. The primary aim is clear thinking, not volume.
+
+**Topics:** AI in institutional contexts, data governance, operational infrastructure, systems design.
+
+---
 
 ## 🛠️ Editorial Stack
 
-- **Format:** Markdown for article authoring.
-- **Site layer:** Jekyll for static site generation.
-- **Presentation:** GitHub Pages as the public delivery layer.
-- **Versioning:** Git for editorial history and iterative refinement.
+- **Format**: Markdown for authoring
+- **Generation**: Jekyll static site generator
+- **Delivery**: GitHub Pages
+- **Versioning**: Git for history and editorial refinement
 
-## 🏛️ Rationale
-
-Most technical writing optimizes for volume.
-This repository does not.
-
-Insight is designed to preserve reasoning: trade-offs, constraints, and operational implications behind digital decisions.
-Articles are published only when there is something worth structuring and keeping.
-
-## 🧭 Scope
-
-Topics covered:
-
-- AI in real-world contexts (especially public sector and healthcare)
-- Data governance and regulatory implications
-- Infrastructure, system design, and operational complexity
-
-## 📚 Content Model
-
-1. **Series-based articles**
-	- Example: `src/homelab/01-why-homelab.md`, `src/homelab/02-architecture.md`
-2. **Standalone articles**
-	- Example: `src/general/ai-in-healthcare.md`
-
-Tutorial-style content is out of scope unless explicitly requested.
+---
 
 ## 📂 Repository Structure
 
 ```text
 .
 ├── src/
-│   ├── homelab/        # Sequence-driven series
-│   ├── digital-health/ # Domain-focused analysis
-│   └── general/        # Standalone cross-topic pieces
-├── _posts/             # Optional date-based posts
-├── _layouts/           # Jekyll layouts
-├── _includes/          # Jekyll partials
-├── assets/             # Shared styles and static assets
-├── index.md            # Public homepage content
-├── README.md
-└── _config.yml         # Jekyll configuration
+│   ├── homelab/        # Infrastructure and operational notes
+│   ├── digital-health/ # AI and healthcare systems analysis
+│   └── general/        # Standalone cross-domain pieces
+├── _layouts/           # Jekyll templates
+├── _includes/          # Partials
+├── assets/             # Styles and static files
+├── index.md            # Homepage
+├── _config.yml         # Jekyll config
+└── README.md           # This file
 ```
 
-## ✍️ Publishing Approach
+---
 
-- Publish rarely, with intent.
-- Prioritize clarity over completeness.
-- Keep structure minimal and maintainable.
-- Prefer analytical framing over commentary.
+## ✍️ Publishing
 
-## 🌐 GitHub Pages
+Articles live in `src/[category]/` as Markdown files with frontmatter (title, date, category).
 
-The site is configured for Jekyll on GitHub Pages.
-Deployment is automated via GitHub Actions in `.github/workflows/pages.yml`.
+Each article gets a permanent URL and appears in the category index and homepage feed.
 
-For local build and preview instructions, see [build-local.md](build-local.md).
+---
+
+## 🌐 Local Build and Preview
+
+See [build-local.md](build-local.md) for instructions.
+
+---
+
+## 🚀 Deployment
+
+Automated via GitHub Pages and deployed through `.github/workflows/pages.yml`.
