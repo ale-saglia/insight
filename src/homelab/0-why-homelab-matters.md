@@ -22,14 +22,16 @@ I chose the second.
 
 It did not go well.
 
-My limited experience, combined with the complexity of managing a bare-metal system, meant that things eventually broke or became too frustrating to maintain. Even though I was already using Linux on desktop, operating a persistent system was a different problem entirely.
+Things would work for a while — until they did not. An update would break something. A configuration would drift. A service would silently stop responding.
+
+My limited experience, combined with the complexity of managing a bare-metal system, meant that I rarely understood *why* things broke — only that they had. Even though I was already using Linux on desktop, operating a persistent system was a different problem entirely. A desktop you can reboot. A NAS running your only cloud storage, you cannot.
 
 After a while, I would give up and return to some compromise with commercial services.
 
 This cycle repeated for years:
 
-- the desire for independence  
-- the frustration of becoming a sysadmin without being one  
+- the desire for independence
+- the frustration of becoming a sysadmin without being one
 
 ---
 
