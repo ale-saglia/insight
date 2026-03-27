@@ -25,7 +25,7 @@ The repository is the source of truth; GitHub Pages is the presentation layer.
 **Categories:**
 
 <ul class="category-list">
-  {% assign category_pages = site.pages | where: 'layout', 'category' | where_exp: 'p', "p.path contains 'src/' and p.category != 'general'" | sort: 'title' %}
+  {% assign category_pages = site.pages | where: 'layout', 'category' | where_exp: 'p', "p.path contains 'src/'" | where_exp: 'p', "p.category != 'general'" | sort: 'title' %}
   {% for category_page in category_pages %}
     <li>
       <a href="{{ category_page.url | relative_url }}">{{ category_page.title }}</a>
