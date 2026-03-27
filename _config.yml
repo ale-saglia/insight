@@ -16,21 +16,21 @@ defaults:
     values:
       layout: article
       category: homelab
-      permalink: /:collection/:slug/
+      permalink: /homelab/:name/
   - scope:
       path: "src/digital-health"
       type: "pages"
     values:
       layout: article
       category: digital-health
-      permalink: /:collection/:slug/
+      permalink: /digital-health/:name/
   - scope:
       path: "src/general"
       type: "pages"
     values:
       layout: article
       category: general
-      permalink: /:collection/:slug/
+      permalink: /general/:name/
   - scope:
       path: ""
       type: "posts"
