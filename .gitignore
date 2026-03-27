@@ -1,0 +1,17 @@
+# Local preview stack (never versioned)
+.local/
+
+# Jekyll local build artifacts
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# Ruby / Bundler local files
+.bundle/
+vendor/bundle/
+Gemfile
+Gemfile.lock
+
+# OS / editor
+.DS_Store

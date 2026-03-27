@@ -1,0 +1,41 @@
+title: Insight Notes
+description: Curated technical and strategic articles, published occasionally.
+url: "https://ale-saglia.github.io"
+baseurl: "/insight"
+
+markdown: kramdown
+permalink: pretty
+
+# Keep _posts available but optional.
+collections: {}
+
+defaults:
+  - scope:
+      path: "src/homelab"
+      type: "pages"
+    values:
+      layout: article
+      category: homelab
+      permalink: /:collection/:slug/
+  - scope:
+      path: "src/ai-healthcare"
+      type: "pages"
+    values:
+      layout: article
+      category: ai-healthcare
+      permalink: /:collection/:slug/
+  - scope:
+      path: "src/general"
+      type: "pages"
+    values:
+      layout: article
+      category: general
+      permalink: /:collection/:slug/
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: article
+
+exclude:
+  - README.md
