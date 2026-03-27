@@ -18,11 +18,11 @@ defaults:
       category: homelab
       permalink: /:collection/:slug/
   - scope:
-      path: "src/ai-healthcare"
+      path: "src/digital-health"
       type: "pages"
     values:
       layout: article
-      category: ai-healthcare
+      category: digital-health
       permalink: /:collection/:slug/
   - scope:
       path: "src/general"

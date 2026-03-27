@@ -3,6 +3,8 @@ layout: category
 title: Homelab
 category: homelab
 permalink: /homelab/
+summary: Small-scale infrastructure practice focused on reliability, lifecycle responsibility, and operational constraints.
 ---
 
-Building and operating small-scale infrastructure teaches lifecycle responsibility and real-world trade-offs.
+Practical notes from small-scale infrastructure work.
+Focus: lifecycle responsibility, reliability constraints, and real-world operational trade-offs.
