@@ -66,25 +66,4 @@ Tutorial-style content is out of scope unless explicitly requested.
 The site is configured for Jekyll on GitHub Pages.
 Deployment is automated via GitHub Actions in `.github/workflows/pages.yml`.
 
-## 👀 Local Preview
-
-Build locally with Docker:
-
-```bash
-./scripts/build-local.sh
-```
-
-Run local preview with correct CSS at root (`/`):
-
-```bash
-./scripts/preview-local.sh
-```
-
-Then open:
-
-`http://127.0.0.1:4000/`
-
-Notes:
-
-- Production keeps `baseurl: /insight` in `_config.yml`.
-- Local preview overrides it with `_config.local.yml` (`baseurl: ""`).
+For local build and preview instructions, see [build-local.md](build-local.md).
