@@ -81,6 +81,24 @@ What looks like redundancy is often what keeps the system working.
 
 ---
 
+## A concrete case: patient registries
+
+Consider a patient who moves to a different municipality within a regional health system.
+
+The regional registry updates the record: new address, new local health authority, new GP assignment.
+
+Each local health authority, however, maintains its own copy of that patient's data. Not just a mirror — an enriched version, with locally managed fields: active exemptions, specialist referrals, internal identifiers, operational flags.
+
+When the update arrives from the regional level, each local system has to validate it against its own state. Some fields map cleanly. Others do not — because the local system tracks things the regional record does not, or represents them differently. In some cases, the change triggers a re-verification workflow that takes hours or days.
+
+Meanwhile, the patient walks into a local office. The desk operator sees the old record.
+
+Not out of negligence — but because the validation cycle has not yet completed. The local system was doing exactly what it was designed to do: verify before accepting.
+
+This is the hidden function of local systems in action. The inconsistency is real, but it is not a failure of the system. It is the cost of distributed responsibility.
+
+---
+
 ## The shift: from replication to access
 
 When systems evolve, the architecture tends to move:
