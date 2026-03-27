@@ -5,8 +5,8 @@ title: Home
 
 This site is a curated collection of occasional insights.
 It is designed for depth, not publishing cadence.
-Articles are published when there is a meaningful point to make.
-The repository is the source of truth; GitHub Pages is the clean presentation layer.
+Articles are published only when there is a meaningful argument to preserve.
+The repository is the source of truth; GitHub Pages is the presentation layer.
 
 ## Latest Articles {#articles}
 
@@ -24,8 +24,15 @@ The repository is the source of truth; GitHub Pages is the clean presentation la
 
 **Categories:**
 
-- [Digital Health](/digital-health/) — Insights on the intersection of artificial intelligence and healthcare systems.
-- [Homelab](/homelab/) — Building and operating small-scale infrastructure teaches lifecycle responsibility and real-world trade-offs.
+<ul class="category-list">
+  {% assign category_pages = site.pages | where: 'layout', 'category' | where_exp: 'p', "p.path contains 'src/' and p.category != 'general'" | sort: 'title' %}
+  {% for category_page in category_pages %}
+    <li>
+      <a href="{{ category_page.url | relative_url }}">{{ category_page.title }}</a>
+      {% if category_page.summary %}— {{ category_page.summary }}{% endif %}
+    </li>
+  {% endfor %}
+</ul>
 
 
 
