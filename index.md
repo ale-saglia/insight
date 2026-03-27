@@ -11,7 +11,8 @@ The repository is the source of truth; GitHub Pages is the presentation layer.
 ## Latest Articles {#articles}
 
 <ul class="article-list">
-  {% for page in site.pages %}
+  {% assign sorted_articles = site.pages | where_exp: 'p', 'p.category' | where_exp: 'p', 'p.date' | sort: 'date' | reverse %}
+  {% for page in sorted_articles %}
     {% if page.category and page.date %}
       <li>
         <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
