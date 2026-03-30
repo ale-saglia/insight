@@ -1,5 +1,5 @@
 ---
-title: "Building compliance tools before I knew what governance meant"
+title: "The process you know but cannot describe"
 date: 2026-03-30
 category: general
 permalink: /general/process-you-know-but-cannot-describe/
