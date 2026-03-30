@@ -1,6 +1,6 @@
 ---
 title: "Building compliance tools before I knew what governance meant"
-date: 2025-07-15
+date: 2026-03-30
 category: general
 permalink: /general/process-you-know-but-cannot-describe/
 ---
