@@ -1,0 +1,37 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ site.title | xml_escape }}</title>
+  <link href="{{ site.url }}/feed.xml" rel="self"/>
+  <link href="{{ site.url }}/"/>
+  <updated>{{ site.time | date_to_xmlschema }}</updated>
+  <id>{{ site.url }}/</id>
+  <author>
+    <name>{{ site.title | xml_escape }}</name>
+  </author>
+  <generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator>
+  <subtitle>{{ site.description | xml_escape }}</subtitle>
+
+  {% assign posts = site.pages | where_exp: "item", "item.path contains 'src/'" | sort: "modified" | reverse %}
+  {% for post in posts %}
+    {% if post.title and post.excerpt %}
+    <entry>
+      <title type="html">{{ post.title | xml_escape }}</title>
+      <link href="{{ site.url }}{{ post.url }}"/>
+      <id>{{ site.url }}{{ post.url }}</id>
+      <published>{{ post.created | date_to_xmlschema }}</published>
+      <updated>{{ post.modified | date_to_xmlschema }}</updated>
+      <author>
+        <name>{{ site.title | xml_escape }}</name>
+      </author>
+      {% if post.category %}
+        <category term="{{ post.category }}"/>
+      {% endif %}
+      <content type="html">{{ post.excerpt | xml_escape }}</content>
+      <summary type="html">{{ post.excerpt | xml_escape }}</summary>
+    </entry>
+    {% endif %}
+  {% endfor %}
+</feed>
