@@ -31,9 +31,15 @@ layout: default
   {% endfor %}
 
   <div class="archive-filters">
-    <button class="filter-btn filter-btn-active" data-year="">All Years</button>
+    <button class="filter-btn filter-btn-active" data-year="">All Years <span class="count">({{ sorted_articles | size }})</span></button>
     {% for year in years %}
-      <button class="filter-btn" data-year="{{ year }}">{{ year }}</button>
+      {% assign year_count = 0 %}
+      {% for article in sorted_articles %}
+        {% if article.created | date: "%Y" == year %}
+          {% assign year_count = year_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      <button class="filter-btn" data-year="{{ year }}">{{ year }} <span class="count">({{ year_count }})</span></button>
     {% endfor %}
   </div>
 

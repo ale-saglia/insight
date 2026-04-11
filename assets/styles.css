@@ -260,6 +260,16 @@ h3 {
   }
 }
 
+.filter-btn .count {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-left: 0.3rem;
+}
+
+.filter-btn-active .count {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .category-list {
   list-style: none;
   padding: 0;
