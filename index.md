@@ -9,14 +9,14 @@ This site collects occasional notes on technical and strategic topics. Most entr
   <section class="home-section">
     <p class="section-label">Latest Articles</p>
     <ul class="article-list">
-      {% assign sorted_articles = site.pages | where_exp: 'p', 'p.category' | where_exp: 'p', 'p.date' | sort: 'date' | reverse %}
+      {% assign sorted_articles = site.pages | where_exp: 'p', 'p.category' | where_exp: 'p', 'p.created' | sort: 'created' | reverse %}
       {% assign visible_categories = site.pages | where: 'layout', 'category' | where_exp: 'p', "p.path contains 'src/'" | where_exp: 'p', "p.category != 'general'" %}
       {% assign article_limit = visible_categories | size | plus: 1 %}
       {% for page in sorted_articles limit: article_limit %}
-        {% if page.category and page.date %}
+        {% if page.category and page.created %}
           <li>
             <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
-            <span class="article-meta">{{ page.date | date: "%d %b %Y" }} {% if page.category != 'general' %}· {{ page.category }}{% endif %}</span>
+            <span class="article-meta">{{ page.created | date: "%d %b %Y" }} {% if page.category != 'general' %}· {{ page.category }}{% endif %}</span>
             {% if page.excerpt %}<span class="article-excerpt">{{ page.excerpt }}</span>{% endif %}
           </li>
         {% endif %}

@@ -1,8 +1,10 @@
 ---
 layout: article
 title: Building a Home Network You Actually Control
-date: 2026-04-11
+created: 2026-04-11
+modified: 2026-04-11
 category: homelab
+keywords: home network design, network segmentation, firewall, OPNsense, infrastructure
 excerpt: Designing residential network infrastructure from scratch with architectural separation of concerns and principled infrastructure design.
 permalink: /homelab/home-network-design/
 ---

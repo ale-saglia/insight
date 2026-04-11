@@ -7,7 +7,9 @@ PLATFORM="${DOCKER_PLATFORM:-linux/amd64}"
 CONFIG="${1:-_config.yml,_config.local.yml}"
 
 cd "$ROOT_DIR"
-
+# Update modified dates from git before building
+echo "Updating modified dates from git..."
+bash "$ROOT_DIR/scripts/update-modified-dates.sh"
 docker run --rm \
   --platform "$PLATFORM" \
   -v "$ROOT_DIR":/srv/jekyll \

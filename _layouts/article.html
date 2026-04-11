@@ -7,12 +7,31 @@ layout: default
       <p class="article-category">{{ page.category }}</p>
     {% endif %}
     <h1>{{ page.title }}</h1>
-    {% if page.date %}
-      <p class="article-meta">{{ page.date | date: "%d %b %Y" }}</p>
+    {% if page.created %}
+      <p class="article-meta">{{ page.created | date: "%d %b %Y" }}</p>
     {% endif %}
   </header>
 
   {{ content }}
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ page.title }}",
+    "description": "{{ page.excerpt | strip_html }}",
+    "datePublished": "{{ page.created | date_to_xmlschema }}",
+    {% if page.modified %}
+    "dateModified": "{{ page.modified | date_to_xmlschema }}",
+    {% endif %}
+    "url": "{{ page.url | absolute_url }}",
+    "author": {
+      "@type": "Person",
+      "name": "Alessandro Saglia"
+    },
+    "articleSection": "{{ page.category | capitalize }}"
+  }
+  </script>
 
   <nav class="article-nav">
     <a href="{{ '/' | relative_url }}" class="article-nav-link">← Back to articles</a>
