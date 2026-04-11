@@ -3,6 +3,7 @@ layout: article
 title: Building a Home Network You Actually Control
 date: 2026-04-11
 category: homelab
+excerpt: Designing residential network infrastructure from scratch with architectural separation of concerns and principled infrastructure design.
 permalink: /homelab/home-network-design/
 ---
 

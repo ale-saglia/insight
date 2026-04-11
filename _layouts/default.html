@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light dark" />
     
     <!-- Primary Meta Tags -->
     <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
@@ -25,6 +27,25 @@
     <meta name="twitter:url" content="{{ page.url | absolute_url }}" />
     <meta name="twitter:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}" />
     <meta name="twitter:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "{% if page.date %}BlogPosting{% else %}WebSite{% endif %}",
+      "name": "{{ site.title }}",
+      "description": "{{ site.description }}",
+      "url": "{{ site.url }}",
+      "author": {
+        "@type": "Person",
+        "name": "Alessandro Saglia"
+      }
+      {% if page.title %},
+      "headline": "{{ page.title }}",
+      "datePublished": "{{ page.date | date: '%Y-%m-%d' }}"
+      {% endif %}
+    }
+    </script>
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/ale-saglia/site/main/favicon.svg" />
@@ -49,13 +70,9 @@
       <div class="wrap">
         <p class="site-footer-note">Published occasionally. Written for clarity over volume.</p>
         <p class="site-footer-meta">
-          Maintained by Alessandro Saglia
-          {% if site.github.repository_url %}
-            · <a href="{{ site.github.repository_url }}">GitHub</a>
-          {% else %}
-            · <a href="https://github.com/ale-saglia/insight">GitHub</a>
-          {% endif %}
+          Written and maintained by <a href="https://ale-saglia.com">Alessandro Saglia</a>
         </p>
+        <p class="site-footer-note">No tracking. No cookies. <a href="https://github.com/ale-saglia/insight">Open for transparency</a></p>
       </div>
     </footer>
   </body>
