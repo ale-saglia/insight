@@ -31,7 +31,7 @@ This site collects occasional notes on technical and strategic topics. Most entr
       {% for category_page in category_pages %}
         <li>
           <a href="{{ category_page.url | relative_url }}">{{ category_page.title }}</a>
-          {% if category_page.summary %}— {{ category_page.summary }}{% endif %}
+          {% if category_page.summary %}- {{ category_page.summary }}{% endif %}
         </li>
       {% endfor %}
     </ul>

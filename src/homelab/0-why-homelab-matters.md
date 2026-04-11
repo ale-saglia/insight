@@ -13,7 +13,7 @@ My homelab journey started around 2018.
 
 At the time, I tried to build a small NAS using a Raspberry Pi 4, two SSDs, and a UPS, mainly to run NextcloudPi. The goal was simple: reduce dependency on large tech platforms.
 
-I had been using a terabyte of Google Drive storage — until that option was removed. The alternatives were either paying (not trivial as a student) or figuring things out myself.
+I had been using a terabyte of Google Drive storage - until that option was removed. The alternatives were either paying (not trivial as a student) or figuring things out myself.
 
 I chose the second.
 
@@ -23,9 +23,9 @@ I chose the second.
 
 It did not go well.
 
-Things would work for a while — until they did not. An update would break something. A configuration would drift. A service would silently stop responding.
+Things would work for a while - until they did not. An update would break something. A configuration would drift. A service would silently stop responding.
 
-My limited experience, combined with the complexity of managing a bare-metal system, meant that I rarely understood *why* things broke — only that they had. Even though I was already using Linux on desktop, operating a persistent system was a different problem entirely. A desktop you can reboot. A NAS running your only cloud storage, you cannot.
+My limited experience, combined with the complexity of managing a bare-metal system, meant that I rarely understood *why* things broke - only that they had. Even though I was already using Linux on desktop, operating a persistent system was a different problem entirely. A desktop you can reboot. A NAS running your only cloud storage, you cannot.
 
 After a while, I would give up and return to some compromise with commercial services.
 
@@ -112,4 +112,4 @@ You are constantly dealing with:
 
 Running even a small system over time makes one thing clear:
 
-Infrastructure is not just about building systems — it is about sustaining them.
+Infrastructure is not just about building systems - it is about sustaining them.

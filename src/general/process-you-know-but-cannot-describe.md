@@ -31,7 +31,7 @@ What I could not do, before the modelling exercise, was hold the entire thing in
  
 The model uses BPMN 2.0, with two swim lanes representing the two functional roles involved: *Patrol Unit* (handling on-site detection and immediate contestation) and *Administrative Office* (handling documentation, notification, and all subsequent phases).
 
-![Highway Code Sanctioning Process — BPMN 2.0](https://raw.githubusercontent.com/ale-saglia/insight/refs/heads/main/assets/process-sanctions-cds-en.bpmn.svg)
+![Highway Code Sanctioning Process - BPMN 2.0](https://raw.githubusercontent.com/ale-saglia/insight/refs/heads/main/assets/process-sanctions-cds-en.bpmn.svg)
 
 *[Download the source file](https://raw.githubusercontent.com/ale-saglia/insight/refs/heads/main/assets/process-sanctions-cds-en.bpmn)*
 
