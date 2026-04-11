@@ -9,7 +9,7 @@
     <!-- Primary Meta Tags -->
     <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
     <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
-    <meta name="keywords" content="{% if page.category %}{{ page.category }}, {% endif %}infrastructure, technology, systems{% if page.keywords %}, {{ page.keywords }}{% endif %}"
+    <meta name="keywords" content="{% if page.category %}{{ page.category }}, {% endif %}infrastructure, technology, systems{% if page.keywords %}, {{ page.keywords }}{% endif %}" />
     <meta name="author" content="Alessandro Saglia" />
     <link rel="canonical" href="{{ page.url | absolute_url }}" />
     

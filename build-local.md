@@ -54,7 +54,7 @@ DOCKER_PLATFORM=linux/arm64 ./scripts/build-local.sh
 
 ## Config Files
 
-- **`_config.yml`**: Production config with `baseurl: /insight`.
+- **`_config.yml`**: Production config with `baseurl: ""` (empty unless deploying to subdirectory).
 - **`_config.local.yml`**: Local override with `baseurl: ""` for root-level preview.
 
 The build scripts merge both when running locally.
