@@ -1,7 +1,9 @@
 ---
 title: "The process you know but cannot describe"
-date: 2026-03-30
+created: 2026-03-30
+modified: 2026-04-11
 category: general
+keywords: process modeling, BPMN, business process, governance, formalization
 excerpt: Formalizing a process you know intimately but cannot articulate. A case study in process modelling using BPMN and the Italian Highway Code.
 permalink: /general/process-you-know-but-cannot-describe/
 layout: article
