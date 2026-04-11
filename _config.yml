@@ -37,5 +37,9 @@ defaults:
     values:
       layout: article
 
+plugins:
+  - jekyll-sitemap
+
 exclude:
   - README.md
+  - build-local.md
