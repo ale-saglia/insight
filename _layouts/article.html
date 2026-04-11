@@ -3,11 +3,18 @@ layout: default
 ---
 <article class="article">
   <header class="article-header">
+    {% if page.category and page.category != 'general' %}
+      <p class="article-category">{{ page.category }}</p>
+    {% endif %}
     <h1>{{ page.title }}</h1>
     {% if page.date %}
-      <p class="meta">{{ page.date | date: "%d %b %Y" }}</p>
+      <p class="article-meta">{{ page.date | date: "%d %b %Y" }}</p>
     {% endif %}
   </header>
 
   {{ content }}
+
+  <nav class="article-nav">
+    <a href="{{ '/' | relative_url }}" class="article-nav-link">← Back to articles</a>
+  </nav>
 </article>

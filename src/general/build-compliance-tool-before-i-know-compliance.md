@@ -3,6 +3,7 @@ layout: article
 title: "Building compliance tools before I knew what governance meant"
 date: 2026-03-28
 category: general
+excerpt: Two software projects that taught me more about digital transformation through failure than any textbook could. A retrospective on naive tool-building.
 permalink: /general/build-compliance-tool-before-i-know-compliance/
 ---
 

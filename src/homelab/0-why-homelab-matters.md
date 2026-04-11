@@ -3,6 +3,7 @@ layout: article
 title: Why I Built a Homelab (and Why It Matters)
 date: 2026-03-27
 category: homelab
+excerpt: Journey from commercial cloud dependency to self-sufficient infrastructure. From frustration to capability.
 permalink: /homelab/why-homelab-matters/
 ---
 

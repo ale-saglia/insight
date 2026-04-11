@@ -9,16 +9,14 @@ layout: default
 
   {{ content }}
 
-  <hr>
-
-  <h2>Articles in this category</h2>
+  <p class="section-label">Articles in this category</p>
 
   <ul class="article-list">
     {% for article in site.pages %}
       {% if article.category == page.category and article.date %}
         <li>
           <a href="{{ article.url | relative_url }}">{{ article.title }}</a>
-          - {{ article.date | date: "%d %b %Y" }}
+          <span class="article-meta">{{ article.date | date: "%d %b %Y" }}</span>
         </li>
       {% endif %}
     {% endfor %}
