@@ -7,6 +7,9 @@ layout: default
       <p class="article-category">{{ page.category }}</p>
     {% endif %}
     <h1>{{ page.title }}</h1>
+    {% if page.series and page.series_episode != nil %}
+      <p class="article-series">{{ page.series }} – Episode {{ page.series_episode }}</p>
+    {% endif %}
     {% if page.created %}
       <p class="article-meta">{{ page.created | date: "%d %b %Y" }}</p>
     {% endif %}
@@ -34,8 +37,8 @@ layout: default
   </script>
 
   <nav class="article-nav" id="article-nav">
-    <a href="javascript:history.back()" class="article-nav-link" id="back-link" style="display: none;">← Back to articles</a>
-    <a href="#" class="article-nav-link" id="top-link" style="display: none;" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">↑ Top</a>
+    <button class="article-nav-link" id="back-link" style="display: none;">← Back to articles</button>
+    <button class="article-nav-link" id="top-link" style="display: none;">↑ Top</button>
   </nav>
 
   <script>
@@ -60,6 +63,15 @@ layout: default
         } else {
           topLink.style.display = 'none';
         }
+      });
+      
+      // Add click handlers to buttons
+      backLink.addEventListener('click', function() {
+        history.back();
+      });
+      
+      topLink.addEventListener('click', function() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
       });
     })();
   </script>

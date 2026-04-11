@@ -7,6 +7,8 @@ category: homelab
 keywords: home network design, network segmentation, firewall, OPNsense, infrastructure
 excerpt: Designing residential network infrastructure from scratch with architectural separation of concerns and principled infrastructure design.
 permalink: /homelab/home-network-design/
+series: From Zero to Homelab
+series_episode: 1
 ---
 
 ## Starting point

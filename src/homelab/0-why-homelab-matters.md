@@ -7,6 +7,8 @@ category: homelab
 keywords: homelab, self-hosting, infrastructure, independence, NextCloud
 excerpt: Journey from commercial cloud dependency to self-sufficient infrastructure. From frustration to capability.
 permalink: /homelab/why-homelab-matters/
+series: From Zero to Homelab
+series_episode: 0
 ---
 
 ## Context

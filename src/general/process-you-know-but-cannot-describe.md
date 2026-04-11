@@ -9,7 +9,7 @@ permalink: /general/process-you-know-but-cannot-describe/
 layout: article
 ---
 
-In an [earlier post](https://insight.ale-saglia.com/general/build-compliance-tool-before-i-know-compliance/), , I wrote about two software projects I built before I had a formal framework for what I was doing. The conclusion was simple: building tools to manage deadlines and track compliance obligations was, in retrospect, a primitive attempt at process governance. The code was the easy part. Understanding the underlying process well enough to model it was the real work.
+In an [earlier post](https://insight.ale-saglia.com/general/build-compliance-tool-before-i-know-compliance/), I wrote about two software projects I built before I had a formal framework for what I was doing. The conclusion was simple: building tools to manage deadlines and track compliance obligations was, in retrospect, a primitive attempt at process governance. The code was the easy part. Understanding the underlying process well enough to model it was the real work.
  
 I also mentioned a university course on process modelling that finally gave me a language for what I had been doing instinctively. This is that story.
  
