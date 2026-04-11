@@ -263,6 +263,13 @@ img {
   display: block;
 }
 
+hr {
+  margin: 1.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  height: 0;
+}
+
 .site-footer {
   border-top: 1px solid var(--line);
   margin-top: 3rem;
@@ -283,14 +290,10 @@ img {
 }
 
 .site-footer a {
-  color: var(--muted);
+  color: var(--link);
   text-decoration: none;
 }
 
 .site-footer a:hover {
   text-decoration: underline;
-}
-
-.site-footer a {
-  color: var(--muted);
 }
