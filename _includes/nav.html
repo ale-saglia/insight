@@ -1,12 +1,96 @@
-<nav class="site-nav" aria-label="Primary">
+<nav class="site-nav" aria-label="Primary" id="site-nav">
   <a href="{{ '/' | relative_url }}">Home</a>
   <span class="site-nav-divider" aria-hidden="true"></span>
   <a href="https://ale-saglia.com" target="_blank">About</a>
   <span class="site-nav-divider" aria-hidden="true"></span>
-  <span class="site-nav-label">Domains</span>
-  {% assign category_pages = site.pages | where: 'layout', 'category' | where_exp: 'p', "p.path contains 'src/'" | where_exp: 'p', "p.category != 'general'" | sort: 'title' %}
-  {% for category_page in category_pages %}
-    <a href="{{ category_page.url | relative_url }}">{{ category_page.title }}</a>
-  {% endfor %}
+  
+  <div class="domains-group">
+    <span class="site-nav-label">Domains</span>
+    {% assign category_pages = site.pages | where: 'layout', 'category' | where_exp: 'p', "p.path contains 'src/'" | where_exp: 'p', "p.category != 'general'" | sort: 'title' %}
+    {% for category_page in category_pages %}
+      <a href="{{ category_page.url | relative_url }}">{{ category_page.title }}</a>
+    {% endfor %}
+  </div>
+  
+  <div class="domains-dropdown" aria-label="Domains menu">
+    <button class="domains-dropdown-trigger" aria-expanded="false" aria-haspopup="true">Domains <span class="domains-dropdown-arrow">▼</span></button>
+    <div class="domains-dropdown-menu">
+      {% for category_page in category_pages %}
+        <a href="{{ category_page.url | relative_url }}" class="domains-dropdown-item">{{ category_page.title }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  
   <a href="{{ '/archive/' | relative_url }}" class="nav-archive">Archive</a>
 </nav>
+
+<script>
+  (function() {
+    const nav = document.getElementById('site-nav');
+    const domainsGroup = document.querySelector('.domains-group');
+    const domainsDropdown = document.querySelector('.domains-dropdown');
+    const domainsDropdownTrigger = document.querySelector('.domains-dropdown-trigger');
+    const domainsDropdownMenu = document.querySelector('.domains-dropdown-menu');
+    
+    if (!nav || !domainsGroup || !domainsDropdown || !domainsDropdownTrigger || !domainsDropdownMenu) return;
+    
+    function checkWrap() {
+      // Get all children heights to detect wrapping
+      const navHeight = nav.offsetHeight;
+      const navStyle = window.getComputedStyle(nav);
+      const lineHeight = parseFloat(navStyle.lineHeight) || 20;
+      
+      // If nav has wrapped to multiple lines, show dropdown
+      const isWrapped = navHeight > lineHeight * 1.1;
+      
+      if (isWrapped) {
+        domainsGroup.classList.add('hidden');
+        domainsDropdown.classList.add('visible');
+      } else {
+        domainsGroup.classList.remove('hidden');
+        domainsDropdown.classList.remove('visible');
+        domainsDropdownMenu.classList.remove('open');
+        domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
+      }
+    }
+    
+    // Handle dropdown toggle
+    domainsDropdownTrigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      const isOpen = domainsDropdownMenu.classList.contains('open');
+      if (isOpen) {
+        domainsDropdownMenu.classList.remove('open');
+        domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
+      } else {
+        domainsDropdownMenu.classList.add('open');
+        domainsDropdownTrigger.setAttribute('aria-expanded', 'true');
+      }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!domainsDropdown.contains(e.target)) {
+        domainsDropdownMenu.classList.remove('open');
+        domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
+      }
+    });
+    
+    // Close dropdown when item is selected
+    domainsDropdownMenu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        domainsDropdownMenu.classList.remove('open');
+        domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
+      });
+    });
+    
+    // Check on load
+    checkWrap();
+    
+    // Check on resize with debounce
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(checkWrap, 150);
+    });
+  })();
+</script>
