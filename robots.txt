@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /_site/
+
+Sitemap: https://insight.ale-saglia.com/sitemap.xml

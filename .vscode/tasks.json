@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Jekyll: Build",
+      "type": "shell",
+      "command": "bash",
+      "args": ["scripts/build-local.sh"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Jekyll: Preview (localhost:4000)",
+      "type": "shell",
+      "command": "bash",
+      "args": ["scripts/preview-local.sh"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "runOptions": {
+        "runOn": "folderOpen": false
+      },
+      "isBackground": false,
+      "problemMatcher": []
+    },
+    {
+      "label": "Jekyll: Clean & Build",
+      "type": "shell",
+      "command": "bash",
+      "args": ["-c", "rm -rf _site && bash scripts/build-local.sh"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

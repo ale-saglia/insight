@@ -3,8 +3,33 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <!-- Primary Meta Tags -->
     <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
-    <meta name="description" content="{{ site.description }}" />
+    <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
+    <meta name="keywords" content="{% if page.category %}{{ page.category }}{% endif %}infrastructure, technology, systems{% if page.keywords %}, {{ page.keywords }}{% endif %}" />
+    <meta name="author" content="Alessandro Saglia" />
+    <link rel="canonical" href="{{ page.url | absolute_url }}" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{% if page.date %}article{% else %}website{% endif %}" />
+    <meta property="og:url" content="{{ page.url | absolute_url }}" />
+    <meta property="og:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}" />
+    <meta property="og:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
+    <meta property="og:site_name" content="{{ site.title }}" />
+    {% if page.date %}<meta property="article:published_time" content="{{ page.date | date: '%Y-%m-%dT%H:%M:%S%z' }}" />{% endif %}
+    {% if page.category %}<meta property="article:section" content="{{ page.category }}" />{% endif %}
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="{{ page.url | absolute_url }}" />
+    <meta name="twitter:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}" />
+    <meta name="twitter:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/ale-saglia/site/main/favicon.svg" />
+    
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="{{ '/assets/styles.css' | relative_url }}" />
   </head>
   <body>
