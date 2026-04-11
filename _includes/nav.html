@@ -1,7 +1,7 @@
 <nav class="site-nav" aria-label="Primary">
   <a href="{{ '/' | relative_url }}">Home</a>
   <span class="site-nav-divider" aria-hidden="true"></span>
-  <a href="https://ale-saglia.com">About</a>
+  <a href="https://ale-saglia.com" target="_blank">About</a>
   <span class="site-nav-divider" aria-hidden="true"></span>
   <span class="site-nav-label">Domains</span>
   {% assign category_pages = site.pages | where: 'layout', 'category' | where_exp: 'p', "p.path contains 'src/'" | where_exp: 'p', "p.category != 'general'" | sort: 'title' %}
