@@ -70,6 +70,10 @@ body {
   text-decoration: none;
 }
 
+.nav-archive {
+  margin-left: auto;
+}
+
 .site-nav-divider {
   width: 1px;
   height: 0.9rem;
@@ -176,6 +180,88 @@ h3 {
   color: var(--muted);
   font-size: 0.92rem;
   margin-top: 0.2rem;
+}
+
+.article-list .article-excerpt-full {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin-top: 0.2rem;
+  line-height: 1.5;
+}
+
+.archive-search {
+  margin-bottom: 2rem;
+}
+
+.search-field {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+}
+
+.search-field:focus {
+  outline: 2px solid var(--link);
+  outline-offset: 0;
+}
+
+.archive-year {
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.archive-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.filter-btn:hover {
+  border-color: var(--link);
+  background: var(--bg);
+  box-shadow: 0 0 0 2px rgba(11, 87, 208, 0.1);
+}
+
+.filter-btn-active {
+  background: var(--link);
+  color: white;
+  border-color: var(--link);
+}
+
+@media (prefers-color-scheme: dark) {
+  .filter-btn-active {
+    color: var(--bg);
+  }
+}
+
+.filter-btn-active:hover {
+  background: var(--link);
+  color: white;
+  box-shadow: 0 2px 8px rgba(11, 87, 208, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  .filter-btn-active:hover {
+    color: var(--bg);
+  }
 }
 
 .category-list {

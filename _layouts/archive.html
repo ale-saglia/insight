@@ -1,0 +1,108 @@
+---
+layout: default
+---
+
+<article class="article">
+  <header class="article-header">
+    <h1>{{ page.title }}</h1>
+  </header>
+
+  {{ content }}
+
+  <div class="archive-search">
+    <input type="text" id="search-input" class="search-field" placeholder="Search articles..." />
+  </div>
+
+  {% assign all_articles = "" | split: "" %}
+  {% for article in site.pages %}
+    {% if article.date and article.layout == "article" %}
+      {% assign all_articles = all_articles | push: article %}
+    {% endif %}
+  {% endfor %}
+
+  {% assign sorted_articles = all_articles | sort: "date" | reverse %}
+
+  {% assign years = "" | split: "" %}
+  {% for article in sorted_articles %}
+    {% assign article_year = article.date | date: "%Y" %}
+    {% unless years contains article_year %}
+      {% assign years = years | push: article_year %}
+    {% endunless %}
+  {% endfor %}
+
+  <div class="archive-filters">
+    <button class="filter-btn filter-btn-active" data-year="">All Years</button>
+    {% for year in years %}
+      <button class="filter-btn" data-year="{{ year }}">{{ year }}</button>
+    {% endfor %}
+  </div>
+
+  {% assign current_year = "" %}
+  {% for article in sorted_articles %}
+    {% assign article_year = article.date | date: "%Y" %}
+    {% if article_year != current_year %}
+      {% if current_year != "" %}
+      </ul>
+      {% endif %}
+      <h2 class="archive-year">{{ article_year }}</h2>
+      <ul class="article-list">
+      {% assign current_year = article_year %}
+    {% endif %}
+    <li class="search-item" data-year="{{ article_year }}" data-title="{{ article.title | downcase }}" data-category="{{ article.category | downcase }}" data-excerpt="{{ article.excerpt | downcase }}">
+      <a href="{{ article.url | relative_url }}">{{ article.title }}</a>
+      <span class="article-meta">{{ article.date | date: "%d %b %Y" }} • {{ article.category | capitalize }}</span>
+      {% if article.excerpt %}<span class="article-excerpt-full">{{ article.excerpt }}</span>{% endif %}
+    </li>
+  {% endfor %}
+  {% if current_year != "" %}</ul>{% endif %}
+
+  <script>
+    const searchInput = document.getElementById('search-input');
+    const items = document.querySelectorAll('.search-item');
+    const yearHeadings = document.querySelectorAll('.archive-year');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    let currentYearFilter = '';
+
+    searchInput.addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      filterItems(query, currentYearFilter);
+    });
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        filterBtns.forEach(b => b.classList.remove('filter-btn-active'));
+        this.classList.add('filter-btn-active');
+        currentYearFilter = this.dataset.year;
+        filterItems(searchInput.value.toLowerCase(), currentYearFilter);
+      });
+    });
+
+    function filterItems(query, yearFilter) {
+      let visibleYears = new Set();
+
+      items.forEach(item => {
+        const title = item.dataset.title;
+        const category = item.dataset.category;
+        const excerpt = item.dataset.excerpt;
+        const itemYear = item.dataset.year;
+
+        const searchMatch = title.includes(query) || category.includes(query) || excerpt.includes(query);
+        const yearMatch = yearFilter === '' || itemYear === yearFilter;
+        const match = searchMatch && yearMatch;
+
+        item.style.display = match ? 'block' : 'none';
+        if (match) {
+          visibleYears.add(itemYear);
+        }
+      });
+
+      yearHeadings.forEach(heading => {
+        const year = heading.textContent.trim();
+        const hasVisibleItems = Array.from(items).some(item => 
+          item.dataset.year === year && item.style.display !== 'none'
+        );
+        heading.style.display = hasVisibleItems ? 'block' : 'none';
+      });
+    }
+  </script>
+</article>
