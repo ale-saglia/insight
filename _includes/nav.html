@@ -36,34 +36,45 @@
     
     let lastExpanded = null;
     let requiredWidth = null;
+    let isCalculatingWidth = false;
     
     function calculateRequiredWidth() {
-      // Temporarily show group to measure its width
-      domainsGroup.classList.remove('hidden');
-      const groupWidth = domainsGroup.scrollWidth;
+      if (isCalculatingWidth) return;
+      isCalculatingWidth = true;
       
-      // Calculate total width needed for all nav elements
-      // Sum of all direct children scrollWidths
-      let totalWidth = 0;
-      Array.from(nav.children).forEach(child => {
-        totalWidth += child.scrollWidth;
-      });
-      
-      // Add gap spacing (0.8rem = ~12.8px per gap, rough estimate)
-      const gapCount = nav.children.length - 1;
-      totalWidth += gapCount * 13;
-      
-      // Add some buffer for padding/margins
-      totalWidth += 40;
-      
-      requiredWidth = totalWidth;
-      return totalWidth;
+      try {
+        // Temporarily show group to get accurate measurement
+        const wasHidden = domainsGroup.classList.contains('hidden');
+        domainsGroup.classList.remove('hidden');
+        
+        // Calculate total width needed for all nav elements
+        let totalWidth = 0;
+        Array.from(nav.children).forEach(child => {
+          totalWidth += child.scrollWidth;
+        });
+        
+        // Add gap spacing (0.8rem = ~12.8px per gap, rough estimate)
+        const gapCount = nav.children.length - 1;
+        totalWidth += gapCount * 13;
+        
+        // Add some buffer for padding/margins
+        totalWidth += 40;
+        
+        requiredWidth = totalWidth;
+        
+        // Restore hidden state if it was hidden before
+        if (wasHidden) {
+          domainsGroup.classList.add('hidden');
+        }
+      } finally {
+        isCalculatingWidth = false;
+      }
     }
     
     function checkLayout() {
       const navWidth = nav.clientWidth;
       
-      // Calculate required width on first check
+      // Use cached requiredWidth; only recalculate if not set
       if (requiredWidth === null) {
         calculateRequiredWidth();
       }
@@ -113,23 +124,23 @@
       });
     });
     
-    // Initial check with delay to ensure layout is ready
-    setTimeout(checkLayout, 100);
+    // Wait for fonts to load, then do initial layout check
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function() {
+        checkLayout();
+      });
+    } else {
+      // Fallback for browsers that don't support FontFaceSet
+      setTimeout(checkLayout, 100);
+    }
     
-    // Listen for resize with debounce
+    // Listen for window resize only (not ResizeObserver to avoid constant recalculation)
     let resizeTimeout;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(checkLayout, 100);
+      // Reset cached width so it recalculates on next check
+      requiredWidth = null;
+      resizeTimeout = setTimeout(checkLayout, 150);
     });
-    
-    // Use ResizeObserver if available for better responsiveness
-    if (typeof ResizeObserver !== 'undefined') {
-      const resizeObserver = new ResizeObserver(function() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(checkLayout, 50);
-      });
-      resizeObserver.observe(nav);
-    }
   })();
 </script>
