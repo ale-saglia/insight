@@ -25,6 +25,8 @@ Articles are published with intent. The primary aim is clear thinking, not volum
 
 ## 📂 Repository Structure
 
+### Core (Editorial)
+
 ```text
 .
 ├── src/
@@ -35,8 +37,23 @@ Articles are published with intent. The primary aim is clear thinking, not volum
 ├── _includes/          # Partials
 ├── assets/             # Styles and static files
 ├── index.md            # Homepage
+├── archive.md          # Archive index
 ├── _config.yml         # Jekyll config
 └── README.md           # This file
+```
+
+### Build & Deployment
+
+```text
+.
+├── scripts/
+│   ├── build-local.sh       # Local build script
+│   ├── preview-local.sh     # Local preview server
+│   └── update-modified-dates.sh
+├── feed.xml                 # Atom feed template
+├── build-local.md           # Build instructions
+├── .github/workflows/pages.yml  # GitHub Pages automation
+└── _site/                   # Generated static site (build output)
 ```
 
 ---
