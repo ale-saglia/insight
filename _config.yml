@@ -39,6 +39,7 @@ defaults:
 
 plugins:
   - jekyll-sitemap
+  - jekyll-feed
 
 exclude:
   - README.md
