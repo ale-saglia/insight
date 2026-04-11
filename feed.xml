@@ -9,7 +9,8 @@ layout: null
   <updated>{{ site.time | date_to_xmlschema }}</updated>
   <id>{{ site.url }}/</id>
   <author>
-    <name>{{ site.title | xml_escape }}</name>
+    <name>Alessandro Saglia</name>
+    <uri>https://ale-saglia.com</uri>
   </author>
   <generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator>
   <subtitle>{{ site.description | xml_escape }}</subtitle>
@@ -24,7 +25,8 @@ layout: null
       <published>{{ post.created | date_to_xmlschema }}</published>
       <updated>{{ post.modified | date_to_xmlschema }}</updated>
       <author>
-        <name>{{ site.title | xml_escape }}</name>
+        <name>Alessandro Saglia</name>
+        <uri>https://ale-saglia.com</uri>
       </author>
       {% if post.category %}
         <category term="{{ post.category }}"/>
