@@ -15,7 +15,7 @@ layout: null
   <generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator>
   <subtitle>{{ site.description | xml_escape }}</subtitle>
 
-  {% assign posts = site.pages | where_exp: "item", "item.path contains 'src/'" | sort: "modified" | reverse %}
+  {% assign posts = site.pages | where_exp: "item", "item.path contains 'src/'" | sort: "created" | reverse %}
   {% for post in posts %}
     {% if post.title and post.excerpt %}
     <entry>
@@ -31,7 +31,7 @@ layout: null
       {% if post.category %}
         <category term="{{ post.category }}"/>
       {% endif %}
-      <content type="html">{{ post.output | xml_escape }}</content>
+      <content type="html">{{ post.content | markdownify | xml_escape }}</content>
       <summary type="html">{{ post.excerpt | xml_escape }}</summary>
     </entry>
     {% endif %}
