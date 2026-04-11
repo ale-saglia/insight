@@ -35,7 +35,8 @@ layout: default
     {% for year in years %}
       {% assign year_count = 0 %}
       {% for article in sorted_articles %}
-        {% if article.created | date: "%Y" == year %}
+        {% assign article_year = article.created | date: "%Y" %}
+        {% if article_year == year %}
           {% assign year_count = year_count | plus: 1 %}
         {% endif %}
       {% endfor %}
