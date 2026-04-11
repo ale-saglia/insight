@@ -34,41 +34,67 @@
     
     if (!nav || !domainsGroup || !domainsDropdown || !domainsDropdownTrigger || !domainsDropdownMenu) return;
     
-    function checkWrap() {
-      // Get all children heights to detect wrapping
-      const navHeight = nav.offsetHeight;
-      const navStyle = window.getComputedStyle(nav);
-      const lineHeight = parseFloat(navStyle.lineHeight) || 20;
+    let lastExpanded = null;
+    let requiredWidth = null;
+    
+    function calculateRequiredWidth() {
+      // Temporarily show group to measure its width
+      domainsGroup.classList.remove('hidden');
+      const groupWidth = domainsGroup.scrollWidth;
       
-      // If nav has wrapped to multiple lines, show dropdown
-      const isWrapped = navHeight > lineHeight * 1.1;
+      // Calculate total width needed for all nav elements
+      // Sum of all direct children scrollWidths
+      let totalWidth = 0;
+      Array.from(nav.children).forEach(child => {
+        totalWidth += child.scrollWidth;
+      });
       
-      if (isWrapped) {
-        domainsGroup.classList.add('hidden');
-        domainsGroup.setAttribute('aria-hidden', 'true');
-        domainsDropdown.classList.add('visible');
-        domainsDropdown.setAttribute('aria-hidden', 'false');
-      } else {
+      // Add gap spacing (0.8rem = ~12.8px per gap, rough estimate)
+      const gapCount = nav.children.length - 1;
+      totalWidth += gapCount * 13;
+      
+      // Add some buffer for padding/margins
+      totalWidth += 40;
+      
+      requiredWidth = totalWidth;
+      return totalWidth;
+    }
+    
+    function checkLayout() {
+      const navWidth = nav.clientWidth;
+      
+      // Calculate required width on first check
+      if (requiredWidth === null) {
+        calculateRequiredWidth();
+      }
+      
+      // Check if nav has enough width to show inline links
+      const shouldExpand = navWidth >= requiredWidth;
+      
+      // Only update if state changed
+      if (lastExpanded === shouldExpand) return;
+      lastExpanded = shouldExpand;
+      
+      if (shouldExpand) {
+        // Expand: show inline links, hide dropdown
         domainsGroup.classList.remove('hidden');
-        domainsGroup.setAttribute('aria-hidden', 'false');
         domainsDropdown.classList.remove('visible');
-        domainsDropdown.setAttribute('aria-hidden', 'true');
+        // Close menu
         domainsDropdownMenu.classList.remove('open');
         domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
+      } else {
+        // Collapse: hide inline links, show dropdown
+        domainsGroup.classList.add('hidden');
+        domainsDropdown.classList.add('visible');
       }
     }
     
     // Handle dropdown toggle
     domainsDropdownTrigger.addEventListener('click', function(e) {
       e.preventDefault();
-      const isOpen = domainsDropdownMenu.classList.contains('open');
-      if (isOpen) {
-        domainsDropdownMenu.classList.remove('open');
-        domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
-      } else {
-        domainsDropdownMenu.classList.add('open');
-        domainsDropdownTrigger.setAttribute('aria-expanded', 'true');
-      }
+      domainsDropdownMenu.classList.toggle('open');
+      domainsDropdownTrigger.setAttribute('aria-expanded', 
+        domainsDropdownMenu.classList.contains('open') ? 'true' : 'false');
     });
     
     // Close dropdown when clicking outside
@@ -80,21 +106,30 @@
     });
     
     // Close dropdown when item is selected
-    domainsDropdownMenu.querySelectorAll('a').forEach(function(link) {
+    Array.from(domainsDropdownMenu.querySelectorAll('a')).forEach(function(link) {
       link.addEventListener('click', function() {
         domainsDropdownMenu.classList.remove('open');
         domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
       });
     });
     
-    // Check on load
-    checkWrap();
+    // Initial check with delay to ensure layout is ready
+    setTimeout(checkLayout, 100);
     
-    // Check on resize with debounce
+    // Listen for resize with debounce
     let resizeTimeout;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(checkWrap, 150);
+      resizeTimeout = setTimeout(checkLayout, 100);
     });
+    
+    // Use ResizeObserver if available for better responsiveness
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(checkLayout, 50);
+      });
+      resizeObserver.observe(nav);
+    }
   })();
 </script>
