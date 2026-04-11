@@ -5,34 +5,19 @@ title: Home
 
 This site collects occasional notes on technical and strategic topics. Most entries focus on AI, governance, and infrastructure systems. Articles are published when ideas have been worked through and written clearly.
 
-<div class="home-grid">
+<div class="home-latest">
   <section class="home-section">
     <p class="section-label">Latest Articles</p>
     <ul class="article-list">
       {% assign sorted_articles = site.pages | where_exp: 'p', 'p.category' | where_exp: 'p', 'p.created' | sort: 'created' | reverse %}
-      {% assign visible_categories = site.pages | where: 'layout', 'category' | where_exp: 'p', "p.path contains 'src/'" | where_exp: 'p', "p.category != 'general'" %}
-      {% assign article_limit = visible_categories | size | plus: 1 %}
-      {% for page in sorted_articles limit: article_limit %}
+      {% for page in sorted_articles limit: 7 %}
         {% if page.category and page.created %}
           <li>
             <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
-            <span class="article-meta">{{ page.created | date: "%d %b %Y" }} {% if page.category != 'general' %}· {{ page.category }}{% endif %}</span>
+            <span class="article-meta">{{ page.created | date: "%d %b %Y" }}{% if page.category != 'general' %} · <a href="{{ '/' | append: page.category | relative_url }}">{{ page.category }}</a>{% endif %}</span>
             {% if page.excerpt %}<span class="article-excerpt">{{ page.excerpt }}</span>{% endif %}
           </li>
         {% endif %}
-      {% endfor %}
-    </ul>
-  </section>
-
-  <section class="home-section">
-    <p class="section-label">Categories</p>
-    <ul class="category-list">
-      {% assign category_pages = site.pages | where: 'layout', 'category' | where_exp: 'p', "p.path contains 'src/'" | where_exp: 'p', "p.category != 'general'" | sort: 'title' %}
-      {% for category_page in category_pages %}
-        <li>
-          <a href="{{ category_page.url | relative_url }}">{{ category_page.title }}</a>
-          {% if category_page.summary %}- {{ category_page.summary }}{% endif %}
-        </li>
       {% endfor %}
     </ul>
   </section>
