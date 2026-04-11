@@ -172,14 +172,10 @@ h3 {
 }
 
 .article-list .article-excerpt {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
   color: var(--muted);
   font-size: 0.92rem;
   margin-top: 0.2rem;
+  line-height: 1.5;
 }
 
 .article-list .article-excerpt-full {
