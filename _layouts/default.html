@@ -9,7 +9,7 @@
     <!-- Primary Meta Tags -->
     <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
     <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
-    <meta name="keywords" content="{% if page.category %}{{ page.category }}{% endif %}infrastructure, technology, systems{% if page.keywords %}, {{ page.keywords }}{% endif %}" />
+    <meta name="keywords" content="{% if page.category %}{{ page.category }}, {% endif %}infrastructure, technology, systems{% if page.keywords %}, {{ page.keywords }}{% endif %}"
     <meta name="author" content="Alessandro Saglia" />
     <link rel="canonical" href="{{ page.url | absolute_url }}" />
     
@@ -28,27 +28,10 @@
     <meta name="twitter:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}" />
     <meta name="twitter:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
     
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "{% if page.created %}BlogPosting{% else %}WebSite{% endif %}",
-      "name": "{{ site.title }}",
-      "description": "{{ site.description }}",
-      "url": "{{ site.url }}",
-      "author": {
-        "@type": "Person",
-        "name": "Alessandro Saglia"
-      }
-      {% if page.title %},
-      "headline": "{{ page.title }}",
-      "datePublished": "{{ page.created | date: '%Y-%m-%d' }}"
-      {% endif %}
-    }
-    </script>
+    <!-- Schema.org JSON-LD (article-specific version in article.html) -->
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/ale-saglia/site/main/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | relative_url }}" />
     
     <!-- Stylesheet -->
     <link rel="stylesheet" href="{{ '/assets/styles.css' | relative_url }}" />

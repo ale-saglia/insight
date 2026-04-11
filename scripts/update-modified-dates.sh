@@ -2,6 +2,9 @@
 # Update 'modified:' field in all markdown files from git history
 # Usage: ./scripts/update-modified-dates.sh
 
+# Check if in a git repository
+git rev-parse --git-dir > /dev/null 2>&1 || { echo "Error: Not a git repository"; exit 1; }
+
 find src/ -name "*.md" -type f | while read file; do
   # Get last commit date for this file in YYYY-MM-DD format
   last_modified=$(git log -1 --format=%ai -- "$file" 2>/dev/null | cut -d' ' -f1)

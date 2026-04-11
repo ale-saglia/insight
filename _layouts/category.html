@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<article class="article">
+<section class="article">
   <header class="article-header">
     <h1>{{ page.title }}</h1>
   </header>
@@ -11,12 +11,8 @@ layout: default
 
   {% assign category_articles = "" | split: "" %}
   {% for article in site.pages %}
-    {% if article.category == page.category and article.created %}
-      {% assign filename = article.path | split: "/" | last %}
-      {% assign first_char = filename | slice: 0 %}
-      {% if first_char != "0" and first_char != "1" and first_char != "2" and first_char != "3" and first_char != "4" and first_char != "5" and first_char != "6" and first_char != "7" and first_char != "8" and first_char != "9" %}
-        {% assign category_articles = category_articles | push: article %}
-      {% endif %}
+    {% if article.category == page.category and article.created and article.series == nil %}
+      {% assign category_articles = category_articles | push: article %}
     {% endif %}
   {% endfor %}
 
@@ -32,4 +28,4 @@ layout: default
       {% endfor %}
     </ul>
   {% endif %}
-</article>
+</section>
