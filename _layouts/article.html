@@ -33,7 +33,23 @@ layout: default
   }
   </script>
 
-  <nav class="article-nav">
-    <a href="{{ '/' | relative_url }}" class="article-nav-link">← Back to articles</a>
+  <nav class="article-nav" id="article-nav">
+    <a href="javascript:history.back()" class="article-nav-link" id="back-link" style="display: none;">← Back to articles</a>
   </nav>
+
+  <script>
+    (function() {
+      const backLink = document.getElementById('back-link');
+      const referrer = document.referrer;
+      const currentDomain = window.location.hostname;
+      
+      // Check if referrer is from the same domain
+      if (referrer && referrer.includes(currentDomain)) {
+        // Check if referrer is from a category page (not direct external or home)
+        if (referrer.includes('/general/') || referrer.includes('/homelab/') || referrer.includes('/digital-health/') || referrer.includes('/archive')) {
+          backLink.style.display = 'inline-block';
+        }
+      }
+    })();
+  </script>
 </article>
