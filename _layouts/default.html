@@ -28,6 +28,7 @@
     <meta name="twitter:url" content="{{ page.url | absolute_url }}" />
     <meta name="twitter:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}" />
     <meta name="twitter:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
+    {% if page.layout == 'article' and page.category %}<meta name="twitter:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ page.url | split: '/' | last }}.png" />{% else %}<meta name="twitter:image" content="{{ site.url }}/assets/og-images/homepage.png" />{% endif %}
     
     <!-- Schema.org JSON-LD (article-specific version in article.html) -->
     
