@@ -3,34 +3,21 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import yaml from 'js-yaml';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const ROOT_DIR = path.join(__dirname, '../..');
 
-// Simple YAML parser for top-level keys
+// Robust YAML parser using js-yaml
 function parseYaml(content) {
-  const result = {};
-  const lines = content.split('\n');
-  for (const line of lines) {
-    if (line.startsWith('title:')) {
-      result.title = line.replace('title:', '').trim().replace(/^["']|["']$/g, '');
-    }
-    if (line.startsWith('description:')) {
-      result.description = line.replace('description:', '').trim().replace(/^["']|["']$/g, '');
-    }
-    if (line.startsWith('excerpt:')) {
-      result.excerpt = line.replace('excerpt:', '').trim().replace(/^["']|["']$/g, '');
-    }
-    if (line.startsWith('permalink:')) {
-      result.permalink = line.replace('permalink:', '').trim().replace(/^["']|["']$/g, '');
-    }
-    if (line.startsWith('category:')) {
-      result.category = line.replace('category:', '').trim().replace(/^["']|["']$/g, '');
-    }
+  try {
+    return yaml.load(content) || {};
+  } catch (error) {
+    console.warn('⚠️  Warning: failed to parse YAML:', error.message);
+    return {};
   }
-  return result;
 }
 
 // Read config to get site title and description
@@ -208,31 +195,6 @@ function escapeXml(str) {
 
 async function generateImages() {
   try {
-    // Check if force regeneration is enabled
-    const forceRegenerate = process.env.FORCE_REGENERATE === 'true';
-    
-    if (forceRegenerate) {
-      console.log('🔄 Force regenerate enabled - clearing existing images...');
-      const ogDir = path.join(ROOT_DIR, 'assets/og-images');
-      if (fs.existsSync(ogDir)) {
-        // Remove all PNG files recursively
-        const removeFilesRecursive = (dir) => {
-          if (fs.existsSync(dir)) {
-            fs.readdirSync(dir).forEach(file => {
-              const filePath = path.join(dir, file);
-              if (fs.statSync(filePath).isDirectory()) {
-                removeFilesRecursive(filePath);
-              } else if (file.endsWith('.png')) {
-                fs.unlinkSync(filePath);
-              }
-            });
-          }
-        };
-        removeFilesRecursive(ogDir);
-        console.log('✓ Cleared existing images');
-      }
-    }
-    
     const siteConfig = getSiteConfig();
     const articles = getArticles();
     

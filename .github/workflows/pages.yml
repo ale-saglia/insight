@@ -5,14 +5,6 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
-      force_regenerate:
-        description: 'Force regenerate all OG images'
-        required: false
-        default: 'false'
-        type: choice
-        options:
-          - 'false'
-          - 'true'
       skip_og_generation:
         description: 'Skip OG image generation (deploy without images)'
         required: false
@@ -47,8 +39,6 @@ jobs:
 
       - name: Generate OG images
         if: ${{ github.event.inputs.skip_og_generation != 'true' }}
-        env:
-          FORCE_REGENERATE: ${{ github.event.inputs.force_regenerate || 'false' }}
         run: bash scripts/generate-og-images.sh
 
       - name: Update modified dates
