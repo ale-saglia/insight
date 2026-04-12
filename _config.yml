@@ -39,6 +39,7 @@ defaults:
 
 plugins:
   - jekyll-sitemap
+  - jekyll-auto-image
 
 exclude:
   - README.md
