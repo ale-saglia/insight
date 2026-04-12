@@ -23,6 +23,12 @@ function parseYaml(content) {
     if (line.startsWith('excerpt:')) {
       result.excerpt = line.replace('excerpt:', '').trim().replace(/^["']|["']$/g, '');
     }
+    if (line.startsWith('permalink:')) {
+      result.permalink = line.replace('permalink:', '').trim().replace(/^["']|["']$/g, '');
+    }
+    if (line.startsWith('category:')) {
+      result.category = line.replace('category:', '').trim().replace(/^["']|["']$/g, '');
+    }
   }
   return result;
 }
@@ -43,8 +49,8 @@ function getArticles() {
     fs.statSync(path.join(srcDir, f)).isDirectory()
   );
 
-  for (const category of categories) {
-    const categoryDir = path.join(srcDir, category);
+  for (const categoryName of categories) {
+    const categoryDir = path.join(srcDir, categoryName);
     const files = fs.readdirSync(categoryDir).filter(f => f.endsWith('.md') && f !== 'README.md');
 
     for (const file of files) {
@@ -56,12 +62,24 @@ function getArticles() {
       if (!frontMatterMatch) continue;
 
       const frontMatter = parseYaml(frontMatterMatch[1]);
-      const slug = file.replace('.md', '');
+      // Extract slug from permalink or filename
+      let slug, category;
+      if (frontMatter.permalink) {
+        // permalink: /digital-health/single-source-truth-no-tech-problem/ -> extract parts
+        const parts = frontMatter.permalink.split('/').filter(p => p.length > 0);
+        category = parts[0];
+        slug = parts[1];
+      } else {
+        slug = file.replace('.md', '');
+        // Remove leading number-dash pattern like Jekyll does (e.g. "1-name" -> "name")
+        slug = slug.replace(/^\d+-/, '');
+        category = frontMatter.category || categoryName;
+      }
 
       articles.push({
         title: frontMatter.title || slug,
         excerpt: frontMatter.excerpt || '',
-        category: frontMatter.category || category,
+        category: category,
         slug,
         path: `/${frontMatter.category || category}/${slug}/`
       });
