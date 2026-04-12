@@ -4,6 +4,15 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      force_regenerate:
+        description: 'Force regenerate all OG images'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 permissions:
   contents: read
@@ -27,6 +36,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      - name: Clean OG images (if force regenerate)
+        if: github.event.inputs.force_regenerate == 'true'
+        run: rm -rf assets/og-images/*.png assets/og-images/*/*.png
 
       - name: Generate OG images
         run: bash scripts/generate-og-images.sh
