@@ -48,12 +48,14 @@ layout: default
       const referrer = document.referrer;
       const currentDomain = window.location.hostname;
       
-      // Check if referrer is from the same domain
-      if (referrer && referrer.includes(currentDomain)) {
-        // Check if referrer is from a category page (not direct external or home)
-        if (referrer.includes('/general/') || referrer.includes('/homelab/') || referrer.includes('/digital-health/') || referrer.includes('/archive')) {
-          backLink.style.display = 'inline-block';
-        }
+      // Show back link if coming from any internal page that is not the homepage
+      if (referrer) {
+        try {
+          const referrerUrl = new URL(referrer);
+          if (referrerUrl.hostname === currentDomain && referrerUrl.pathname !== '/') {
+            backLink.style.display = 'inline-block';
+          }
+        } catch (e) {}
       }
       
       // Show top link after scrolling 400px

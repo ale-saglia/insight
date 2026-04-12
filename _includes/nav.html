@@ -53,9 +53,9 @@
           totalWidth += child.scrollWidth;
         });
         
-        // Add gap spacing (0.8rem = ~12.8px per gap, rough estimate)
+        // Add gap spacing (read actual computed value to stay in sync with CSS)
         const gapCount = nav.children.length - 1;
-        totalWidth += gapCount * 13;
+        totalWidth += gapCount * parseFloat(getComputedStyle(nav).gap || '0');
         
         // Add some buffer for padding/margins
         totalWidth += 40;
