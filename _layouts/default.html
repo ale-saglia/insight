@@ -21,11 +21,8 @@
     <meta property="og:site_name" content="{{ site.title }}" />
     {% if page.layout == 'article' and page.category %}
       {% assign url_parts = page.url | split: '/' %}
-      {% for part in url_parts reversed %}
-        {% unless part == '' %}
-          {% assign og_slug = part %}
-        {% endunless %}
-      {% endfor %}
+      {% assign slug_index = url_parts.size | minus: 1 %}
+      {% assign og_slug = url_parts[slug_index] %}
       <meta property="og:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ og_slug }}.png" />
     {% else %}
       <meta property="og:image" content="{{ site.url }}/assets/og-images/homepage.png" />
@@ -39,15 +36,10 @@
     <meta name="twitter:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}" />
     <meta name="twitter:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
     {% if page.layout == 'article' and page.category %}
-      {% if twitter_slug == nil %}
-        {% assign url_parts = page.url | split: '/' %}
-        {% for part in url_parts reversed %}
-          {% unless part == '' %}
-            {% assign twitter_slug = part %}
-          {% endunless %}
-        {% endfor %}
-      {% endif %}
-      <meta name="twitter:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ twitter_slug }}.png" />
+      {% assign url_parts = page.url | split: '/' %}
+      {% assign slug_index = url_parts.size | minus: 1 %}
+      {% assign tw_slug = url_parts[slug_index] %}
+      <meta name="twitter:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ tw_slug }}.png" />
     {% else %}
       <meta name="twitter:image" content="{{ site.url }}/assets/og-images/homepage.png" />
     {% endif %}
