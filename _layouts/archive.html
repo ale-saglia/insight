@@ -144,127 +144,59 @@ layout: default
       });
     });
 
+    function matchesFilters(item, query, yearFilter, keywordFilters) {
+      const title = item.dataset.title;
+      const category = item.dataset.category;
+      const excerpt = item.dataset.excerpt;
+      const keywords = item.dataset.keywords ? item.dataset.keywords.split(',') : [];
+
+      const searchMatch = title.includes(query) || category.includes(query) || excerpt.includes(query);
+      const yearMatch = yearFilter === '' || item.dataset.year === yearFilter;
+
+      // Keywords use AND logic: match if no filters selected, OR if article has ALL selected keywords
+      let keywordMatch = keywordFilters.size === 0;
+      if (keywordFilters.size > 0) {
+        keywordMatch = Array.from(keywordFilters).every(filter =>
+          keywords.some(kw => kw.trim() === filter)
+        );
+      }
+
+      return searchMatch && yearMatch && keywordMatch;
+    }
+
     function filterItems(query, yearFilter, keywordFilters) {
-      let visibleYears = new Set();
-
       items.forEach(item => {
-        const title = item.dataset.title;
-        const category = item.dataset.category;
-        const excerpt = item.dataset.excerpt;
-        const keywords = item.dataset.keywords ? item.dataset.keywords.split(',') : [];
-        const itemYear = item.dataset.year;
-
-        const searchMatch = title.includes(query) || category.includes(query) || excerpt.includes(query);
-        const yearMatch = yearFilter === '' || itemYear === yearFilter;
-        
-        // Keywords use AND logic: match if no filters selected, OR if article has ALL selected keywords
-        let keywordMatch = keywordFilters.size === 0;
-        if (keywordFilters.size > 0) {
-          keywordMatch = Array.from(keywordFilters).every(filter => 
-            keywords.some(kw => kw.trim() === filter)
-          );
-        }
-        
-        const match = searchMatch && yearMatch && keywordMatch;
-
+        const match = matchesFilters(item, query, yearFilter, keywordFilters);
         item.style.display = match ? 'block' : 'none';
-        if (match) {
-          visibleYears.add(itemYear);
-        }
       });
 
       yearHeadings.forEach(heading => {
         const year = heading.textContent.trim();
-        const hasVisibleItems = Array.from(items).some(item => 
+        const hasVisibleItems = Array.from(items).some(item =>
           item.dataset.year === year && item.style.display !== 'none'
         );
         heading.style.display = hasVisibleItems ? 'block' : 'none';
       });
 
-      // Update year filter counts
-      // Count is based only on keyword filters, NOT on year filter
+      // Update year filter counts (based only on keyword + search filters, NOT the selected year)
       filterBtns.forEach(btn => {
         const btnYear = btn.dataset.year;
-        let count = 0;
-        if (btnYear === '') {
-          // "All Years" button - count all items matching keywords and search
-          count = Array.from(items).filter(item => {
-            const title = item.dataset.title;
-            const category = item.dataset.category;
-            const excerpt = item.dataset.excerpt;
-            const keywords = item.dataset.keywords ? item.dataset.keywords.split(',') : [];
-            
-            const searchMatch = title.includes(query) || category.includes(query) || excerpt.includes(query);
-            
-            let keywordMatch = keywordFilters.size === 0;
-            if (keywordFilters.size > 0) {
-              keywordMatch = Array.from(keywordFilters).every(filter => 
-                keywords.some(kw => kw.trim() === filter)
-              );
-            }
-            
-            return searchMatch && keywordMatch;
-          }).length;
-        } else {
-          // Count items for this specific year, filtered only by keywords and search, not by year selection
-          count = Array.from(items).filter(item => {
-            const title = item.dataset.title;
-            const category = item.dataset.category;
-            const excerpt = item.dataset.excerpt;
-            const keywords = item.dataset.keywords ? item.dataset.keywords.split(',') : [];
-            const itemYear = item.dataset.year;
-            
-            const searchMatch = title.includes(query) || category.includes(query) || excerpt.includes(query);
-            
-            let keywordMatch = keywordFilters.size === 0;
-            if (keywordFilters.size > 0) {
-              keywordMatch = Array.from(keywordFilters).every(filter => 
-                keywords.some(kw => kw.trim() === filter)
-              );
-            }
-            
-            return itemYear === btnYear && searchMatch && keywordMatch;
-          }).length;
-        }
+        const count = Array.from(items).filter(item =>
+          matchesFilters(item, query, btnYear, keywordFilters)
+        ).length;
         const countSpan = btn.querySelector('.count');
-        if (countSpan) {
-          countSpan.textContent = `(${count})`;
-        }
+        if (countSpan) countSpan.textContent = `(${count})`;
       });
 
-      // Update keyword filter counts
-      // Count how many articles would match if we add each keyword to current filters
+      // Update keyword filter counts (count articles that would match if this keyword were added)
       keywordBtns.forEach(btn => {
-        const keyword = btn.dataset.keyword;
-        let count = 0;
-        
-        items.forEach(item => {
-          const title = item.dataset.title;
-          const category = item.dataset.category;
-          const excerpt = item.dataset.excerpt;
-          const keywords = item.dataset.keywords ? item.dataset.keywords.split(',') : [];
-          const itemYear = item.dataset.year;
-          
-          // Check if matches search and year filters
-          const searchMatch = title.includes(query) || category.includes(query) || excerpt.includes(query);
-          const yearMatch = yearFilter === '' || itemYear === yearFilter;
-          
-          // Check if matches keyword (including the one we're counting for) with AND logic
-          let filterSet = new Set(keywordFilters);
-          filterSet.add(keyword);
-          let keywordMatch = Array.from(filterSet).every(filter => 
-            keywords.some(kw => kw.trim() === filter)
-          );
-          
-          if (searchMatch && yearMatch && keywordMatch) {
-            count++;
-          }
-        });
-        
+        const expandedFilters = new Set(keywordFilters);
+        expandedFilters.add(btn.dataset.keyword);
+        const count = Array.from(items).filter(item =>
+          matchesFilters(item, query, yearFilter, expandedFilters)
+        ).length;
         const countSpan = btn.querySelector('.count');
-        if (countSpan) {
-          countSpan.textContent = `(${count})`;
-        }
+        if (countSpan) countSpan.textContent = `(${count})`;
       });
     }
   </script>
