@@ -118,7 +118,7 @@ function generateSVG(siteTitle, siteDescription, articleTitle, excerpt, domain) 
   <text x="60" y="${yPos + 45}" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">${escapeXml(siteDescription)}</text>
   
   <!-- Top separator line -->
-  <line x1="60" y1="${yPos + 70}" x2="1140" y2="${yPos + 70}" stroke="#e6e8eb" stroke-width="1"/>
+  <line x1="60" y1="${yPos + 70}" x2="1050" y2="${yPos + 70}" stroke="#e6e8eb" stroke-width="1"/>
   
   <!-- Article title section -->`;
   
@@ -140,10 +140,10 @@ function generateSVG(siteTitle, siteDescription, articleTitle, excerpt, domain) 
   yPos += excerptLines.slice(0, 3).length * 52 + 25;
   
   // Bottom separator line
-  svg += `\n  <line x1="60" y1="${yPos}" x2="1140" y2="${yPos}" stroke="#e6e8eb" stroke-width="1"/>
+  svg += `\n  <line x1="60" y1="${yPos}" x2="1050" y2="${yPos}" stroke="#e6e8eb" stroke-width="1"/>
   
   <!-- Domain footer (bottom right) -->
-  <text x="1080" y="${yPos + 45}" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif" text-anchor="end">${escapeXml(domain)}</text>
+  <text x="980" y="${yPos + 45}" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif" text-anchor="end">${escapeXml(domain)}</text>
 </svg>`;
   
   return svg;
@@ -166,19 +166,19 @@ function generateSVGHomepage(siteTitle, siteDescription, domain) {
   <text x="60" y="${yPos + 80}" font-size="42" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">${escapeXml(siteDescription)}</text>
   
   <!-- Top separator line -->
-  <line x1="60" y1="${yPos + 124}" x2="1140" y2="${yPos + 124}" stroke="#e6e8eb" stroke-width="1"/>
+  <line x1="60" y1="${yPos + 124}" x2="1050" y2="${yPos + 124}" stroke="#e6e8eb" stroke-width="1"/>
   
   <!-- Tagline -->
   <text x="60" y="${yPos + 170}" font-size="32" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">Published occasionally. Written for clarity over volume.</text>
   
   <!-- Bottom separator line -->
-  <line x1="60" y1="550" x2="1140" y2="550" stroke="#e6e8eb" stroke-width="1"/>
+  <line x1="60" y1="550" x2="1050" y2="550" stroke="#e6e8eb" stroke-width="1"/>
   
   <!-- Author footer (bottom left) -->
   <text x="60" y="595" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">Written and maintained by Alessandro Saglia</text>
   
   <!-- Domain footer (bottom right) -->
-  <text x="1080" y="595" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif" text-anchor="end">${escapeXml(domain)}</text>
+  <text x="980" y="595" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif" text-anchor="end">${escapeXml(domain)}</text>
 </svg>`;
   
   return svg;
