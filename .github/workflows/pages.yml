@@ -23,6 +23,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate OG images
+        run: bash scripts/generate-og-images.sh
+
       - name: Update modified dates
         run: bash scripts/update-modified-dates.sh
 
