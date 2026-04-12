@@ -18,7 +18,6 @@ assets/og-images/
 
 # Node.js dependencies (og-image generator)
 scripts/og-image-gen/node_modules/
-scripts/og-image-gen/package-lock.json
 
 # OS / editor
 .DS_Store

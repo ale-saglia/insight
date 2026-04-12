@@ -280,8 +280,7 @@ h3 {
   margin-top: 0.1rem;
 }
 
-.article-list .article-excerpt,
-.article-list .article-excerpt-full {
+.article-list .article-excerpt {
   color: var(--muted);
   font-size: 0.92rem;
   margin-top: 0.2rem;
