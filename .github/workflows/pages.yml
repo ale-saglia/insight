@@ -37,11 +37,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Clean OG images (if force regenerate)
-        if: github.event.inputs.force_regenerate == 'true'
-        run: rm -rf assets/og-images/*.png assets/og-images/*/*.png
-
       - name: Generate OG images
+        env:
+          FORCE_REGENERATE: ${{ github.event.inputs.force_regenerate || 'false' }}
         run: bash scripts/generate-og-images.sh
 
       - name: Update modified dates
