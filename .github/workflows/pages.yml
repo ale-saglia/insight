@@ -13,6 +13,14 @@ on:
         options:
           - 'false'
           - 'true'
+      skip_og_generation:
+        description: 'Skip OG image generation (deploy without images)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 permissions:
   contents: read
@@ -38,6 +46,7 @@ jobs:
           node-version: '20'
 
       - name: Generate OG images
+        if: ${{ github.event.inputs.skip_og_generation != 'true' }}
         env:
           FORCE_REGENERATE: ${{ github.event.inputs.force_regenerate || 'false' }}
         run: bash scripts/generate-og-images.sh
