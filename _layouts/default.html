@@ -19,6 +19,7 @@
     <meta property="og:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}" />
     <meta property="og:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
     <meta property="og:site_name" content="{{ site.title }}" />
+    {% if page.layout == 'article' and page.category %}<meta property="og:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ page.url | split: '/' | last }}.png" />{% else %}<meta property="og:image" content="{{ site.url }}/assets/og-images/homepage.png" />{% endif %}
     {% if page.created %}<meta property="article:published_time" content="{{ page.created | date: '%Y-%m-%dT%H:%M:%S%z' }}" />{% endif %}
     {% if page.category %}<meta property="article:section" content="{{ page.category }}" />{% endif %}
     
