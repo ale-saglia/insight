@@ -8,6 +8,10 @@ CONFIG="${1:-_config.yml,_config.local.yml}"
 
 cd "$ROOT_DIR"
 
+# Ensure front matter required fields before any downstream processing
+echo "Checking and normalizing article front matter..."
+bash "$ROOT_DIR/scripts/ensure-frontmatter.sh"
+
 # Generate OG images before building
 echo "🎨 Generating OG preview images..."
 bash "$ROOT_DIR/scripts/generate-og-images.sh"
