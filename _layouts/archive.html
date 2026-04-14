@@ -105,6 +105,10 @@ layout: default
   {% endfor %}
   {% if current_year != "" %}</ul>{% endif %}
 
+  <p id="archive-no-results" class="archive-empty-state" role="status" aria-live="polite" hidden>
+    No articles match the selected filters. Try clearing the search, year, or keyword filters.
+  </p>
+
   <script>
     const searchInput = document.getElementById('search-input');
     const items = document.querySelectorAll('.search-item');
@@ -112,6 +116,7 @@ layout: default
     const filterBtns = document.querySelectorAll('.filter-btn');
     const keywordBtns = document.querySelectorAll('.keyword-btn');
     const keywordFiltersContainer = document.getElementById('keyword-filters');
+    const noResultsMessage = document.getElementById('archive-no-results');
     let currentYearFilter = '';
     let currentKeywordFilters = new Set(); // Multiple keywords support
 
@@ -207,6 +212,13 @@ layout: default
         const countSpan = btn.querySelector('.count');
         if (countSpan) countSpan.textContent = `(${count})`;
       });
+
+      const visibleItems = Array.from(items).filter(item => item.style.display !== 'none').length;
+      if (noResultsMessage) {
+        noResultsMessage.hidden = visibleItems !== 0;
+      }
     }
+
+    filterItems('', currentYearFilter, currentKeywordFilters);
   </script>
 </section>
