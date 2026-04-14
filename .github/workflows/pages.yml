@@ -37,6 +37,9 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Ensure article front matter
+        run: bash scripts/ensure-frontmatter.sh
+
       - name: Generate OG images
         if: ${{ github.event.inputs.skip_og_generation != 'true' }}
         run: bash scripts/generate-og-images.sh

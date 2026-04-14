@@ -15,6 +15,8 @@ Build the site with Jekyll using Docker:
 ./scripts/build-local.sh
 ```
 
+Before building, the script now ensures each article in `src/*/*.md` has required front matter keys (`layout`, `title`, `created`, `category`, `keywords`, `excerpt`, `permalink`) without overwriting existing values. Missing `keywords` and `excerpt` raise warnings.
+
 This runs Jekyll with the local config override (`_config.local.yml`) so the site builds at the root path (`/`) instead of under `/insight`.
 
 Output is generated in `_site/`.

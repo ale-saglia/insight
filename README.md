@@ -49,6 +49,7 @@ Articles are published with intent. The primary aim is clear thinking, not volum
 ├── scripts/
 │   ├── build-local.sh           # Local build script
 │   ├── preview-local.sh         # Local preview server
+│   ├── ensure-frontmatter.sh    # Adds missing article front matter fields + warnings
 │   ├── update-modified-dates.sh # Updates file modified timestamps from Git
 │   ├── generate-og-images.sh    # Generates OG images for social media
 │   └── og-image-gen/
