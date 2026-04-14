@@ -23,6 +23,14 @@ Articles are published with intent. The primary aim is clear thinking, not volum
 
 ---
 
+## 🤖 AI Usage
+
+AI is used as a writing aid during drafting.
+It supports iteration and phrasing, but not idea generation or argument development.
+All content is authored and validated manually.
+
+---
+
 ## 📂 Repository Structure
 
 ### Core (Editorial)
