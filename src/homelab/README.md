@@ -3,14 +3,16 @@ layout: category
 title: Homelab
 category: homelab
 permalink: /homelab/
-summary: A series on building and operating small-scale infrastructure with responsibility and intent.
+summary: Category hub for homelab content, including the Zero to Homelab series and broader infrastructure topics.
 ---
 
-A practical series on building and operating homelab infrastructure.
+This category collects homelab content by genre, including the Zero to Homelab series.
 
 Focus: lifecycle responsibility, reliability constraints, and real-world operational trade-offs.
 
 ## Episodes
+
+The episodes below are part of the series **Zero to Homelab**.
 
 **[Episode 0: Why I Built a Homelab (and Why It Matters)](/homelab/why-homelab-matters/)**
 
