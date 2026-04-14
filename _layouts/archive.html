@@ -48,9 +48,10 @@ layout: default
   {% assign all_keywords = "" | split: "" %}
   {% for article in sorted_articles %}
     {% if article.keywords %}
-      {% assign keywords = article.keywords | split: ", " %}
+      {% assign keywords = article.keywords | split: "," %}
       {% for keyword in keywords %}
-        {% assign all_keywords = all_keywords | push: keyword %}
+        {% assign normalized_keyword = keyword | strip %}
+        {% assign all_keywords = all_keywords | push: normalized_keyword %}
       {% endfor %}
     {% endif %}
   {% endfor %}
@@ -67,9 +68,17 @@ layout: default
     <div class="keyword-filters" id="keyword-filters">
       {% for keyword in unique_keywords %}
         {% assign count = 0 %}
+        {% assign normalized_keyword = keyword | downcase | strip %}
         {% for article in sorted_articles %}
-          {% if article.keywords contains keyword %}
-            {% assign count = count | plus: 1 %}
+          {% if article.keywords %}
+            {% assign article_keywords = article.keywords | downcase | split: "," %}
+            {% for article_keyword in article_keywords %}
+              {% assign normalized_article_keyword = article_keyword | strip %}
+              {% if normalized_article_keyword == normalized_keyword %}
+                {% assign count = count | plus: 1 %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
           {% endif %}
         {% endfor %}
         <button class="keyword-btn" data-keyword="{{ keyword | downcase | strip }}" data-count="{{ count }}">{{ keyword | strip }} <span class="count">({{ count }})</span></button>
