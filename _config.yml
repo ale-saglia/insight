@@ -2,6 +2,9 @@ title: Insight Notes
 description: Notes on AI, governance, and infrastructure systems.
 url: "https://insight.ale-saglia.com"
 baseurl: ""
+author:
+  name: Alessandro Saglia
+  url: https://ale-saglia.com
 
 markdown: kramdown
 permalink: pretty

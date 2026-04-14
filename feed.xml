@@ -4,13 +4,13 @@ layout: null
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>{{ site.title | xml_escape }}</title>
-  <link href="{{ site.url }}/feed.xml" rel="self"/>
-  <link href="{{ site.url }}/"/>
+  <link href="{{ '/feed.xml' | absolute_url }}" rel="self"/>
+  <link href="{{ '/' | absolute_url }}"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
   <id>{{ site.url }}/</id>
   <author>
-    <name>Alessandro Saglia</name>
-    <uri>https://ale-saglia.com</uri>
+    <name>{{ site.author.name | xml_escape }}</name>
+    <uri>{{ site.author.url | xml_escape }}</uri>
   </author>
   <generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator>
   <subtitle>{{ site.description | xml_escape }}</subtitle>
@@ -23,10 +23,10 @@ layout: null
       <link href="{{ site.url }}{{ post.url }}"/>
       <id>{{ site.url }}{{ post.url }}</id>
       <published>{{ post.created | date_to_xmlschema }}</published>
-      <updated>{{ post.modified | date_to_xmlschema }}</updated>
+      <updated>{% if post.modified %}{{ post.modified | date_to_xmlschema }}{% else %}{{ post.created | date_to_xmlschema }}{% endif %}</updated>
       <author>
-        <name>Alessandro Saglia</name>
-        <uri>https://ale-saglia.com</uri>
+        <name>{{ site.author.name | xml_escape }}</name>
+        <uri>{{ site.author.url | xml_escape }}</uri>
       </author>
       {% if post.category %}
         <category term="{{ post.category }}"/>
