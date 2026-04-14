@@ -150,7 +150,7 @@ function generateSVG(siteTitle, siteDescription, articleTitle, excerpt, domain) 
 }
 
 // Generate SVG for OG image - Homepage (no title/excerpt, larger header)
-function generateSVGHomepage(siteTitle, siteDescription, domain) {
+function generateSVGHomepage(siteTitle, siteDescription, domain, authorName) {
   let yPos = 200;
   
   let svg = `<?xml version="1.0" encoding="UTF-8"?>
@@ -175,7 +175,7 @@ function generateSVGHomepage(siteTitle, siteDescription, domain) {
   <line x1="60" y1="550" x2="1050" y2="550" stroke="#e6e8eb" stroke-width="1"/>
   
   <!-- Author footer (bottom left) -->
-  <text x="60" y="595" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">Written and maintained by Alessandro Saglia</text>
+  <text x="60" y="595" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">Written and maintained by ${escapeXml(authorName)}</text>
   
   <!-- Domain footer (bottom right) -->
   <text x="980" y="595" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif" text-anchor="end">${escapeXml(domain)}</text>
@@ -203,17 +203,17 @@ async function generateImages() {
     
     // Extract domain from URL
     const domain = siteConfig.url ? siteConfig.url.replace(/^https?:\/\//, '') : 'insight.ale-saglia.com';
+    const authorName = siteConfig.author?.name || 'Alessandro Saglia';
 
     // Generate homepage OG image
     const homepageOutputPath = path.join(ROOT_DIR, 'assets/og-images', 'homepage.png');
     const homepageDir = path.dirname(homepageOutputPath);
-    if (!fs.existsSync(homepageDir)) {
-      fs.mkdirSync(homepageDir, { recursive: true });
-    }
+    fs.mkdirSync(homepageDir, { recursive: true });
     const homepageSvg = generateSVGHomepage(
       siteConfig.title,
       siteConfig.description,
-      domain
+      domain,
+      authorName
     );
     await sharp(Buffer.from(homepageSvg))
       .png()
@@ -225,9 +225,7 @@ async function generateImages() {
       const ogDir = path.join(ROOT_DIR, 'assets/og-images', article.category);
       
       // Create directory if it doesn't exist
-      if (!fs.existsSync(ogDir)) {
-        fs.mkdirSync(ogDir, { recursive: true });
-      }
+      fs.mkdirSync(ogDir, { recursive: true });
 
       const outputPath = path.join(ogDir, `${article.slug}.png`);
       const svgString = generateSVG(

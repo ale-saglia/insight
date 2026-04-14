@@ -18,6 +18,15 @@ git rev-parse --git-dir >/dev/null 2>&1 || {
 
 warn_count=0
 updated_count=0
+TMPFILES=()
+
+cleanup_tmpfiles() {
+  if ((${#TMPFILES[@]})); then
+    rm -f "${TMPFILES[@]}"
+  fi
+}
+
+trap cleanup_tmpfiles EXIT
 
 warn() {
   local file="$1"
@@ -271,7 +280,7 @@ while read -r file; do
     created_cache="$(first_commit_date "$file")"
     if [[ -z "$created_cache" ]]; then
       created_cache="$(date +%F)"
-      warn "$file" "created non trovato in git history: uso data corrente ${created_cache}"
+      warn "$file" "created not found in git history: using current date ${created_cache}"
     fi
 
     printf '%s' "$created_cache"
@@ -286,17 +295,20 @@ while read -r file; do
       strip_h1="1"
     else
       title_value="$slug"
-      warn "$file" "title non trovato (H1 assente): uso fallback dal nome file"
+      warn "$file" "title not found (missing H1): using filename fallback"
     fi
 
-    warn "$file" "keywords assente: inserito placeholder vuoto"
-    warn "$file" "excerpt assente: inserito placeholder vuoto"
+    warn "$file" "keywords missing: inserted empty placeholder"
+    warn "$file" "excerpt missing: inserted empty placeholder"
 
     escaped_title="$(escape_double_quotes "$title_value")"
     created="$(resolve_created)"
     tmp_file="$(mktemp)"
+    TMPFILES+=("$tmp_file")
     processed_body_tmp="$(mktemp)"
+    TMPFILES+=("$processed_body_tmp")
     front_matter_tmp="$(mktemp)"
+    TMPFILES+=("$front_matter_tmp")
 
     normalize_body "$file" 1 "$strip_h1" "$title_value" > "$processed_body_tmp"
     build_front_matter_block "" "\"${escaped_title}\"" "$created" "$category" "$permalink" > "$front_matter_tmp"
@@ -334,7 +346,7 @@ while read -r file; do
       title_added_from_h1="1"
     else
       title_value="$slug"
-      warn "$file" "title non trovato (H1 assente): uso fallback dal nome file"
+      warn "$file" "title not found (missing H1): using filename fallback"
     fi
     escaped_title="$(escape_double_quotes "$title_value")"
     missing_lines+=("title: \"${escaped_title}\"")
@@ -355,13 +367,13 @@ while read -r file; do
   if ! has_key "keywords" "$fm_block"; then
     missing_lines+=("keywords: ")
     missing_count=$((missing_count + 1))
-    warn "$file" "keywords assente: inserito placeholder vuoto"
+    warn "$file" "keywords missing: inserted empty placeholder"
   fi
 
   if ! has_key "excerpt" "$fm_block"; then
     missing_lines+=("excerpt: \"\"")
     missing_count=$((missing_count + 1))
-    warn "$file" "excerpt assente: inserito placeholder vuoto"
+    warn "$file" "excerpt missing: inserted empty placeholder"
   fi
 
   if ! has_key "permalink" "$fm_block"; then
@@ -379,13 +391,17 @@ while read -r file; do
   fi
 
   current_body_tmp="$(mktemp)"
+  TMPFILES+=("$current_body_tmp")
   processed_body_tmp="$(mktemp)"
+  TMPFILES+=("$processed_body_tmp")
   tail -n "+$((end_line + 1))" "$file" > "$current_body_tmp"
   normalize_body "$file" "$((end_line + 1))" "$strip_h1" "$title_for_body" > "$processed_body_tmp"
 
   if [[ "$missing_count" -gt 0 ]] || ! cmp -s "$current_body_tmp" "$processed_body_tmp"; then
     tmp_file="$(mktemp)"
+    TMPFILES+=("$tmp_file")
     front_matter_tmp="$(mktemp)"
+    TMPFILES+=("$front_matter_tmp")
 
     if [[ "$title_added_from_h1" == "1" ]]; then
       rewritten_title="\"$(escape_double_quotes "$title_value")\""

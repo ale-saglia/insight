@@ -53,6 +53,7 @@ body {
   font-size: 0.85rem;
   color: var(--muted);
   margin: 0.2rem 0 0.4rem 0;
+  letter-spacing: 0.04em;
 }
 
 .site-subtitle {
@@ -456,8 +457,9 @@ a:focus {
   text-decoration: underline;
 }
 
-a:focus {
-  outline: none;
+a:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
 }
 
 img {
@@ -499,13 +501,6 @@ img {
 
 .keyword-filters.has-overflow::after {
   opacity: 1;
-}
-
-.article-series {
-  font-size: 0.85rem;
-  color: var(--muted);
-  margin: 0.2rem 0 0.4rem 0;
-  letter-spacing: 0.04em;
 }
 
 .keyword-btn {

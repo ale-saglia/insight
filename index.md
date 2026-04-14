@@ -11,13 +11,11 @@ This site collects occasional notes on technical and strategic topics. Most entr
     <ul class="article-list">
       {% assign sorted_articles = site.pages | where_exp: 'p', 'p.category' | where_exp: 'p', 'p.created' | sort: 'created' | reverse %}
       {% for page in sorted_articles limit: 7 %}
-        {% if page.category and page.created %}
-          <li>
-            <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
-            <span class="article-meta">{{ page.created | date: "%d %b %Y" }}{% if page.category != 'general' %} · <a href="{{ '/' | append: page.category | relative_url }}">{{ page.category }}</a>{% endif %}</span>
-            {% if page.excerpt %}<span class="article-excerpt">{{ page.excerpt }}</span>{% endif %}
-          </li>
-        {% endif %}
+        <li>
+          <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
+          <span class="article-meta">{{ page.created | date: "%d %b %Y" }}{% if page.category != 'general' %} · <a href="{{ '/' | append: page.category | relative_url }}">{{ page.category }}</a>{% endif %}</span>
+          {% if page.excerpt %}<span class="article-excerpt">{{ page.excerpt }}</span>{% endif %}
+        </li>
       {% endfor %}
     </ul>
   </section>

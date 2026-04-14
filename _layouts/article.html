@@ -21,8 +21,8 @@ layout: default
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "{{ page.title }}",
-    "description": "{{ page.excerpt | strip_html }}",
+    "headline": {{ page.title | jsonify }},
+    "description": {{ page.excerpt | strip_html | jsonify }},
     "datePublished": "{{ page.created | date_to_xmlschema }}",
     {% if page.modified %}
     "dateModified": "{{ page.modified | date_to_xmlschema }}",
@@ -30,9 +30,9 @@ layout: default
     "url": "{{ page.url | absolute_url }}",
     "author": {
       "@type": "Person",
-      "name": "Alessandro Saglia"
+      "name": {{ site.author.name | jsonify }}
     },
-    "articleSection": "{{ page.category | capitalize }}"
+    "articleSection": {{ page.category | capitalize | jsonify }}
   }
   </script>
 
