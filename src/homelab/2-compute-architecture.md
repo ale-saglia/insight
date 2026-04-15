@@ -69,7 +69,7 @@ A Home Assistant Yellow sits alongside the two servers. It runs Home Assistant f
 
 A two-node Proxmox cluster has a fundamental problem: if one node goes down, the surviving node cannot establish quorum on its own, which limits its ability to manage cluster resources. Adding a third Corosync voter solves this without adding a third hypervisor.
 
-I could have virtualized Home Assistant on one of the Proxmox nodes. But I already had the Yellow, it consumes very little power, and keeping home automation on a separate physical device means it remains operational during Proxmox maintenance or outages. When the servers are down for updates, the lights still work. That felt like the right trade-off.
+I could have virtualized Home Assistant on one of the Proxmox nodes. But I already had the Yellow, it consumes very little power, and keeping home automation on a separate physical device means it remains operational during Proxmox maintenance or outages. The Yellow runs on an M.2 SSD rather than a microSD or eMMC, a deliberate choice given that it now carries a cluster-level responsibility. When the servers are down for updates, the lights still work. That felt like the right trade-off.
 
 ### How the pieces fit together
 
@@ -99,7 +99,7 @@ A VM gets its own kernel. It is fully isolated from the host. It can run a diffe
 
 An LXC container shares the host kernel. It is lighter, faster to start, and uses fewer resources. But it cannot run a different OS, and the isolation boundary is thinner. A misconfigured container can, in certain scenarios, affect the host in ways a VM cannot.
 
-My default choice is LXC. The reasoning is straightforward: the CPUs in this setup are adequate but not overpowered, power consumption is a constant constraint, and every layer of overhead that can be removed should be, unless there is a specific reason to keep it. LXC containers start in seconds, consume only the memory their processes actually use, and are simpler to manage and template. For the workloads I run, the reduced isolation compared to a full VM is an acceptable trade-off, assessed against the actual risk profile of each service.
+My default choice is LXC. The reasoning is straightforward: the CPUs in this setup are adequate but not overpowered, power consumption is a constant constraint, and every layer of overhead that can be removed should be, unless there is a specific reason to keep it. LXC containers start in seconds, consume only the memory their processes actually use, and are simpler to manage and template. For the workloads I run, the reduced isolation compared to a full VM is an acceptable trade-off, assessed against the actual risk profile of each service. Nearly all containers run unprivileged. The one exception requires limited privileges to pass through the AMD integrated GPU and a TUN device, which the kernel will not map correctly to an unprivileged container regardless of how creative you get with device permissions. I spent weeks confirming this.
 
 The exceptions are few and justified. OPNsense runs as a VM because it is FreeBSD and requires direct access to network interfaces via PCI passthrough. Proxmox Backup Server runs as a VM because it manages its own storage independently and benefits from the stronger isolation boundary. A Windows VM exists for a specific use case that requires it.
 
