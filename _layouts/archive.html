@@ -100,7 +100,7 @@ layout: default
     <li class="search-item" data-year="{{ article_year }}" data-title="{{ article.title | downcase }}" data-category="{{ article.category | downcase }}" data-excerpt="{{ article.excerpt | downcase }}" data-keywords="{{ article.keywords | downcase | replace: ', ', ',' }}">
       <a href="{{ article.url | relative_url }}">{{ article.title }}</a>
       <span class="article-meta">{{ article.created | date: "%d %b %Y" }} • {{ article.category | capitalize }}</span>
-      {% if article.excerpt %}<span class="article-excerpt-full">{{ article.excerpt }}</span>{% endif %}
+      {% if article.excerpt %}<span class="article-excerpt">{{ article.excerpt }}</span>{% endif %}
     </li>
   {% endfor %}
   {% if current_year != "" %}</ul>{% endif %}
