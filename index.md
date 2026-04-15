@@ -13,7 +13,7 @@ This site collects occasional notes on technical and strategic topics. Most entr
     <p class="section-label">Start Here</p>
     <a class="featured-article-card" href="{{ latest_article.url | relative_url }}">
       <div class="featured-article-content">
-        <p class="featured-article-meta">{{ latest_article.created | date: "%d %b %Y" }}{% if latest_article.category != 'general' %} · <span class="featured-article-category">{{ latest_article.category }}</span>{% endif %}</p>
+        <p class="featured-article-meta">{{ latest_article.created | date: "%d %b %Y" }}{% if latest_article.category != 'general' %} · <span class="featured-article-category">{{ latest_article.category }}</span>{% endif %}{% if latest_article.series and latest_article.series_episode != nil %} · {{ latest_article.series }} · Episode {{ latest_article.series_episode }}{% endif %}</p>
         <h2 id="featured-article-title">{{ latest_article.title }}</h2>
         {% if latest_article.excerpt %}<p class="featured-article-excerpt">{{ latest_article.excerpt }}</p>{% endif %}
       </div>
