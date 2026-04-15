@@ -45,11 +45,11 @@ Both nodes share a few baseline design choices. The Proxmox OS disk on each is a
 
 This is the network node. An Intel N150 with 16 GB of RAM, four cores, modest in every respect.
 
-It runs three things: OPNsense as a virtual machine, a UniFi controller LXC for wireless management, and a network-services LXC that hosts the reverse proxy and the identity provider. Episode 1 covered why the firewall is virtualized and what that entails. The point here is different: this node exists because its power draw is low enough to justify keeping it permanently on, and its workload is stable enough that it rarely needs attention.
+It runs three things: OPNsense as a virtual machine, a UniFi controller LXC for wireless management, and a network-services LXC that hosts the reverse proxy and the identity provider. [Episode 1](/homelab/home-network-design/) covered why the firewall is virtualized and what that entails. The point here is different: this node exists because its power draw is low enough to justify keeping it permanently on, and its workload is stable enough that it rarely needs attention.
 
 The N150 is not powerful. It does not need to be. Routing, DNS resolution, VPN termination, and reverse proxying are not computationally expensive. What matters is that the network layer is physically and logically independent from everything else. If the storage node goes down for maintenance, the network stays up. If a container on the storage node misbehaves and consumes all available resources, the firewall and reverse proxy are unaffected.
 
-This is the same separation of concerns described in Episode 1, but at the hardware level.
+This is the same separation of concerns described in [Episode 1](/homelab/home-network-design/), but at the hardware level.
 
 ### pve-storage
 
