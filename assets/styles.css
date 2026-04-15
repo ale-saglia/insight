@@ -242,10 +242,69 @@ h3 {
   margin-top: 0;
 }
 
+.featured-article {
+  margin-top: 2rem;
+}
+
+.featured-article .section-label {
+  margin-top: 0;
+}
+
+.featured-article-card {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.featured-article-card:hover {
+  text-decoration: none;
+}
+
+.featured-article-content {
+  padding: 1rem 1.1rem 1.2rem;
+}
+
+.featured-article-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.featured-article-category {
+  color: var(--link);
+}
+
+.featured-article h2 {
+  margin: 0.3rem 0 0;
+  font-size: 1.5rem;
+}
+
+.featured-article-excerpt {
+  margin: 0.7rem 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.home-latest {
+  margin-top: 1.8rem;
+}
+
 @media (max-width: 700px) {
   .home-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+
+  .featured-article {
+    margin-top: 1.5rem;
+  }
+
+  .featured-article h2 {
+    font-size: 1.3rem;
   }
 }
 
