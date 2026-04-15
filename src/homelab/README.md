@@ -29,3 +29,11 @@ Designing residential network infrastructure from scratch. Architectural decisio
 *Topics:* OPNsense, network segmentation, infrastructure design, resilience
 
 *Lesson:* You understand systems by breaking them, then figuring out why they broke - not before.
+
+**[Episode 2: Two Nodes, One Lesson in Constraint](/homelab/compute-architecture/)**
+
+From a four-node plan to a two-node reality. How power, noise, operational complexity, and data-layer choices shaped the compute architecture.
+
+*Topics:* Proxmox, LXC vs VM, energy efficiency, ZFS, NFS, service/data separation
+
+*Lesson:* Good architecture is what remains sustainable under real operating constraints, not what looks cleanest in the first diagram.
