@@ -347,6 +347,15 @@ h3 {
   line-height: 1.5;
 }
 
+.latest-archive-link {
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+}
+
+.latest-archive-link a {
+  color: var(--link);
+}
+
 .archive-search {
   margin-bottom: 2rem;
 }

@@ -33,6 +33,7 @@ This site collects occasional notes on technical and strategic topics. Most entr
         </li>
       {% endfor %}
     </ul>
+    <p class="latest-archive-link"><a href="{{ '/archive/' | relative_url }}">Browse all articles in the archive</a></p>
   </section>
 </div>
 
