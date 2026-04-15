@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 540" font-family="Georgia, 'Times New Roman', serif">
+  <style>
+    .node-box { fill: none; stroke: #5b636a; stroke-width: 1.5; }
+    .node-title { font-size: 14px; font-weight: bold; fill: #1b1f23; }
+    .node-spec { font-size: 11px; fill: #5b636a; }
+    .item { font-size: 12px; }
+    .item-vm { fill: #0b57d0; }
+    .item-lxc { fill: #1b1f23; }
+    .label { font-size: 11px; fill: #5b636a; }
+    .connection { stroke: #5b636a; stroke-width: 1.5; }
+    .footer { font-size: 11px; fill: #5b636a; }
+    .ha-box { fill: none; stroke: #5b636a; stroke-width: 1; stroke-dasharray: 4,3; }
+    .switch-box { fill: none; stroke: #5b636a; stroke-width: 1.5; }
+    .switch-label { font-size: 11px; font-weight: bold; fill: #5b636a; }
+    .dot-vm { fill: #0b57d0; }
+    .dot-lxc { fill: none; stroke: #5b636a; stroke-width: 1.5; }
+    @media (prefers-color-scheme: dark) {
+      .node-box { stroke: #e0e6ed; }
+      .node-title { fill: #e6edf3; }
+      .node-spec { fill: #e0e6ed; }
+      .item-vm { fill: #58a6ff; }
+      .item-lxc { fill: #e6edf3; }
+      .label { fill: #e0e6ed; }
+      .connection { stroke: #e0e6ed; }
+      .footer { fill: #e0e6ed; }
+      .ha-box { stroke: #e0e6ed; }
+      .switch-box { stroke: #e0e6ed; }
+      .switch-label { fill: #e0e6ed; }
+      .dot-vm { fill: #58a6ff; }
+      .dot-lxc { stroke: #e0e6ed; }
+    }
+  </style>
+
+  <!-- pve-network node -->
+  <rect class="node-box" x="30" y="30" width="260" height="220" rx="6"/>
+  <text class="node-title" x="50" y="58">pve-network</text>
+  <text class="node-spec" x="50" y="76">Intel N150 · 16 GB · 4 cores</text>
+
+  <circle class="dot-vm" cx="56" cy="106" r="4"/>
+  <text class="item item-vm" x="68" y="110">OPNsense</text>
+
+  <circle class="dot-lxc" cx="56" cy="136" r="4"/>
+  <text class="item item-lxc" x="68" y="140">network-services</text>
+  <text class="label" x="68" y="155">reverse proxy · SSO</text>
+
+  <circle class="dot-lxc" cx="56" cy="180" r="4"/>
+  <text class="item item-lxc" x="68" y="184">UniFi controller</text>
+
+  <!-- pve-storage node -->
+  <rect class="node-box" x="530" y="30" width="260" height="380" rx="6"/>
+  <text class="node-title" x="550" y="58">pve-storage</text>
+  <text class="node-spec" x="550" y="76">Ryzen 7 PRO 8845HS · 96 GB · 8 bays</text>
+
+  <circle class="dot-vm" cx="556" cy="106" r="4"/>
+  <text class="item item-vm" x="568" y="110">Proxmox Backup Server</text>
+
+  <circle class="dot-vm" cx="556" cy="136" r="4"/>
+  <text class="item item-vm" x="568" y="140">Windows</text>
+
+  <circle class="dot-lxc" cx="556" cy="172" r="4"/>
+  <text class="item item-lxc" x="568" y="176">personal photo library</text>
+
+  <circle class="dot-lxc" cx="556" cy="202" r="4"/>
+  <text class="item item-lxc" x="568" y="206">NVR</text>
+  <text class="label" x="568" y="221">Google Coral TPU</text>
+
+  <circle class="dot-lxc" cx="556" cy="246" r="4"/>
+  <text class="item item-lxc" x="568" y="250">file cloud</text>
+
+  <circle class="dot-lxc" cx="556" cy="276" r="4"/>
+  <text class="item item-lxc" x="568" y="280">personal services</text>
+
+  <circle class="dot-lxc" cx="556" cy="306" r="4"/>
+  <text class="item item-lxc" x="568" y="310">secrets</text>
+
+  <circle class="dot-lxc" cx="556" cy="336" r="4"/>
+  <text class="item item-lxc" x="568" y="340">monitoring</text>
+
+  <circle class="dot-lxc" cx="556" cy="366" r="4"/>
+  <text class="item item-lxc" x="568" y="370">storage services</text>
+  <text class="label" x="568" y="385">Samba</text>
+
+  <!-- 10 Gbps switch -->
+  <rect class="switch-box" x="360" y="120" width="100" height="40" rx="4"/>
+  <text class="switch-label" x="378" y="145">10 Gbps</text>
+
+  <!-- Connection: pve-network → switch -->
+  <line class="connection" x1="290" y1="140" x2="360" y2="140"/>
+
+  <!-- Connection: switch → pve-storage -->
+  <line class="connection" x1="460" y1="140" x2="530" y2="140"/>
+
+  <!-- Connection: switch → HA Yellow -->
+  <line class="connection" x1="410" y1="160" x2="410" y2="310"/>
+
+  <!-- HA Yellow -->
+  <rect class="ha-box" x="330" y="310" width="160" height="60" rx="6"/>
+  <text class="item item-lxc" x="352" y="335">Home Assistant Yellow</text>
+  <text class="label" x="365" y="355">Corosync voter</text>
+
+  <!-- Legend -->
+  <circle class="dot-vm" cx="50" cy="470" r="4"/>
+  <text class="label" x="62" y="474">VM (full isolation)</text>
+  <circle class="dot-lxc" cx="190" cy="470" r="4"/>
+  <text class="label" x="202" y="474">LXC container</text>
+
+  <!-- Footer -->
+  <text class="footer" x="50" y="507">OS disks: ZFS mirror (2× NVMe per node) · All devices on UPS</text>
+  <text class="footer" x="50" y="523">Storage: 4× RAIDZ2 + 4× MergeFS · NFS export → pve-network (live migration)</text>
+</svg>
