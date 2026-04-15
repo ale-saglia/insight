@@ -28,7 +28,7 @@ This site collects occasional notes on technical and strategic topics. Most entr
       {% for page in sorted_articles offset: 1 limit: 5 %}
         <li>
           <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
-          <span class="article-meta">{{ page.created | date: "%d %b %Y" }}{% if page.category != 'general' %} · <a href="{{ '/' | append: page.category | relative_url }}">{{ page.category }}</a>{% endif %}</span>
+          <span class="article-meta">{{ page.created | date: "%d %b %Y" }}{% if page.category != 'general' %} · <a href="{{ '/' | append: page.category | relative_url }}">{{ page.category }}</a>{% endif %}{% if page.series and page.series_episode != nil %} · {{ page.series }} · Episode {{ page.series_episode }}{% endif %}</span>
           {% if page.excerpt %}<span class="article-excerpt">{{ page.excerpt }}</span>{% endif %}
         </li>
       {% endfor %}
