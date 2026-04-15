@@ -65,7 +65,7 @@ The paper's most compelling use cases for agentic AI involve cross-boundary coor
 
 These scenarios are genuinely appealing. They also depend on something that does not yet exist in most public administrations: reliable, real-time data interoperability across organisational boundaries.
 
-I have [written before](https://insight.ale-saglia.com/digital-health/single-source-truth-no-tech-problem/) about why a single source of truth is not a technical problem but an organisational one. The same logic applies here, amplified. An agentic system that orchestrates across departments needs not just access to data, but semantically consistent, validated, authoritative data with clear ownership and governance.
+I have [written before](/digital-health/single-source-truth-no-tech-problem/) about why a single source of truth is not a technical problem but an organisational one. The same logic applies here, amplified. An agentic system that orchestrates across departments needs not just access to data, but semantically consistent, validated, authoritative data with clear ownership and governance.
 
 In the Italian context, where regional health systems maintain separate patient registries, where municipalities run their own demographic databases, where interoperability between state systems often relies on batch file exchanges rather than real-time APIs, the infrastructure for cross-boundary agent orchestration is not yet in place. The agent would be navigating the same fragmentation that frustrates citizens today, just faster.
 

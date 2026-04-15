@@ -9,7 +9,7 @@ excerpt: Formalizing a process you know intimately but cannot articulate. A case
 permalink: /general/process-you-know-but-cannot-describe/
 ---
 
-In an [earlier post](https://insight.ale-saglia.com/general/build-compliance-tool-before-i-know-compliance/), I wrote about two software projects I built before I had a formal framework for what I was doing. The conclusion was simple: building tools to manage deadlines and track compliance obligations was, in retrospect, a primitive attempt at process governance. The code was the easy part. Understanding the underlying process well enough to model it was the real work.
+In an [earlier post](/general/build-compliance-tool-before-i-know-compliance/), I wrote about two software projects I built before I had a formal framework for what I was doing. The conclusion was simple: building tools to manage deadlines and track compliance obligations was, in retrospect, a primitive attempt at process governance. The code was the easy part. Understanding the underlying process well enough to model it was the real work.
 
 I also mentioned a university course on process modelling that finally gave me a language for what I had been doing instinctively. This is that story.
 
@@ -33,9 +33,9 @@ What I could not do, before the modelling exercise, was hold the entire thing in
 
 The model uses BPMN 2.0, with two swim lanes representing the two functional roles involved: *Patrol Unit* (handling on-site detection and immediate contestation) and *Administrative Office* (handling documentation, notification, and all subsequent phases).
 
-![Highway Code Sanctioning Process - BPMN 2.0](https://raw.githubusercontent.com/ale-saglia/insight/refs/heads/main/assets/process-sanctions-cds-en.bpmn.svg)
+![Highway Code Sanctioning Process - BPMN 2.0](/assets/process-sanctions-cds-en.bpmn.svg)
 
-*[Download the source file](https://raw.githubusercontent.com/ale-saglia/insight/refs/heads/main/assets/process-sanctions-cds-en.bpmn)*
+*[Download the source file](/assets/process-sanctions-cds-en.bpmn)*
 
 A few things worth noting in the model:
 
@@ -69,7 +69,7 @@ People who work inside complex processes for years accumulate a detailed operati
 
 Formal modelling is one tool for making that tacit knowledge visible. It does not replace operational experience. It surfaces it, names it, and creates a shared object that can be examined, critiqued, and improved.
 
-This is, in a more structured form, the same thing I was trying to do when I built DESU: surface the compliance tracking logic that was living in spreadsheets and in people's heads, and give it a more explicit, queryable form.
+This is, in a more structured form, the same thing I was trying to do when I built [DESU](/general/build-compliance-tool-before-i-know-compliance/#desu-when-a-spreadsheet-stops-being-enough): surface the compliance tracking logic that was living in spreadsheets and in people's heads, and give it a more explicit, queryable form.
 
 The difference is that with DESU I was solving the problem with code before I understood the structure well enough to model it properly. The result worked, but it was brittle, difficult to extend, and dependent on my own understanding of what the firm actually needed.
 
