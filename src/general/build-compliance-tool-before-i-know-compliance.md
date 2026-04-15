@@ -4,7 +4,7 @@ title: "Building compliance tools before I knew what governance meant"
 created: 2026-03-28
 modified: 2026-04-11
 category: general
-keywords: compliance, governance, digital transformation, software architecture, organizational systems
+keywords: compliance, process governance, digital transformation, software architecture, organizational systems
 excerpt: Two software projects that taught me more about digital transformation through failure than any textbook could. A retrospective on naive tool-building.
 permalink: /general/build-compliance-tool-before-i-know-compliance/
 ---
