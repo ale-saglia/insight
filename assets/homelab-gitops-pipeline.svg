@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 470" font-family="Georgia, 'Times New Roman', serif">
+  <style>
+    .node-box { fill: none; stroke: #5b636a; stroke-width: 1.5; }
+    .node-title { font-size: 14px; font-weight: bold; fill: #1b1f23; }
+    .node-spec { font-size: 11px; fill: #5b636a; }
+    .item { font-size: 12px; }
+    .item-action { fill: #0b57d0; }
+    .item-lxc { fill: #1b1f23; }
+    .label { font-size: 11px; fill: #5b636a; }
+    .footer { font-size: 11px; fill: #5b636a; }
+    .connection { stroke: #5b636a; stroke-width: 1.5; fill: none; }
+    .dashed-box { fill: none; stroke: #5b636a; stroke-width: 1; stroke-dasharray: 4,3; }
+    .step-box { fill: none; stroke: #5b636a; stroke-width: 1.5; }
+    .dot-host { fill: none; stroke: #5b636a; stroke-width: 1.5; }
+    /* --- Stili aggiunti da compute-architecture.svg --- */
+    .item-vm { fill: #0b57d0; }
+    .switch-label { font-size: 11px; font-weight: bold; fill: #5b636a; }
+    .dot-vm { fill: #0b57d0; }
+    .dot-lxc { fill: none; stroke: #5b636a; stroke-width: 1.5; }
+    /* --- Fine stili aggiunti --- */
+    @media (prefers-color-scheme: dark) {
+      .node-box { stroke: #e0e6ed; }
+      .node-title { fill: #f8fafc; }
+      .node-spec { fill: #f3f6fa; }
+      .item-action { fill: #58a6ff; }
+      .item-lxc { fill: #f8fafc; }
+      .label { fill: #f3f6fa; }
+      .footer { fill: #f3f6fa; }
+      .connection { stroke: #e0e6ed; }
+      .dashed-box { stroke: #e0e6ed; }
+      .step-box { stroke: #e0e6ed; }
+      .dot-host { stroke: #e0e6ed; }
+      .arrow { stroke: #e0e6ed; fill: #e0e6ed; }
+      /* --- Stili dark aggiunti da compute-architecture.svg --- */
+      .item-vm { fill: #58a6ff; }
+      .item-lxc { fill: #f8fafc; }
+      .switch-label { fill: #f3f6fa; }
+      .dot-vm { fill: #58a6ff; }
+      .dot-lxc { stroke: #e0e6ed; }
+      /* --- Fine stili dark aggiunti --- */
+    }
+  </style>
+
+  <!-- ================================================================ -->
+  <!-- ROW 1: Source control                                            -->
+  <!-- ================================================================ -->
+
+  <!-- Renovate -->
+  <text class="label" x="95" y="47" text-anchor="end">Renovate</text>
+  <text class="node-spec" x="95" y="61" text-anchor="end">image update PRs</text>
+  <line class="connection" x1="105" y1="50" x2="175" y2="50"/>
+  <polygon class="arrow" points="175,46 185,50 175,54"/>
+
+  <!-- GitHub -->
+  <rect class="node-box" x="190" y="25" width="170" height="50" rx="6"/>
+  <text class="node-title" x="275" y="48" text-anchor="middle">GitHub</text>
+  <text class="node-spec" x="275" y="63" text-anchor="middle">private repository</text>
+
+  <!-- Mirror arrows -->
+  <!-- Mirror arrows (accorciate per non sforare) -->
+  <!-- Mirror arrows (ridotte e centrate) -->
+  <line class="connection" x1="370" y1="43" x2="450" y2="43"/>
+  <polygon class="arrow" points="450,39 458,43 450,47"/>
+  <line class="connection" x1="450" y1="57" x2="370" y2="57"/>
+  <polygon class="arrow" points="370,53 362,57 370,61"/>
+  <text class="label" x="410" y="37" text-anchor="middle">sync</text>
+
+  <!-- Gitea -->
+  <rect class="node-box" x="460" y="25" width="170" height="50" rx="6"/>
+  <text class="node-title" x="545" y="48" text-anchor="middle">Gitea</text>
+  <text class="node-spec" x="545" y="63" text-anchor="middle">local mirror</text>
+
+  <!-- ================================================================ -->
+  <!-- ROW 2: Pull trigger                                              -->
+  <!-- ================================================================ -->
+
+  <!-- Freccia verticale centrata -->
+  <line class="connection" x1="410" y1="75" x2="410" y2="115"/>
+  <polygon class="arrow" points="406,115 410,125 414,115"/>
+  <text class="label" x="420" y="100" text-anchor="start">git pull · systemd timer · every 5 min</text>
+
+  <!-- ================================================================ -->
+  <!-- ROW 3: deploy.sh pipeline                                        -->
+  <!-- ================================================================ -->
+
+  <rect class="node-box" x="60" y="130" width="700" height="115" rx="6"/>
+  <text class="node-title" x="80" y="155">deploy.sh</text>
+  <text class="node-spec" x="80" y="172">runs independently on each host</text>
+
+  <!-- Step 1: Pull -->
+  <rect class="step-box" x="80" y="185" width="120" height="42" rx="4"/>
+  <text class="item item-action" x="140" y="205" text-anchor="middle">Pull</text>
+  <text class="label" x="140" y="220" text-anchor="middle">hard reset to remote</text>
+
+  <!-- Arrow 1→2 -->
+  <line class="connection" x1="205" y1="206" x2="225" y2="206"/>
+  <polygon class="arrow" points="225,202 235,206 225,210"/>
+
+  <!-- Step 2: Decrypt -->
+  <rect class="step-box" x="240" y="185" width="140" height="42" rx="4"/>
+  <text class="item item-action" x="310" y="205" text-anchor="middle">Decrypt</text>
+  <text class="label" x="310" y="220" text-anchor="middle">SOPS + AGE</text>
+
+  <!-- Arrow 2→3 -->
+  <line class="connection" x1="385" y1="206" x2="405" y2="206"/>
+  <polygon class="arrow" points="405,202 415,206 405,210"/>
+
+  <!-- Step 3: Teardown -->
+  <rect class="step-box" x="420" y="185" width="140" height="42" rx="4"/>
+  <text class="item item-action" x="490" y="205" text-anchor="middle">Teardown</text>
+  <text class="label" x="490" y="220" text-anchor="middle">remove orphaned stacks</text>
+
+  <!-- Arrow 3→4 -->
+  <line class="connection" x1="565" y1="206" x2="585" y2="206"/>
+  <polygon class="arrow" points="585,202 595,206 585,210"/>
+
+  <!-- Step 4: Converge -->
+  <rect class="step-box" x="600" y="185" width="140" height="42" rx="4"/>
+  <text class="item item-action" x="670" y="205" text-anchor="middle">Converge</text>
+  <text class="label" x="670" y="220" text-anchor="middle">docker compose up -d</text>
+
+  <!-- ================================================================ -->
+  <!-- Arrows: deploy.sh → hosts                                        -->
+  <!-- ================================================================ -->
+
+  <line class="connection" x1="175" y1="245" x2="175" y2="295"/>
+  <polygon class="arrow" points="171,295 175,305 179,295"/>
+
+  <line class="connection" x1="410" y1="245" x2="410" y2="295"/>
+  <polygon class="arrow" points="406,295 410,305 414,295"/>
+
+  <line class="connection" x1="645" y1="245" x2="645" y2="295"/>
+  <polygon class="arrow" points="641,295 645,305 649,295"/>
+
+  <!-- ================================================================ -->
+  <!-- ROW 4: Target hosts                                              -->
+  <!-- ================================================================ -->
+
+  <!-- Host 1: network-services -->
+  <rect class="node-box" x="60" y="310" width="230" height="75" rx="6"/>
+  <text class="node-title" x="80" y="335">network-services</text>
+  <circle class="dot-host" cx="86" cy="355" r="4"/>
+  <text class="item item-lxc" x="98" y="359">stacks.yaml</text>
+  <text class="label" x="98" y="374">reverse proxy · SSO</text>
+
+  <!-- Host 2: media -->
+  <rect class="node-box" x="305" y="310" width="210" height="75" rx="6"/>
+  <text class="node-title" x="325" y="335">media</text>
+  <circle class="dot-host" cx="331" cy="355" r="4"/>
+  <text class="item item-lxc" x="343" y="359">stacks.yaml</text>
+  <text class="label" x="343" y="374">photos · media server</text>
+
+  <!-- Host 3: personal-services -->
+  <rect class="node-box" x="530" y="310" width="230" height="75" rx="6"/>
+  <text class="node-title" x="550" y="335">personal-services</text>
+  <circle class="dot-host" cx="556" cy="355" r="4"/>
+  <text class="item item-lxc" x="568" y="359">stacks.yaml</text>
+  <text class="label" x="568" y="374">bookmarks · PDF tools</text>
+
+  <!-- More hosts + annotation -->
+  <text class="label" x="60" y="413">+ secrets · monitoring · git-services · frigate · …</text>
+
+  <!-- AGE key annotation -->
+  <rect class="dashed-box" x="460" y="402" width="290" height="25" rx="4"/>
+  <text class="label" x="605" y="419" text-anchor="middle">AGE private key on each host · never in repo</text>
+
+  <!-- Footer -->
+  <text class="footer" x="60" y="458">Each host converges independently · stacks.yaml defines what runs · compose files define how</text>
+
+</svg>
