@@ -16,18 +16,19 @@
     .dot-lxc { fill: none; stroke: #5b636a; stroke-width: 1.5; }
     @media (prefers-color-scheme: dark) {
       .node-box { stroke: #e0e6ed; }
-      .node-title { fill: #e6edf3; }
-      .node-spec { fill: #e0e6ed; }
+      .node-title { fill: #f8fafc; }
+      .node-spec { fill: #f3f6fa; }
       .item-vm { fill: #58a6ff; }
-      .item-lxc { fill: #e6edf3; }
-      .label { fill: #e0e6ed; }
+      .item-lxc { fill: #f8fafc; }
+      .label { fill: #f3f6fa; }
       .connection { stroke: #e0e6ed; }
-      .footer { fill: #e0e6ed; }
+      .footer { fill: #f3f6fa; }
       .ha-box { stroke: #e0e6ed; }
       .switch-box { stroke: #e0e6ed; }
-      .switch-label { fill: #e0e6ed; }
+      .switch-label { fill: #f3f6fa; }
       .dot-vm { fill: #58a6ff; }
       .dot-lxc { stroke: #e0e6ed; }
+      .arrow { stroke: #e0e6ed; fill: #e0e6ed; }
     }
   </style>
 
