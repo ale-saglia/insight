@@ -37,3 +37,11 @@ From a four-node plan to a two-node reality. How power, noise, operational compl
 *Topics:* Proxmox, LXC vs VM, energy efficiency, ZFS, NFS, service/data separation
 
 *Lesson:* Good architecture is what remains sustainable under real operating constraints, not what looks cleanest in the first diagram.
+
+**[Episode 3: The Commit Is the Deploy](/homelab/gitops-and-secrets/)**
+
+How a private Git repository, a deploy script, and encrypted secrets turned a multi-node homelab into infrastructure that scales without scaling complexity. Every Compose file, variable, and secret is version-controlled. A commit is a deploy, every change is traceable and reversible, and secrets are secured with SOPS and AGE.
+
+*Topics:* GitOps, SOPS, AGE, automation, secrets management, convergent pipeline, safe updates
+
+*Lesson:* Infrastructure is truly under control when every change is a readable, auditable, and reversible commit.
