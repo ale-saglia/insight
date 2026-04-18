@@ -2,7 +2,7 @@
 layout: article
 title: Why I Built a Homelab (and Why It Matters)
 created: 2026-03-27
-modified: 2026-04-11
+modified: 2026-04-15
 category: homelab
 keywords: homelab, self-hosting, infrastructure, digital independence, Nextcloud
 excerpt: Journey from commercial cloud dependency to self-sufficient infrastructure. From frustration to capability.
