@@ -2,147 +2,109 @@
 layout: article
 title: A Single Source of Truth Is Not a Technical Problem
 created: 2026-03-27
-modified: 2026-04-11
+modified: 2026-04-18
 category: digital-health
 keywords: healthcare data, organizational alignment, single source of truth, data governance
 excerpt: Why centralizing healthcare data is fundamentally an organizational alignment challenge, not a technical architecture decision.
 permalink: /digital-health/single-source-truth-no-tech-problem/
 ---
 
-## Context
+## The promise
 
-In healthcare systems, the idea of a *single source of truth* is often presented as a technical objective.
+A patient moves to a new municipality. The regional registry updates her record: new address, new local health authority, new GP. The update propagates. And yet, when she walks into the local office the next morning, the system still shows her old doctor. The desk operator apologises, checks manually, and resolves it. Nobody is surprised. This is how it works.
 
-Centralize the data. Remove duplication. Ensure consistency.
+In healthcare systems, the idea of a single source of truth is often presented as a technical objective. Centralize the data. Remove duplication. Ensure consistency. The logic is appealing: if there is one authoritative copy, there can be no conflict.
 
-On paper, the solution is straightforward.
+In practice, it rarely works that way. Not because the technology is insufficient, but because the systems that maintain patient data are embedded in institutional structures where duplication is not an accident. It is a consequence of how responsibility is distributed.
 
-In practice, it rarely is.
-
-Because the problem is not how to store data - it is how systems agree on it.
+Understanding this changed how I think about data architecture in public systems. The problem is not how to store data. It is how organisations agree on it.
 
 ---
 
-## Why duplication exists
+## Why local copies exist
 
-Healthcare data is not just a technical asset. It is tied to responsibility.
+Consider the typical architecture of a regional health system. At the top, a regional registry holds the canonical identity of every patient: name, tax code, residence, GP assignment, local health authority membership. This is the reference. Below it, each local health authority maintains its own copy of that data, enriched with locally managed fields: active exemptions, specialist referrals, internal identifiers, operational flags that the regional system does not track.
 
-Different institutions operate on the same data, but with different roles:
+From the outside, these local copies look like redundancy. A data architect would see them as a problem to be eliminated. But they exist for reasons that are not immediately visible in a system diagram.
 
-- some are responsible for primary information (e.g. identity, residence)  
-- others manage operational relationships (e.g. service access, assignments)  
+Local systems serve as verification layers. When the regional registry sends a notification that a patient has changed address, or switched GP, or moved to a different health authority, the local system does not simply overwrite its record. It validates the incoming data against its own state. Some fields map cleanly. Others do not, because the local system tracks things the regional record does not, or represents them differently. In some cases, the update triggers a re-verification workflow that takes hours or days.
 
-This creates a distributed ownership model.
+Meanwhile, the patient walks into a local office. The desk operator sees the old record. Not out of negligence, but because the validation cycle has not yet completed. The local system is doing exactly what it was designed to do: verify before accepting. The inconsistency is real, but it is the cost of distributed responsibility, not a failure of the system.
 
-Each actor needs control over "their" part of the data - not just access to it.
+Local systems also serve as operational buffers. If the regional registry goes down, local health authorities can continue to operate because they have a working copy of the data they need. This is not elegant, but it is resilient. And in healthcare, resilience is not optional.
 
-Local systems are not an accident. They are a consequence of this structure.
-
----
-
-## The hidden function of local systems
-
-Local systems are often seen as duplication.
-
-In reality, they act as:
-
-- verification layers  
-- operational buffers  
-- accountability points  
-
-Data does not simply “flow” into a central system. It is:
-
-- checked  
-- validated  
-- contextualized  
-
-before becoming authoritative.
-
-Centralizing unverified data does not solve inconsistency - it scales it.
+Finally, local systems serve as accountability points. When a local health authority manages a patient's exemptions or referrals, it does so as a data controller with specific legal responsibilities. Holding a local copy is not just a technical convenience. It is a consequence of the regulatory structure that assigns different institutions different roles over the same data.
 
 ---
 
-## Why centralization is hard
+## The notification model and its limits
 
-The difficulty is not technological.
+The architecture I just described typically operates on a push model. The regional registry detects a change and sends a notification downstream to every local system that might be affected. Each local system receives, validates, and integrates the update on its own schedule.
 
-It comes from the need to align:
+This model has worked for years. It also has a structural problem: it scales duplication.
 
-- responsibilities  
-- validation processes  
-- operational constraints  
+Every notification creates a new copy of the data at every receiving end. The more local systems exist, the more copies are maintained. The more copies exist, the more opportunities there are for drift: a notification that arrives late, a validation that fails silently, a local enrichment that conflicts with a subsequent update.
 
-across multiple organizations.
+Over time, the gap between the regional registry and any given local copy becomes a function of timing and implementation quality. The system converges toward consistency, but never guarantees it at any given moment. For routine operations, this is acceptable. For cross-boundary workflows, where one institution needs to trust another institution's data in real time, it is not.
 
-Even when a central system exists, local adaptations persist because:
+But the notification model's limitations become most visible not within a single regional system, but across regional boundaries. Consider a patient who moves from one region to another. She registers with the new region's health system and is assigned a new GP. The new region begins paying for her primary care. The problem is that the old region has no mechanism to learn that she has left. Its registry still lists her as an active patient. Her former GP is still on the books. The old region continues to pay for a service that is no longer being provided.
 
-- processes differ  
-- timing differs  
-- incentives differ  
+The result is that the state pays twice for the same patient's primary care. Not because of fraud or negligence, but because two independent systems, each internally correct, have no shared reference to reconcile against. The old region's data is not wrong. It is stale. And without a national-level source of truth that both regions query, there is no event that triggers the correction. The patient moved. The data did not.
 
-What looks like redundancy is often what keeps the system working.
+This is not a theoretical risk. It is a structural inefficiency embedded in any system where regional registries operate as independent authorities with no common upstream. The push model, which works tolerably within a single region, breaks down entirely when the boundary to cross is between regions rather than between local health authorities.
+
+The deeper problem is that the push model encodes a specific assumption about how data should flow: the centre distributes, the periphery absorbs. In practice, local systems do not just absorb. They interpret, enrich, and adapt. The notification is a starting point, not a conclusion.
 
 ---
 
-## A concrete case: patient registries
+## The architectural shift: from copies to queries
 
-Consider a patient who moves to a different municipality within a regional health system.
+When I started working with systems that were moving beyond this model, the direction was clear in principle but difficult in practice. The shift is from replication to access: instead of maintaining synchronised copies, systems query a shared authoritative source directly when they need current data.
 
-The regional registry updates the record: new address, new local health authority, new GP assignment.
+The logic applies at every scale. Within a region, local health authorities stop maintaining shadow copies of patient data and query the regional registry instead. Across regions, the regional registries themselves stop operating as independent authorities and integrate with a national-level registry that provides the shared reference they lacked. The cross-regional double payment described above becomes structurally impossible: when a patient registers in a new region, the national registry reflects the change, and the old region's system sees it the next time it queries.
 
-Each local health authority, however, maintains its own copy of that patient's data. Not just a mirror - an enriched version, with locally managed fields: active exemptions, specialist referrals, internal identifiers, operational flags.
+In architectural terms, this is a move from push to pull. Sources stop sending notifications. Downstream systems stop maintaining copies of data they do not own. When a desk operator needs to verify a patient's identity or GP assignment, the system makes a real-time API call to the authoritative source and gets the current state.
 
-When the update arrives from the regional level, each local system has to validate it against its own state. Some fields map cleanly. Others do not - because the local system tracks things the regional record does not, or represents them differently. In some cases, the change triggers a re-verification workflow that takes hours or days.
+This eliminates an entire category of consistency problems. There is no lag between the source and the downstream record, because there is no downstream record for that data. The source is queried, not copied. But the trade-off is direct: the pull model eliminates inconsistency at the cost of systemic dependency. Every downstream system now relies on the authoritative source being available, correct, and fast enough for real-time use.
 
-Meanwhile, the patient walks into a local office. The desk operator sees the old record.
+This is where the concept of trust becomes central, and not in the technical sense of TLS certificates or API authentication. The trust that matters is institutional. The authoritative source must be highly available, because every downstream system depends on it for routine operations. The API must be well-governed, because every query carries an implicit agreement: the consuming system is accepting the response as authoritative without local validation. And the transition itself must be managed carefully, because dismantling local copies means removing the operational buffers and verification layers that those systems provided.
 
-Not out of negligence - but because the validation cycle has not yet completed. The local system was doing exactly what it was designed to do: verify before accepting.
+In the push model, trust was distributed. Each local system trusted its own copy, verified on its own terms. In the pull model, trust is centralised. Every actor must agree that the source is authoritative, that its data is correct, and that its availability is guaranteed. This is not a technical configuration. It is an institutional commitment.
 
-This is the hidden function of local systems in action. The inconsistency is real, but it is not a failure of the system. It is the cost of distributed responsibility.
-
----
-
-## The shift: from replication to access
-
-When systems evolve, the architecture tends to move:
-
-- from replicated databases  
-- to shared access through services  
-
-Instead of synchronizing copies, systems query a common reference.
-
-This reduces duplication, but introduces new constraints:
-
-- dependency on availability  
-- need for strict governance  
-- tighter coordination across actors  
-
-Removing copies simplifies data - but increases the cost of being wrong.
+This is where the real difficulty lives. The technical implementation of an API is straightforward. The institutional agreement required to trust that API, to accept that the data it returns does not need local verification, to restructure workflows that depended on having a local copy, that is organisational work, not engineering work.
 
 ---
 
-## What actually enables a single source of truth
+## What makes convergence possible
 
-A single source of truth does not emerge from architecture alone.
+A single source of truth does not emerge from architecture alone. I have seen systems where the technical layer was well-designed but the institutional alignment was missing, and the result was a central registry that existed alongside local copies that no one was willing to dismantle. The architecture was correct. The organisation had not changed.
 
-It requires:
+What actually enables convergence is not a better database or a faster API. It is a prior agreement on who owns what. Consider a simple field: a patient's exemption status. The regional registry knows whether the patient exists. The local health authority knows whether that patient qualifies for a specific exemption, because it holds the supporting documentation. If both systems maintain the field independently, they will eventually disagree. The only way to prevent that is to decide, before writing any code, that the exemption field belongs to one system and one system only, and that every other system queries it rather than copying it.
 
-- clearly defined ownership  
-- explicit validation responsibilities  
-- shared rules for data lifecycle  
+This sounds obvious. In practice, it requires negotiations that have nothing to do with technology: which institution accepts liability for an incorrect value, what happens when a query fails and the data is needed for a time-sensitive decision, who pays for the infrastructure that makes real-time access possible. These are governance questions, not engineering questions. And they must be answered for every field in the data model, not just the easy ones.
 
-When these are in place, the technical layer becomes simpler.
+The principle known as "once only", where a citizen should never be asked to provide information the administration already holds, captures the aspiration well. It has been legislated in multiple jurisdictions. The legal basis exists. What is often missing is the trust infrastructure underneath: shared operational practices, institutional willingness to treat another administration's data as authoritative, and a culture that prioritises the citizen's experience across organisational boundaries rather than within them.
 
-Without them, duplication is not a failure - it is the default.
+---
+
+## The same lesson, in a different system
+
+I have encountered this pattern in a completely different context: my own homelab infrastructure. In [The Commit Is the Deploy](/homelab/gitops-and-secrets/), I described how I moved from manually configured services on each host to a single Git repository that defines the complete state of the infrastructure.
+
+The parallel is closer than it might seem. Before the repository, each host had its own configuration, its own copy of environment variables, its own version of what was supposed to be running. The configurations would drift. Updates would happen on one host and not another. The gap between intended state and actual state grew silently. It was the same push model at a smaller scale: I would make a change and propagate it manually to each host, hoping for consistency.
+
+The repository solved this by becoming the single source of truth. Hosts no longer maintain their own state. They query the repository and converge to whatever it defines. A commit is a deploy. There are no local copies to reconcile.
+
+But even in that context, the hard part was not writing the deploy script. It was deciding to trust the repository as authoritative, to accept that local modifications would be overwritten, to restructure the operational workflow around a centralised definition rather than distributed improvisation. Trust, again, was the bottleneck. Not trust in the technology, but trust in the decision to give up local control.
+
+The technical layer was the easy part. The shift in how I operated the system was the real change.
 
 ---
 
 ## Closing
 
-A single source of truth is often described as a data architecture goal.
+A single source of truth is often described as a data architecture goal. In reality, it is a coordination problem. Technology can support it, but cannot create it.
 
-In reality, it is a coordination problem.
+The systems I have worked with, both in healthcare and in infrastructure, taught me the same thing: duplication exists because responsibility is distributed, and it persists because trust is not. Eliminating duplication without first building the institutional trust that replaces it does not create a single source of truth. It creates a central system that no one fully relies on, surrounded by local copies that everyone still depends on.
 
-Technology can support it, but cannot create it.
-
-And without coordination, there is no such thing as a single source of truth - only multiple versions that temporarily agree.
+The path forward is not centralisation for its own sake. It is the slower work of defining who owns what, who validates what, and what it means to accept someone else's data as authoritative. When that trust is established, the architecture follows naturally. When it is not, no amount of engineering will compensate.
