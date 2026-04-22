@@ -38,10 +38,15 @@ layout: default
   {% for sub in sub_slugs %}
     {% assign sub_url = '/' | append: page.category | append: '/' | append: sub | append: '/' %}
     {% assign sub_label = sub | replace: '-', ' ' %}
+    {% assign sub_summary = "" %}
     {% for p in site.pages %}
-      {% if p.url == sub_url %}{% assign sub_label = p.title %}{% endif %}
+      {% if p.url == sub_url %}
+        {% assign sub_label = p.title %}
+        {% assign sub_summary = p.summary %}
+      {% endif %}
     {% endfor %}
     <p class="section-label"><a href="{{ sub_url | relative_url }}">{{ sub_label }}</a></p>
+    {% if sub_summary %}<p class="section-description">{{ sub_summary }}</p>{% endif %}
     <ul class="article-list">
       {% assign sub_articles = "" | split: "" %}
       {% for article in domain_articles %}
