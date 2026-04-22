@@ -36,7 +36,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: true
+
+      - name: Install Ruby gems
+        run: bundle install
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
