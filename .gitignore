@@ -10,8 +10,6 @@ _site/
 # Ruby / Bundler local files
 .bundle/
 vendor/bundle/
-Gemfile
-Gemfile.lock
 
 # Generated OG images (build artifacts, not versioned)
 assets/og-images/
