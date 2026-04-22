@@ -275,7 +275,7 @@ h3 {
 }
 
 .featured-article-category {
-  color: var(--link);
+  color: var(--muted);
 }
 
 .featured-article h2 {
