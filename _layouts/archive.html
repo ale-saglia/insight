@@ -136,12 +136,21 @@ layout: default
       filterItems(query, currentYearFilter, currentKeywordFilters);
     });
 
+    function updateURL() {
+      const params = new URLSearchParams();
+      if (currentYearFilter) params.set('year', currentYearFilter);
+      if (currentKeywordFilters.size > 0) params.set('keyword', Array.from(currentKeywordFilters).join(','));
+      const search = params.toString();
+      history.replaceState(null, '', search ? '?' + search : location.pathname);
+    }
+
     filterBtns.forEach(btn => {
       btn.addEventListener('click', function() {
         filterBtns.forEach(b => b.classList.remove('filter-btn-active'));
         this.classList.add('filter-btn-active');
         currentYearFilter = this.dataset.year;
         filterItems(searchInput.value.toLowerCase(), currentYearFilter, currentKeywordFilters);
+        updateURL();
       });
     });
 
@@ -155,6 +164,7 @@ layout: default
           currentKeywordFilters.delete(keyword);
         }
         filterItems(searchInput.value.toLowerCase(), currentYearFilter, currentKeywordFilters);
+        updateURL();
       });
     });
 
@@ -219,6 +229,28 @@ layout: default
       }
     }
 
-    filterItems('', currentYearFilter, currentKeywordFilters);
+    // Restore filter state from URL params on page load
+    const urlParams = new URLSearchParams(location.search);
+    const urlYear = urlParams.get('year') || '';
+    const urlKeywords = urlParams.get('keyword') ? urlParams.get('keyword').split(',') : [];
+
+    if (urlYear) {
+      currentYearFilter = urlYear;
+      filterBtns.forEach(btn => {
+        btn.classList.toggle('filter-btn-active', btn.dataset.year === urlYear);
+      });
+    }
+
+    urlKeywords.forEach(kw => {
+      const trimmed = kw.trim();
+      if (trimmed) {
+        currentKeywordFilters.add(trimmed);
+        keywordBtns.forEach(btn => {
+          if (btn.dataset.keyword === trimmed) btn.classList.add('keyword-btn-active');
+        });
+      }
+    });
+
+    filterItems(searchInput.value.toLowerCase(), currentYearFilter, currentKeywordFilters);
   </script>
 </section>
