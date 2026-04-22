@@ -52,9 +52,12 @@ layout: default
       {% endfor %}
       {% assign sorted_sub = sub_articles | sort: "name" %}
       {% for article in sorted_sub %}
+        {% assign ep_fn = article.path | split: "/" | last | split: "." | first %}
+        {% assign ep_num = ep_fn | split: "-" | first %}
+        {% assign ep_str = ep_num | plus: 0 | append: "" %}
         <li>
           <a href="{{ article.url | relative_url }}">{{ article.title }}</a>
-          <span class="article-meta">{{ article.created | date: "%d %b %Y" }}</span>
+          <span class="article-meta">{{ article.created | date: "%d %b %Y" }}{% if ep_str == ep_num %} · Episode {{ ep_num }}{% endif %}</span>
           {% if article.excerpt %}<span class="article-excerpt">{{ article.excerpt }}</span>{% endif %}
         </li>
       {% endfor %}

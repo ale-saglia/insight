@@ -31,8 +31,7 @@ layout: default
       {% assign ep_str = ep_num | plus: 0 | append: "" %}
       <li>
         <a href="{{ article.url | relative_url }}">{{ article.title }}</a>
-        {% if ep_str == ep_num %}<span class="article-series">{{ page.title }} · Episode {{ ep_num }}</span>{% endif %}
-        <span class="article-meta">{{ article.created | date: "%d %b %Y" }}</span>
+        <span class="article-meta">{{ article.created | date: "%d %b %Y" }}{% if ep_str == ep_num %} · Episode {{ ep_num }}{% endif %}</span>
         {% if article.excerpt %}<span class="article-excerpt">{{ article.excerpt }}</span>{% endif %}
       </li>
     {% endfor %}
