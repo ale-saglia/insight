@@ -2,7 +2,7 @@
 layout: article
 title: The Commit Is the Deploy
 created: 2026-04-18
-modified: 2026-04-18
+modified: 2026-04-22
 category: homelab
 keywords: GitOps, SOPS, AGE, infrastructure as code, Docker Compose, Renovate, homelab automation
 excerpt: How a private Git repository, a deploy script, and encrypted secrets turned a multi-node homelab into infrastructure that scales without scaling complexity.
