@@ -2,11 +2,9 @@
 layout: article
 title: A Single Source of Truth Is Not a Technical Problem
 created: 2026-03-27
-modified: 2026-04-18
-category: digital-health
 keywords: healthcare data, organizational alignment, single source of truth, data governance
 excerpt: Why centralizing healthcare data is fundamentally an organizational alignment challenge, not a technical architecture decision.
-permalink: /digital-health/single-source-truth-no-tech-problem/
+article_id: single-source-truth-no-tech-problem
 ---
 
 ## The promise

@@ -14,26 +14,25 @@ collections: {}
 
 defaults:
   - scope:
-      path: "src/homelab"
+      path: "src/infrastructure"
       type: "pages"
     values:
       layout: article
-      category: homelab
-      permalink: /homelab/:name/
   - scope:
-      path: "src/digital-health"
+      path: "src/digital-governance"
       type: "pages"
     values:
       layout: article
-      category: digital-health
-      permalink: /digital-health/:name/
   - scope:
-      path: "src/general"
+      path: "src/frontier"
       type: "pages"
     values:
       layout: article
-      category: general
-      permalink: /general/:name/
+  - scope:
+      path: "src/_general"
+      type: "pages"
+    values:
+      layout: article
   - scope:
       path: ""
       type: "posts"

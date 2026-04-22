@@ -111,7 +111,7 @@ collect_custom_front_matter_lines() {
   local fm_block="$1"
 
   printf '%s\n' "$fm_block" | awk '
-    !/^(layout|title|created|modified|category|keywords|excerpt|permalink):[[:space:]]*/ {
+    !/^(layout|title|created|modified|keywords|excerpt):[[:space:]]*/ {
       if ($0 !~ /^[[:space:]]*$/) print
     }
   '
@@ -121,9 +121,7 @@ build_front_matter_block() {
   local fm_block="$1"
   local fallback_title="$2"
   local fallback_created="$3"
-  local fallback_category="$4"
-  local fallback_permalink="$5"
-  local layout_value title_value created_value modified_value category_value keywords_value excerpt_value permalink_value custom_lines
+  local layout_value title_value created_value modified_value keywords_value excerpt_value custom_lines
 
   layout_value="$(extract_front_matter_scalar layout "$fm_block")"
   [[ -z "$layout_value" ]] && layout_value="article"
@@ -136,15 +134,9 @@ build_front_matter_block() {
 
   modified_value="$(extract_front_matter_scalar modified "$fm_block")"
 
-  category_value="$(extract_front_matter_scalar category "$fm_block")"
-  [[ -z "$category_value" ]] && category_value="$fallback_category"
-
   keywords_value="$(extract_front_matter_scalar keywords "$fm_block")"
   excerpt_value="$(extract_front_matter_scalar excerpt "$fm_block")"
   [[ -z "$excerpt_value" ]] && excerpt_value='""'
-
-  permalink_value="$(extract_front_matter_scalar permalink "$fm_block")"
-  [[ -z "$permalink_value" ]] && permalink_value="$fallback_permalink"
 
   custom_lines="$(collect_custom_front_matter_lines "$fm_block")"
 
@@ -156,14 +148,12 @@ build_front_matter_block() {
     if [[ -n "$modified_value" ]]; then
       printf 'modified: %s\n' "$modified_value"
     fi
-    printf 'category: %s\n' "$category_value"
     if [[ -n "$keywords_value" ]]; then
       printf 'keywords: %s\n' "$keywords_value"
     else
       printf 'keywords: \n'
     fi
     printf 'excerpt: %s\n' "$excerpt_value"
-    printf 'permalink: %s\n' "$permalink_value"
     if [[ -n "$custom_lines" ]]; then
       printf '%s\n' "$custom_lines"
     fi
@@ -311,7 +301,7 @@ while read -r file; do
     TMPFILES+=("$front_matter_tmp")
 
     normalize_body "$file" 1 "$strip_h1" "$title_value" > "$processed_body_tmp"
-    build_front_matter_block "" "\"${escaped_title}\"" "$created" "$category" "$permalink" > "$front_matter_tmp"
+    build_front_matter_block "" "\"${escaped_title}\"" "$created" > "$front_matter_tmp"
 
     {
       cat "$front_matter_tmp"
@@ -359,11 +349,6 @@ while read -r file; do
     missing_count=$((missing_count + 1))
   fi
 
-  if ! has_key "category" "$fm_block"; then
-    missing_lines+=("category: ${category}")
-    missing_count=$((missing_count + 1))
-  fi
-
   if ! has_key "keywords" "$fm_block"; then
     missing_lines+=("keywords: ")
     missing_count=$((missing_count + 1))
@@ -374,11 +359,6 @@ while read -r file; do
     missing_lines+=("excerpt: \"\"")
     missing_count=$((missing_count + 1))
     warn "$file" "excerpt missing: inserted empty placeholder"
-  fi
-
-  if ! has_key "permalink" "$fm_block"; then
-    missing_lines+=("permalink: ${permalink}")
-    missing_count=$((missing_count + 1))
   fi
 
   strip_h1="0"
@@ -412,7 +392,7 @@ while read -r file; do
       fi
     fi
 
-    build_front_matter_block "$fm_block" "$rewritten_title" "$(extract_front_matter_scalar created "$fm_block")" "$category" "$permalink" > "$front_matter_tmp"
+    build_front_matter_block "$fm_block" "$rewritten_title" "$(extract_front_matter_scalar created "$fm_block")" > "$front_matter_tmp"
 
     {
       cat "$front_matter_tmp"

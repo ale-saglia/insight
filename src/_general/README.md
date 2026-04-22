@@ -1,8 +1,6 @@
 ---
 layout: category
 title: General
-category: general
-permalink: /general/
 summary: Technical and strategic observations on infrastructure, governance, and systems thinking.
 ---
 

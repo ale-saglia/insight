@@ -13,7 +13,12 @@ This site collects occasional notes on technical and strategic topics. Most entr
     <p class="section-label">Start Here</p>
     <a class="featured-article-card" href="{{ latest_article.url | relative_url }}">
       <div class="featured-article-content">
-        <p class="featured-article-meta">{{ latest_article.created | date: "%d %b %Y" }}{% if latest_article.category != 'general' %} · <span class="featured-article-category">{{ latest_article.category }}</span>{% endif %}{% if latest_article.series and latest_article.series_episode != nil %} · {{ latest_article.series }} · Episode {{ latest_article.series_episode }}{% endif %}</p>
+        {% assign la_cat_url = '/' | append: latest_article.category | append: '/' %}
+        {% assign la_cat_label = latest_article.category %}
+        {% for p in site.pages %}
+          {% if p.url == la_cat_url %}{% assign la_cat_label = p.title %}{% endif %}
+        {% endfor %}
+        <p class="featured-article-meta">{{ latest_article.created | date: "%d %b %Y" }}{% if latest_article.category != 'general' %} · <span class="featured-article-category">{{ la_cat_label }}</span>{% endif %}</p>
         <h2 id="featured-article-title">{{ latest_article.title }}</h2>
         {% if latest_article.excerpt %}<p class="featured-article-excerpt">{{ latest_article.excerpt }}</p>{% endif %}
       </div>
@@ -28,7 +33,12 @@ This site collects occasional notes on technical and strategic topics. Most entr
       {% for page in sorted_articles offset: 1 limit: 5 %}
         <li>
           <a href="{{ page.url | relative_url }}">{{ page.title }}</a>
-          <span class="article-meta">{{ page.created | date: "%d %b %Y" }}{% if page.category != 'general' %} · <a href="{{ '/' | append: page.category | relative_url }}">{{ page.category }}</a>{% endif %}{% if page.series and page.series_episode != nil %} · {{ page.series }} · Episode {{ page.series_episode }}{% endif %}</span>
+          {% assign li_cat_url = '/' | append: page.category | append: '/' %}
+          {% assign li_cat_label = page.category %}
+          {% for cp in site.pages %}
+            {% if cp.url == li_cat_url %}{% assign li_cat_label = cp.title %}{% endif %}
+          {% endfor %}
+          <span class="article-meta">{{ page.created | date: "%d %b %Y" }}{% if page.category != 'general' %} · <a href="{{ li_cat_url | relative_url }}">{{ li_cat_label }}</a>{% endif %}</span>
           {% if page.excerpt %}<span class="article-excerpt">{{ page.excerpt }}</span>{% endif %}
         </li>
       {% endfor %}

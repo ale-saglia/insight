@@ -4,11 +4,32 @@ layout: default
 <article class="article">
   <header class="article-header">
     {% if page.category and page.category != 'general' %}
-      <p class="article-category">{{ page.category }}</p>
+      {% assign cat_url = '/' | append: page.category | append: '/' %}
+      {% assign domain_label = page.category %}
+      {% for p in site.pages %}
+        {% if p.url == cat_url %}{% assign domain_label = p.title %}{% endif %}
+      {% endfor %}
+      {% assign path_parts = page.path | split: "/" %}
+      {% if path_parts.size >= 4 %}
+        {% assign sub_slug = path_parts[2] %}
+        {% assign sub_url = cat_url | append: sub_slug | append: '/' %}
+        {% assign sub_label = sub_slug | replace: '-', ' ' %}
+        {% for p in site.pages %}
+          {% if p.url == sub_url %}{% assign sub_label = p.title %}{% endif %}
+        {% endfor %}
+        <p class="article-category">{{ domain_label }} <span class="article-subcategory">/ {{ sub_label }}</span></p>
+      {% else %}
+        <p class="article-category">{{ domain_label }}</p>
+      {% endif %}
     {% endif %}
     <h1>{{ page.title }}</h1>
-    {% if page.series and page.series_episode != nil %}
-      <p class="article-series">{{ page.series }} – Episode {{ page.series_episode }}</p>
+    {% if path_parts.size >= 4 %}
+      {% assign ep_filename = page.path | split: "/" | last | split: "." | first %}
+      {% assign ep_num = ep_filename | split: "-" | first %}
+      {% assign ep_str = ep_num | plus: 0 | append: "" %}
+      {% if ep_str == ep_num %}
+        <p class="article-series">{{ sub_label }} · Episode {{ ep_num }}</p>
+      {% endif %}
     {% endif %}
     {% if page.created %}
       <p class="article-meta">{{ page.created | date: "%d %b %Y" }}</p>
@@ -32,7 +53,7 @@ layout: default
       "@type": "Person",
       "name": {{ site.author.name | jsonify }}
     },
-    "articleSection": {{ page.category | capitalize | jsonify }}
+    "articleSection": {{ domain_label | default: page.category | capitalize | jsonify }}
   }
   </script>
 

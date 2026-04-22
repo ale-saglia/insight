@@ -97,9 +97,14 @@ layout: default
       <ul class="article-list">
       {% assign current_year = article_year %}
     {% endif %}
-    <li class="search-item" data-year="{{ article_year }}" data-title="{{ article.title | downcase }}" data-category="{{ article.category | downcase }}" data-excerpt="{{ article.excerpt | downcase }}" data-keywords="{{ article.keywords | downcase | replace: ', ', ',' }}">
+    {% assign cat_display = article.category %}
+    {% assign cat_lookup_url = '/' | append: article.category | append: '/' %}
+    {% for p in site.pages %}
+      {% if p.url == cat_lookup_url %}{% assign cat_display = p.title %}{% endif %}
+    {% endfor %}
+    <li class="search-item" data-year="{{ article_year }}" data-title="{{ article.title | downcase }}" data-category="{{ cat_display | downcase }}" data-excerpt="{{ article.excerpt | downcase }}" data-keywords="{{ article.keywords | downcase | replace: ', ', ',' }}">
       <a href="{{ article.url | relative_url }}">{{ article.title }}</a>
-      <span class="article-meta">{{ article.created | date: "%d %b %Y" }} • {{ article.category | capitalize }}</span>
+      <span class="article-meta">{{ article.created | date: "%d %b %Y" }} • {{ cat_display }}</span>
       {% if article.excerpt %}<span class="article-excerpt">{{ article.excerpt }}</span>{% endif %}
     </li>
   {% endfor %}

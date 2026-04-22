@@ -2,11 +2,9 @@
 layout: article
 title: "The accountability satisfies the citizen, not the agent"
 created: 2026-04-14
-modified: 2026-04-15
-category: general
 keywords: agentic AI, public administration, accountability, explainability, open government, interoperability, institutional governance, AI Act
 excerpt: "Agentic AI promises to transform government. But in a system built on explainability and open government, where every decision must be traceable and attributed, where does the agent end and the bureaucrat begin?"
-permalink: /general/agentic-ai-pa-accountability-gap/
+article_id: agentic-ai-pa-accountability-gap
 ---
 
 Every administrative act in Italy must carry a motivation. Not a summary, not a label: a traceable chain of reasoning that a citizen can read, understand, and challenge before a judge. This principle is not a bureaucratic formality. It is the mechanism through which public power remains accountable.

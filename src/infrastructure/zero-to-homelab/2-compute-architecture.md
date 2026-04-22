@@ -2,13 +2,9 @@
 layout: article
 title: Two Nodes, One Lesson in Constraint
 created: 2026-04-15
-modified: 2026-04-15
-category: homelab
 keywords: Proxmox VE, virtualization, LXC, VM, compute architecture, energy efficiency, ZFS, NFS
 excerpt: From a four-node plan to a two-node reality. How energy costs, operational complexity, and data management shaped the compute layer.
-permalink: /homelab/compute-architecture/
-series: From Zero to Homelab
-series_episode: 2
+article_id: compute-architecture
 ---
 
 ## The plan that did not survive contact with reality

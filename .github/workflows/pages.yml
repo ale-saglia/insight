@@ -46,9 +46,6 @@ jobs:
         if: ${{ github.event.inputs.skip_og_generation != 'true' }}
         run: bash scripts/generate-og-images.sh
 
-      - name: Update modified dates
-        run: bash scripts/update-modified-dates.sh
-
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
