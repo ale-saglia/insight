@@ -115,6 +115,15 @@
         domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
       }
     });
+
+    // Close dropdown on Escape and return focus to trigger
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && domainsDropdownMenu.classList.contains('open')) {
+        domainsDropdownMenu.classList.remove('open');
+        domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
+        domainsDropdownTrigger.focus();
+      }
+    });
     
     // Close dropdown when item is selected
     Array.from(domainsDropdownMenu.querySelectorAll('a')).forEach(function(link) {
