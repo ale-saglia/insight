@@ -73,6 +73,8 @@ What this means in practice: the repository contains files like `authentik.secre
 
 Day to day, I edit secrets from my laptop, which has an encrypted disk and a VSCode plugin that handles SOPS decryption and re-encryption transparently. Open the file, edit the value, save. The plugin re-encrypts on save. The commit contains only ciphertext. If I ever need to edit secrets from a different machine, the fallback is minimal: any computer with Git, SOPS, and AGE installed is enough. The AGE private key is stored in my password manager, so the recovery path does not depend on a single device.
 
+On the workstation where I edit secrets day to day, the AGE private key does not live on disk. A shell wrapper fetches it from the macOS Keychain at decrypt time, passes it to SOPS via stdin, and discards it. The key exists in memory for the duration of the operation and nowhere else on the filesystem. An encrypted disk that is actively unlocked is not a meaningful barrier against a process reading arbitrary files. The Keychain approach means that even on a running, unlocked machine, the AGE key is not a file that can be copied or stumbled upon. The password manager copy exists for recovery from a different machine, not for routine use.
+
 This workflow has a deliberate trade-off: secrets cannot be edited from a phone or a web browser. For a homelab, this is an acceptable constraint. It is also, arguably, a feature. The inability to modify secrets from an arbitrary device is a security boundary, not a limitation.
 
 The security model is convenience-aware, not convenience-optimized. Compromising a host would expose its AGE key and the decrypted secrets for its local stacks. It would not automatically grant access to all data: services are isolated at the container and network level, and hosts are not directly reachable from outside the network. There is no SSH access enabled by default; the firewall blocks it unless a temporary rule is explicitly created. This is still a significant improvement over the previous setup, where secrets lived in plaintext files on each host, manually copied and occasionally forgotten.
@@ -88,6 +90,18 @@ Keeping those digests current is [Renovate](https://github.com/renovatebot/renov
 Not all updates are treated equally. Services that do not handle sensitive data and whose compromise would not expose other parts of the infrastructure allow digest-only updates to auto-merge: same tag, rebuilt image, no breaking change expected. For everything else, including any minor or major version bump, the PR requires manual review. Major PostgreSQL upgrades, for instance, trigger an explicit warning in the PR body because a major version bump is incompatible with the existing data directory without migration.
 
 The result is that updates are deliberate, traceable, and reversible. Every image change is a commit with a clear diff. If an update breaks something, the fix is a revert. If I want to know what version of a service was running three weeks ago, I check the Git history. The PR history also serves as an implicit changelog, which matters for the backup episode: knowing exactly what was running at the time of a backup makes restores meaningful.
+
+---
+
+## Images are reviewed before they run
+
+Renovate ensures that an image update is intentional and traceable. It does not verify what is inside the image.
+
+Trivy runs as a GitHub Actions step on every pull request that Renovate opens. Before a PR can be merged, Trivy scans the updated image against known CVE databases. A high or critical severity finding blocks the merge. The review step that was already required for version bumps now has a second layer: the image content is checked, not just the tag and digest.
+
+The two controls are orthogonal. Renovate guarantees that the image reference is the one you committed and that the commit was deliberate. Trivy guarantees that the image content does not contain known vulnerabilities at the time of review. Neither replaces the other. A clean Trivy report on a mutable tag would mean nothing. A pinned digest with a critical CVE would be a problem regardless of how traceable it is. Together they cover the cases the other misses.
+
+This does not eliminate supply chain risk. An image that passes Trivy today may have a new CVE disclosed tomorrow. The protection is at review time, not continuously. But it means that the update cycle, which Renovate already makes systematic and weekly, includes a security signal at each iteration rather than treating image content as a trusted input.
 
 ---
 

@@ -2,7 +2,7 @@
 layout: article
 title: Building a Home Network You Actually Control
 created: 2026-04-11
-modified: 2026-04-15
+modified: 2026-04-18
 category: homelab
 keywords: home network design, network segmentation, firewall, OPNsense, network infrastructure
 excerpt: Designing residential network infrastructure from scratch with architectural separation of concerns and principled infrastructure design.
@@ -102,6 +102,24 @@ Cameras have their own dedicated zone: isolated from everything, with no interne
 Smart media devices and a guest wireless network complete the picture, each with appropriately limited reach.
 
 The network operates on a default-deny posture: inter-segment traffic is blocked by default, and every communication path requires an explicit firewall rule
+
+---
+
+## Dynamic VLAN assignment
+
+Defining segments is the design. Assigning devices to them reliably at connection time is the operational problem.
+
+For wired connections, segment membership is determined by the switch port. A device plugged into a port gets the VLAN that port belongs to. This works for infrastructure with fixed physical locations.
+
+Wireless is different. Any device can attempt to connect, and the network needs to decide where to put it before it has proven anything about itself.
+
+FreeRADIUS, running inside OPNsense, handles wireless authentication for both networks. The two SSIDs serve different populations and use different mechanisms.
+
+The IoT network uses MAC Authentication Bypass. The access point presents the connecting device's MAC address to FreeRADIUS as the authentication credential. If the MAC is registered, the device is assigned to the corresponding IoT VLAN. If it is not recognized, the default policy applies: the device lands in the most restricted IoT zone, with no internet access and no cross-segment reach. Either way, the device stays within the IoT boundary. The MAC binding only determines the degree of restriction within that boundary, not a level of trust. All IoT VLANs are untrusted from the perspective of access to privileged resources. The default is not rejection. It is automatic containment: a new device connecting for the first time is isolated without any manual intervention and without interrupting anything else.
+
+The main network uses WPA3-Enterprise. FreeRADIUS authenticates clients via PEAP-MSCHAPv2, so the credential is a username and password rather than a shared passphrase. Authentication is tied to an identity, not to a device. My own setup uses two separate accounts: one that maps to the trusted segment, one to the untrusted segment. The choice of which to use at connection time determines the level of access that session will have. Family members authenticate with untrusted credentials and land in the users segment regardless of which device they use.
+
+The result is that segment assignment follows a consistent policy rather than manual configuration. Adding a new device means deciding its trust level, either registering its MAC to the appropriate VLAN or letting it fall to the default. The network posture does not depend on remembering to configure anything after the fact.
 
 ---
 
