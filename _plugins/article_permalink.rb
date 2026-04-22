@@ -27,14 +27,12 @@ Jekyll::Hooks.register :pages, :post_init do |page|
         "/#{category}/#{article_id}/"
       end
 
-    stdout, _, status = Open3.capture3('git', 'log', '-1', '--format=%cd', '--date=format:%Y-%m-%d', '--', page.relative_path)
-    git_date = stdout.strip
-    if status.success? && !git_date.empty?
-      begin
-        page.data['modified'] = Date.parse(git_date)
-      rescue ArgumentError
-        # leave unset
-      end
+    begin
+      stdout, _, status = Open3.capture3('git', 'log', '-1', '--format=%cd', '--date=format:%Y-%m-%d', '--', page.relative_path)
+      git_date = stdout.strip
+      page.data['modified'] = Date.parse(git_date) if status.success? && !git_date.empty?
+    rescue StandardError
+      # git unavailable or failed — modified left unset
     end
   end
 end
