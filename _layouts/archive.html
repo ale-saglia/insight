@@ -144,21 +144,27 @@ layout: default
       history.replaceState(null, '', search ? '?' + search : location.pathname);
     }
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
+    const archiveFiltersContainer = document.querySelector('.archive-filters');
+
+    if (archiveFiltersContainer) {
+      archiveFiltersContainer.addEventListener('click', function(e) {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
         filterBtns.forEach(b => b.classList.remove('filter-btn-active'));
-        this.classList.add('filter-btn-active');
-        currentYearFilter = this.dataset.year;
+        btn.classList.add('filter-btn-active');
+        currentYearFilter = btn.dataset.year;
         filterItems(searchInput.value.toLowerCase(), currentYearFilter, currentKeywordFilters);
         updateURL();
       });
-    });
+    }
 
-    keywordBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
-        this.classList.toggle('keyword-btn-active');
-        const keyword = this.dataset.keyword;
-        if (this.classList.contains('keyword-btn-active')) {
+    if (keywordFiltersContainer) {
+      keywordFiltersContainer.addEventListener('click', function(e) {
+        const btn = e.target.closest('.keyword-btn');
+        if (!btn) return;
+        btn.classList.toggle('keyword-btn-active');
+        const keyword = btn.dataset.keyword;
+        if (btn.classList.contains('keyword-btn-active')) {
           currentKeywordFilters.add(keyword);
         } else {
           currentKeywordFilters.delete(keyword);
@@ -166,7 +172,7 @@ layout: default
         filterItems(searchInput.value.toLowerCase(), currentYearFilter, currentKeywordFilters);
         updateURL();
       });
-    });
+    }
 
     function matchesFilters(item, query, yearFilter, keywordFilters) {
       const title = item.dataset.title;
