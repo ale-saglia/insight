@@ -215,10 +215,9 @@ async function generateImages() {
       domain,
       authorName
     );
-    await sharp(Buffer.from(homepageSvg))
-      .png()
-      .toFile(homepageOutputPath);
-    console.log(`✓ Generated homepage.png`);
+    const homepageBuffer = Buffer.from(homepageSvg);
+    await sharp(homepageBuffer).webp({ quality: 85 }).toFile(homepageOutputPath.replace('.png', '.webp'));
+    console.log(`✓ Generated homepage.webp`);
 
     // Generate article OG images
     for (const article of articles) {
@@ -235,13 +234,11 @@ async function generateImages() {
         article.excerpt,
         domain
       );
-      
-      // Convert SVG to PNG using sharp
-      await sharp(Buffer.from(svgString))
-        .png()
-        .toFile(outputPath);
 
-      console.log(`✓ Generated ${article.category}/${article.slug}.png`);
+      const svgBuffer = Buffer.from(svgString);
+      await sharp(svgBuffer).webp({ quality: 85 }).toFile(outputPath.replace('.png', '.webp'));
+
+      console.log(`✓ Generated ${article.category}/${article.slug}.webp`);
     }
 
     console.log('\n✨ All OG images generated successfully!');

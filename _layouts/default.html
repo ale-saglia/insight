@@ -22,9 +22,9 @@
     <meta property="og:site_name" content="{{ site.title }}" />
     {% if page.layout == 'article' and page.category %}
       {% assign og_slug = page.url | split: '/' | reverse | first %}
-      <meta property="og:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ og_slug }}.png" />
+      <meta property="og:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ og_slug }}.webp" />
     {% else %}
-      <meta property="og:image" content="{{ site.url }}/assets/og-images/homepage.png" />
+      <meta property="og:image" content="{{ site.url }}/assets/og-images/homepage.webp" />
     {% endif %}
     {% if page.created %}<meta property="article:published_time" content="{{ page.created | date: '%Y-%m-%dT%H:%M:%S%z' }}" />{% endif %}
     {% if page.category %}<meta property="article:section" content="{{ page.category }}" />{% endif %}
@@ -36,9 +36,9 @@
     <meta name="twitter:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
     {% if page.layout == 'article' and page.category %}
       {% assign tw_slug = page.url | split: '/' | reverse | first %}
-      <meta name="twitter:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ tw_slug }}.png" />
+      <meta name="twitter:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ tw_slug }}.webp" />
     {% else %}
-      <meta name="twitter:image" content="{{ site.url }}/assets/og-images/homepage.png" />
+      <meta name="twitter:image" content="{{ site.url }}/assets/og-images/homepage.webp" />
     {% endif %}
     
     <!-- Schema.org JSON-LD (article-specific version in article.html) -->
