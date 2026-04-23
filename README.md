@@ -38,16 +38,17 @@ All content is authored and validated manually.
 ```text
 .
 ├── src/
-│   ├── homelab/        # Infrastructure and operational notes
-│   ├── digital-health/ # AI and healthcare systems analysis
-│   └── general/        # Standalone cross-domain pieces
-├── _layouts/           # Jekyll templates
-├── _includes/          # Partials
-├── assets/             # Styles and static files
-├── index.md            # Homepage
-├── archive.md          # Archive index
-├── _config.yml         # Jekyll config
-└── README.md           # This file
+│   ├── infrastructure/      # Infrastructure and operational notes
+│   ├── digital-governance/  # AI and governance systems analysis
+│   ├── frontier/            # AI and emerging technology notes
+│   └── _general/            # Standalone cross-domain pieces
+├── _layouts/                # Jekyll templates
+├── _includes/               # Partials
+├── assets/                  # Styles and static files
+├── index.md                 # Homepage
+├── archive.md               # Archive index
+├── _config.yml              # Jekyll config
+└── README.md                # This file
 ```
 
 ### Build & Deployment
@@ -74,7 +75,7 @@ All content is authored and validated manually.
 
 ## ✍️ Publishing
 
-Articles live in `src/[category]/` as Markdown files with frontmatter (title, date, category).
+Articles live in `src/[category]/` (or `src/[category]/[subcategory]/`) as Markdown files with frontmatter.
 
 Each article gets a permanent URL and appears in the category index and homepage feed.
 

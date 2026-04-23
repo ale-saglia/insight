@@ -26,7 +26,9 @@ Jekyll::Hooks.register :pages, :post_init do |page|
       else
         "/#{category}/#{article_id}/"
       end
+  end
 
+  unless is_readme
     begin
       stdout, _, status = Open3.capture3('git', 'log', '-1', '--format=%cd', '--date=format:%Y-%m-%d', '--', page.relative_path)
       git_date = stdout.strip

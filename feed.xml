@@ -2,10 +2,10 @@
 layout: null
 ---
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="{{ site.url }}">
   <title>{{ site.title | xml_escape }}</title>
-  <link href="{{ '/feed.xml' | absolute_url }}" rel="self"/>
-  <link href="{{ '/' | absolute_url }}"/>
+  <link href="{{ '/feed.xml' | absolute_url }}" rel="self" type="application/atom+xml"/>
+  <link href="{{ '/' | absolute_url }}" rel="alternate" type="text/html"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
   <id>{{ site.url }}/</id>
   <author>
@@ -20,7 +20,7 @@ layout: null
     {% if post.title %}
     <entry>
       <title type="html">{{ post.title | xml_escape }}</title>
-      <link href="{{ site.url }}{{ post.url }}"/>
+      <link href="{{ site.url }}{{ post.url }}" rel="alternate" type="text/html"/>
       <id>{{ site.url }}{{ post.url }}</id>
       <published>{{ post.created | date_to_xmlschema }}</published>
       <updated>{% if post.modified %}{{ post.modified | date_to_xmlschema }}{% else %}{{ post.created | date_to_xmlschema }}{% endif %}</updated>

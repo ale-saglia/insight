@@ -202,7 +202,7 @@ layout: default
       const excerpt = item.dataset.excerpt;
       const keywords = item.dataset.keywords ? item.dataset.keywords.split(',') : [];
 
-      const searchMatch = title.includes(query) || category.includes(query) || excerpt.includes(query);
+      const searchMatch = title.includes(query) || category.includes(query) || excerpt.includes(query) || keywords.join(' ').includes(query);
       const yearMatch = yearFilter === '' || item.dataset.year === yearFilter;
 
       // Keywords use AND logic: match if no filters selected, OR if article has ALL selected keywords
