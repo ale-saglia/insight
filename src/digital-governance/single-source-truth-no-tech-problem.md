@@ -87,7 +87,7 @@ The principle known as "once only", where a citizen should never be asked to pro
 
 ## The same lesson, in a different system
 
-I have encountered this pattern in a completely different context: my own homelab infrastructure. In [The Commit Is the Deploy](/homelab/gitops-and-secrets/), I described how I moved from manually configured services on each host to a single Git repository that defines the complete state of the infrastructure.
+I have encountered this pattern in a completely different context: my own homelab infrastructure. In [The Commit Is the Deploy](/infrastructure/zero-to-homelab/gitops-and-secrets/), I described how I moved from manually configured services on each host to a single Git repository that defines the complete state of the infrastructure.
 
 The parallel is closer than it might seem. Before the repository, each host had its own configuration, its own copy of environment variables, its own version of what was supposed to be running. The configurations would drift. Updates would happen on one host and not another. The gap between intended state and actual state grew silently. It was the same push model at a smaller scale: I would make a change and propagate it manually to each host, hoping for consistency.
 

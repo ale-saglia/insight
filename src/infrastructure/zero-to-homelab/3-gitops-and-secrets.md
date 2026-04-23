@@ -9,7 +9,7 @@ article_id: gitops-and-secrets
 
 ## The problem with doing things properly
 
-[Episode 2](/homelab/compute-architecture/) ended with a two-node Proxmox cluster running several LXC containers, each hosting Docker Compose stacks. The architecture was deliberately segmented: separate containers for network services, media, personal tools, secrets management. Better isolation, clearer boundaries, smaller blast radius.
+[Episode 2](/infrastructure/zero-to-homelab/compute-architecture/) ended with a two-node Proxmox cluster running several LXC containers, each hosting Docker Compose stacks. The architecture was deliberately segmented: separate containers for network services, media, personal tools, secrets management. Better isolation, clearer boundaries, smaller blast radius.
 
 But segmentation has an operational cost.
 
@@ -93,7 +93,7 @@ The result is that updates are deliberate, traceable, and reversible. Every imag
 
 Renovate ensures that an image update is intentional and traceable. It does not verify what is inside the image.
 
-Trivy runs as a GitHub Actions step on every pull request that Renovate opens. Before a PR can be merged, Trivy scans the updated image against known CVE databases. A high or critical severity finding blocks the merge. The review step that was already required for version bumps now has a second layer: the image content is checked, not just the tag and digest.
+[Trivy](https://github.com/aquasecurity/trivy) runs as a GitHub Actions step on every pull request that Renovate opens. Before a PR can be merged, Trivy scans the updated image against known CVE databases. A high or critical severity finding blocks the merge. The review step that was already required for version bumps now has a second layer: the image content is checked, not just the tag and digest.
 
 The two controls are orthogonal. Renovate guarantees that the image reference is the one you committed and that the commit was deliberate. Trivy guarantees that the image content does not contain known vulnerabilities at the time of review. Neither replaces the other. A clean Trivy report on a mutable tag would mean nothing. A pinned digest with a critical CVE would be a problem regardless of how traceable it is. Together they cover the cases the other misses.
 
