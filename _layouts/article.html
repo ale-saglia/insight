@@ -17,20 +17,19 @@ layout: default
         {% for p in site.pages %}
           {% if p.url == sub_url %}{% assign sub_label = p.title %}{% endif %}
         {% endfor %}
-        <p class="article-category">{{ domain_label }} <span class="article-subcategory">/ {{ sub_label }}</span></p>
+        {% assign ep_filename = page.path | split: "/" | last | split: "." | first %}
+        {% assign ep_num = ep_filename | split: "-" | first %}
+        {% assign ep_str = ep_num | plus: 0 | append: "" %}
+        {% if ep_str == ep_num %}
+          <p class="article-category"><a href="{{ cat_url }}">{{ domain_label }}</a> / <a href="{{ sub_url }}">{{ sub_label }}</a> · Episode {{ ep_num }}</p>
+        {% else %}
+          <p class="article-category"><a href="{{ cat_url }}">{{ domain_label }}</a> / <a href="{{ sub_url }}">{{ sub_label }}</a></p>
+        {% endif %}
       {% else %}
-        <p class="article-category">{{ domain_label }}</p>
+        <p class="article-category"><a href="{{ cat_url }}">{{ domain_label }}</a></p>
       {% endif %}
     {% endif %}
     <h1>{{ page.title }}</h1>
-    {% if path_parts.size >= 4 %}
-      {% assign ep_filename = page.path | split: "/" | last | split: "." | first %}
-      {% assign ep_num = ep_filename | split: "-" | first %}
-      {% assign ep_str = ep_num | plus: 0 | append: "" %}
-      {% if ep_str == ep_num %}
-        <p class="article-series">{{ sub_label }} · Episode {{ ep_num }}</p>
-      {% endif %}
-    {% endif %}
     {% if page.created %}
       <p class="article-meta">{{ page.created | date: "%d %b %Y" }}</p>
     {% endif %}

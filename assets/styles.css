@@ -484,9 +484,17 @@ h3 {
   font-size: 0.85rem;
   color: var(--muted);
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   margin: 0 0 0.6rem 0;
   font-weight: 500;
+}
+
+.article-category a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.article-category a:hover {
+  text-decoration: underline;
 }
 
 .article-meta {
