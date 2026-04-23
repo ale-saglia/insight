@@ -58,9 +58,7 @@ body {
 
 .site-subtitle {
   margin: 0 0 0;
-  max-width: 44ch;
   color: var(--muted);
-  line-height: 1.5;
 }
 
 .site-nav {

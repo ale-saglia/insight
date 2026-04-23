@@ -3,7 +3,7 @@ layout: default
 title: Home
 ---
 
-This site collects occasional notes on technical and strategic topics. Most entries focus on AI, governance, and infrastructure systems. Articles are published when ideas have been worked through and written clearly.
+There is a threshold where engineering becomes governance and infrastructure becomes policy. It is rarely marked, often crossed without noticing. I write here to think at that boundary: the hidden mechanics of digital public systems, the friction between technical possibility and institutional reality, and the quiet decisions that shape both.
 
 {% assign sorted_articles = site.pages | where_exp: 'p', 'p.category' | where_exp: 'p', 'p.created' | sort: 'created' | reverse %}
 {% assign latest_article = sorted_articles | first %}
