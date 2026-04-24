@@ -38,6 +38,7 @@ layout: default
 
   {{ content }}
   
+  {% assign og_size = page.url | size | minus: 2 %}{% assign og_path = page.url | slice: 1, og_size %}
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -49,9 +50,16 @@ layout: default
     "dateModified": "{{ page.modified | date_to_xmlschema }}",
     {% endif %}
     "url": "{{ page.url | absolute_url }}",
+    "image": "{{ site.url }}/assets/og-images/{{ og_path }}.webp",
     "author": {
       "@type": "Person",
-      "name": {{ site.author.name | jsonify }}
+      "name": {{ site.author.name | jsonify }},
+      "url": {{ site.author.url | jsonify }}
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": {{ site.author.name | jsonify }},
+      "url": {{ site.author.url | jsonify }}
     },
     "articleSection": {{ domain_label | default: page.category | capitalize | jsonify }}
   }
