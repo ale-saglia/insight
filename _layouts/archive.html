@@ -97,27 +97,30 @@ layout: default
       <ul class="article-list">
       {% assign current_year = article_year %}
     {% endif %}
-    {% assign ar_parts = article.path | split: "/" %}
-    {% assign ar_cat_url = '/' | append: article.category | append: '/' %}
-    {% assign ar_cat_label = article.category %}
-    {% for p in site.pages %}
-      {% if p.url == ar_cat_url %}{% assign ar_cat_label = p.title %}{% endif %}
-    {% endfor %}
-    {% assign ar_meta_label = ar_cat_label %}
-    {% if ar_parts.size >= 4 %}
-      {% assign ar_sub_slug = ar_parts[2] %}
-      {% assign ar_sub_url = ar_cat_url | append: ar_sub_slug | append: '/' %}
-      {% assign ar_sub_label = ar_sub_slug | replace: '-', ' ' %}
-      {% for p in site.pages %}
-        {% if p.url == ar_sub_url %}{% assign ar_sub_label = p.title %}{% endif %}
-      {% endfor %}
-      {% assign ar_meta_label = ar_cat_label | append: ' / ' | append: ar_sub_label %}
-      {% assign ar_ep_fn = article.path | split: "/" | last | split: "." | first %}
-      {% assign ar_ep_num = ar_ep_fn | split: "-" | first %}
-      {% assign ar_ep_str = ar_ep_num | plus: 0 | append: "" %}
-      {% if ar_ep_str == ar_ep_num %}
-        {% assign ar_meta_label = ar_meta_label | append: ' · Episode ' | append: ar_ep_num %}
+    {% assign ar_url_parts = article.url | split: "/" %}
+    {% assign ar_crumb_url = "/" %}
+    {% assign ar_meta_label = "" %}
+    {% for part in ar_url_parts %}
+      {% if forloop.index0 >= 1 %}
+        {% unless forloop.last %}
+          {% assign ar_crumb_url = ar_crumb_url | append: part | append: "/" %}
+          {% assign ar_part_label = part | replace: "-", " " %}
+          {% for p in site.pages %}
+            {% if p.url == ar_crumb_url %}{% assign ar_part_label = p.title %}{% endif %}
+          {% endfor %}
+          {% if forloop.index0 == 1 %}
+            {% assign ar_meta_label = ar_part_label %}
+          {% else %}
+            {% assign ar_meta_label = ar_meta_label | append: ' / ' | append: ar_part_label %}
+          {% endif %}
+        {% endunless %}
       {% endif %}
+    {% endfor %}
+    {% assign ar_ep_fn = article.path | split: "/" | last | split: "." | first %}
+    {% assign ar_ep_num = ar_ep_fn | split: "-" | first %}
+    {% assign ar_ep_str = ar_ep_num | plus: 0 | append: "" %}
+    {% if ar_ep_str == ar_ep_num %}
+      {% assign ar_meta_label = ar_meta_label | append: ' · Episode ' | append: ar_ep_num %}
     {% endif %}
     <li class="search-item" data-year="{{ article_year }}" data-title="{{ article.title | downcase }}" data-category="{{ ar_meta_label | downcase }}" data-excerpt="{{ article.excerpt | downcase }}" data-keywords="{{ article.keywords | downcase | replace: ', ', ',' }}">
       <a href="{{ article.url | relative_url }}">{{ article.title }}</a>

@@ -7,25 +7,17 @@ Jekyll::Hooks.register :pages, :post_init do |page|
 
   category = parts[1].sub(/^_/, '')
   page.data['category'] = category
-  page.data['subcategory'] = parts[2] if parts.length >= 4
 
   is_readme = parts.last == 'README.md'
+  page.data['top_level'] = true if is_readme && parts.length == 3
 
   if is_readme
-    page.data['permalink'] =
-      if parts.length == 3
-        "/#{category}/"
-      else
-        "/#{category}/#{parts[2]}/"
-      end
+    segments = parts[1..-2].map { |p| p.sub(/^_/, '') }
+    page.data['permalink'] = '/' + segments.join('/') + '/'
   elsif page.data['article_id']
     article_id = page.data['article_id']
-    page.data['permalink'] =
-      if parts.length >= 4
-        "/#{category}/#{parts[2]}/#{article_id}/"
-      else
-        "/#{category}/#{article_id}/"
-      end
+    segments = parts[1..-2].map { |p| p.sub(/^_/, '') }
+    page.data['permalink'] = '/' + segments.join('/') + '/' + article_id + '/'
   end
 
   unless is_readme

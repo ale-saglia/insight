@@ -4,30 +4,28 @@ layout: default
 <article class="article">
   <header class="article-header">
     {% if page.category and page.category != 'general' %}
-      {% assign cat_url = '/' | append: page.category | append: '/' %}
+      {% assign url_parts = page.url | split: "/" %}
+      {% assign ep_filename = page.path | split: "/" | last | split: "." | first %}
+      {% assign ep_num = ep_filename | split: "-" | first %}
+      {% assign ep_str = ep_num | plus: 0 | append: "" %}
+      {% assign crumb_url = "/" %}
       {% assign domain_label = page.category %}
-      {% for p in site.pages %}
-        {% if p.url == cat_url %}{% assign domain_label = p.title %}{% endif %}
-      {% endfor %}
-      {% assign path_parts = page.path | split: "/" %}
-      {% if path_parts.size >= 4 %}
-        {% assign sub_slug = path_parts[2] %}
-        {% assign sub_url = cat_url | append: sub_slug | append: '/' %}
-        {% assign sub_label = sub_slug | replace: '-', ' ' %}
-        {% for p in site.pages %}
-          {% if p.url == sub_url %}{% assign sub_label = p.title %}{% endif %}
-        {% endfor %}
-        {% assign ep_filename = page.path | split: "/" | last | split: "." | first %}
-        {% assign ep_num = ep_filename | split: "-" | first %}
-        {% assign ep_str = ep_num | plus: 0 | append: "" %}
-        {% if ep_str == ep_num %}
-          <p class="article-category"><a href="{{ cat_url }}">{{ domain_label }}</a> / <a href="{{ sub_url }}">{{ sub_label }}</a> · Episode {{ ep_num }}</p>
-        {% else %}
-          <p class="article-category"><a href="{{ cat_url }}">{{ domain_label }}</a> / <a href="{{ sub_url }}">{{ sub_label }}</a></p>
+      {% assign crumb_items = "" | split: "" %}
+      {% for part in url_parts %}
+        {% if forloop.index0 >= 1 %}
+          {% unless forloop.last %}
+            {% assign crumb_url = crumb_url | append: part | append: "/" %}
+            {% assign part_label = part | replace: "-", " " %}
+            {% for p in site.pages %}
+              {% if p.url == crumb_url %}{% assign part_label = p.title %}{% endif %}
+            {% endfor %}
+            {% if forloop.index0 == 1 %}{% assign domain_label = part_label %}{% endif %}
+            {% assign crumb_item = crumb_url | append: "|" | append: part_label %}
+            {% assign crumb_items = crumb_items | push: crumb_item %}
+          {% endunless %}
         {% endif %}
-      {% else %}
-        <p class="article-category"><a href="{{ cat_url }}">{{ domain_label }}</a></p>
-      {% endif %}
+      {% endfor %}
+      <p class="article-category">{% for item in crumb_items %}{% assign item_parts = item | split: "|" %}{% unless forloop.first %} / {% endunless %}<a href="{{ item_parts[0] | relative_url }}">{{ item_parts[1] }}</a>{% endfor %}{% if ep_str == ep_num %} · Episode {{ ep_num }}{% endif %}</p>
     {% endif %}
     <h1>{{ page.title }}</h1>
     {% if page.created %}
