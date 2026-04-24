@@ -29,7 +29,7 @@ The entire service layer is defined in a single private repository. Every Docker
 
 The structure separates what runs where from how it is configured. The repository has three main areas: `host/` declares which stacks run on each host via a `stacks.yaml` file, `stacks/` contains the actual Compose definitions and encrypted secrets for each service, and `global/` holds shared configuration. The full flow from commit to running containers looks like this:
 
-![GitOps deploy pipeline](/assets/homelab-gitops-pipeline.svg)
+![GitOps deployment pipeline: Renovate opens image update PRs to a private GitHub repository, which is bidirectionally mirrored to a self-hosted Gitea instance. A systemd timer pulls every 5 minutes and runs deploy.sh on each host in four steps: Pull (hard reset to remote), Decrypt (SOPS and AGE), Teardown (remove orphaned stacks), and Converge (docker compose up). Target hosts include network-services, media, and personal-services. The AGE private key is stored on each host and never committed to the repository.](/assets/homelab-gitops-pipeline.svg)
 
 Each host has a `stacks.yaml` that is just a list of stack names. Nothing else. The actual stack definitions, Compose files, environment variables, and SOPS-encrypted secrets, live under `stacks/`, organized by service name.
 

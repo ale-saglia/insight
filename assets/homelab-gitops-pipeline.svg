@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 470" font-family="Georgia, 'Times New Roman', serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 470" font-family="Georgia, 'Times New Roman', serif" role="img" aria-labelledby="title-gitops desc-gitops">
+  <title id="title-gitops">GitOps deployment pipeline</title>
+  <desc id="desc-gitops">Renovate automatically opens image update pull requests to a private GitHub repository. GitHub and a self-hosted Gitea instance are kept in sync via bidirectional mirroring. A systemd timer on each host pulls from Gitea every 5 minutes and runs deploy.sh, which executes four steps sequentially: Pull (hard reset to remote HEAD), Decrypt (SOPS secrets decrypted with AGE keys), Teardown (orphaned stacks removed), and Converge (docker compose up -d). Target hosts include network-services (reverse proxy, SSO), media (photos, media server), and personal-services (bookmarks, PDF tools), plus secrets, monitoring, git-services, and frigate. Each host stores its AGE private key locally; it is never committed to the repository.</desc>
   <style>
     .node-box { fill: none; stroke: #5b636a; stroke-width: 1.5; }
     .node-title { font-size: 14px; font-weight: bold; fill: #1b1f23; }

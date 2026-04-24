@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 540" font-family="Georgia, 'Times New Roman', serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 540" font-family="Georgia, 'Times New Roman', serif" role="img" aria-labelledby="title-compute-arch desc-compute-arch">
+  <title id="title-compute-arch">Homelab compute architecture</title>
+  <desc id="desc-compute-arch">Two Proxmox VE nodes connected via a 10 Gbps switch. pve-network (Intel N150, 16 GB, 4 cores) runs OPNsense as a VM, plus network-services and UniFi controller as LXC containers. pve-storage (Ryzen 7 PRO 8845HS, 96 GB, 8 bays) runs Proxmox Backup Server and Windows as VMs, plus NVR with Google Coral TPU, personal photo library, file cloud, secrets, monitoring, and storage services as LXC containers. Home Assistant Yellow is connected to the switch as a Corosync voter. OS disks use ZFS mirror; storage uses RAIDZ2 and MergeFS with NFS export for live migration.</desc>
   <style>
     .node-box { fill: none; stroke: #5b636a; stroke-width: 1.5; }
     .node-title { font-size: 14px; font-weight: bold; fill: #1b1f23; }

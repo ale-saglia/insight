@@ -31,7 +31,7 @@ What I could not do, before the modelling exercise, was hold the entire thing in
 
 The model uses BPMN 2.0, with two swim lanes representing the two functional roles involved: *Patrol Unit* (handling on-site detection and immediate contestation) and *Administrative Office* (handling documentation, notification, and all subsequent phases).
 
-![Highway Code Sanctioning Process - BPMN 2.0](/assets/process-sanctions-cds-en.bpmn.svg)
+![BPMN 2.0 process diagram for highway code sanctioning by Local Police. Two swim lanes: Patrol Unit handles violation detection and immediate contestation; Administrative Office handles notice drafting, service to the jointly liable party, and all subsequent phases. The flow branches on immediate versus deferred contestation, converges through notice service, and ends in one of three outcomes: payment received, debt registration and transfer to a collection agency after the 60-day deadline, or administrative annulment following a successful appeal.](/assets/process-sanctions-cds-en.bpmn.svg)
 
 *[Download the source file](/assets/process-sanctions-cds-en.bpmn)*
 
