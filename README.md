@@ -12,6 +12,14 @@ Articles are published with intent. The primary aim is clear thinking, not volum
 
 **Topics:** AI in institutional contexts, data governance, operational infrastructure, systems design.
 
+--
+
+## 🏛️ Governance & Design Principles
+
+The architecture and stack of this project are not merely technical choices, but the practical implementation of core digital governance principles (digital sovereignty, engineering proportionality, and privacy by design). 
+
+To understand the rationale and the ethical framework behind these architectural decisions, please read the **[Manifesto & Governance Principles](MANIFESTO.md)**.
+
 ---
 
 ## 🛠️ Editorial Stack
@@ -20,14 +28,6 @@ Articles are published with intent. The primary aim is clear thinking, not volum
 - **Generation**: Jekyll static site generator
 - **Delivery**: GitHub Pages
 - **Versioning**: Git for history and editorial refinement
-
----
-
-## 🤖 AI Usage
-
-AI is used as a writing aid during drafting.
-It supports iteration and phrasing, but not idea generation or argument development.
-All content is authored and validated manually.
 
 ---
 
