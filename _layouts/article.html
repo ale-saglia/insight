@@ -37,7 +37,22 @@ layout: default
   </header>
 
   {{ content }}
-  
+
+  {% if page.prev_episode or page.next_episode %}
+  <nav class="episode-nav">
+    {% if page.prev_episode %}
+      <a href="{{ page.prev_episode.url | relative_url }}" class="episode-nav-link episode-nav-prev">← {{ page.prev_episode.title }}</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+    {% if page.next_episode %}
+      <a href="{{ page.next_episode.url | relative_url }}" class="episode-nav-link episode-nav-next">{{ page.next_episode.title }} →</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+  </nav>
+  {% endif %}
+
   {% assign og_size = page.url | size | minus: 2 %}{% assign og_path = page.url | slice: 1, og_size %}
   <script type="application/ld+json">
   {

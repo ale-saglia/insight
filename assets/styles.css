@@ -511,6 +511,31 @@ h3 {
   margin: 0.3rem 0 0 0;
 }
 
+.episode-nav {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.episode-nav-link {
+  color: var(--link);
+  text-decoration: none;
+  font-size: 0.9rem;
+  max-width: 45%;
+  line-height: 1.4;
+}
+
+.episode-nav-link:hover {
+  text-decoration: underline;
+}
+
+.episode-nav-next {
+  text-align: right;
+}
+
 .article-nav {
   margin-top: 2rem;
   padding-top: 1.5rem;
