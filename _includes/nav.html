@@ -41,28 +41,17 @@
     function calculateRequiredWidth() {
       if (isCalculatingWidth) return;
       isCalculatingWidth = true;
-      
+
       try {
-        // Temporarily show group to get accurate measurement
         const wasHidden = domainsGroup.classList.contains('hidden');
         domainsGroup.classList.remove('hidden');
-        
-        // Calculate total width needed for all nav elements
-        let totalWidth = 0;
-        Array.from(nav.children).forEach(child => {
-          totalWidth += child.scrollWidth;
-        });
-        
-        // Add gap spacing (read actual computed value to stay in sync with CSS)
-        const gapCount = nav.children.length - 1;
-        totalWidth += gapCount * parseFloat(getComputedStyle(nav).gap || '0');
-        
-        // Add some buffer for padding/margins
-        totalWidth += 40;
-        
-        requiredWidth = totalWidth;
-        
-        // Restore hidden state if it was hidden before
+
+        // Disable wrapping temporarily so scrollWidth reflects true single-row width
+        const prevWrap = nav.style.flexWrap;
+        nav.style.flexWrap = 'nowrap';
+        requiredWidth = nav.scrollWidth;
+        nav.style.flexWrap = prevWrap;
+
         if (wasHidden) {
           domainsGroup.classList.add('hidden');
         }
