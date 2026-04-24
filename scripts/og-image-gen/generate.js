@@ -27,21 +27,34 @@ function getSiteConfig() {
   return parseYaml(content);
 }
 
+function getMdFiles(dir) {
+  const results = [];
+  for (const entry of fs.readdirSync(dir)) {
+    const full = path.join(dir, entry);
+    if (fs.statSync(full).isDirectory()) {
+      results.push(...getMdFiles(full));
+    } else if (entry.endsWith('.md') && entry !== 'README.md') {
+      results.push(full);
+    }
+  }
+  return results;
+}
+
 // Read all markdown files from src/
 function getArticles() {
   const articles = [];
   const srcDir = path.join(ROOT_DIR, 'src');
 
-  const categories = fs.readdirSync(srcDir).filter(f => 
+  const categories = fs.readdirSync(srcDir).filter(f =>
     fs.statSync(path.join(srcDir, f)).isDirectory()
   );
 
   for (const categoryName of categories) {
     const categoryDir = path.join(srcDir, categoryName);
-    const files = fs.readdirSync(categoryDir).filter(f => f.endsWith('.md') && f !== 'README.md');
+    const filePaths = getMdFiles(categoryDir);
 
-    for (const file of files) {
-      const filePath = path.join(categoryDir, file);
+    for (const filePath of filePaths) {
+      const file = path.basename(filePath);
       const content = fs.readFileSync(filePath, 'utf8');
 
       // Extract front matter
@@ -63,10 +76,13 @@ function getArticles() {
         category = frontMatter.category || categoryName;
       }
 
+      const relDir = path.relative(categoryDir, path.dirname(filePath));
+
       articles.push({
         title: frontMatter.title || slug,
         excerpt: frontMatter.excerpt || '',
         category: category,
+        relDir,
         slug,
         path: `/${frontMatter.category || category}/${slug}/`
       });
@@ -97,88 +113,66 @@ function wrapText(text, maxLineLength) {
 
 // Generate SVG for OG image - Article
 function generateSVG(siteTitle, siteDescription, articleTitle, excerpt, domain) {
-  // Wrap texts - more aggressive wrapping for title
-  const titleLines = wrapText(articleTitle, 38);
-  const excerptLines = wrapText(excerpt, 85);
-  
-  // Build SVG with proper layout
+  const titleLines = wrapText(articleTitle, 32);
+  const excerptLines = wrapText(excerpt, 60);
+  const maxExcerptLines = Math.min(3, Math.max(1, 5 - titleLines.length));
+
   let yPos = 100;
-  
-  // Site header section
+
   let svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
-  <!-- White background -->
   <rect width="1200" height="630" fill="#ffffff"/>
-  
-  <!-- Site header section -->
-  <!-- Site title -->
   <text x="60" y="${yPos}" font-size="64" font-weight="600" fill="#1b1f23" font-family="Georgia, serif">${escapeXml(siteTitle)}</text>
-  
-  <!-- Site description -->
   <text x="60" y="${yPos + 45}" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">${escapeXml(siteDescription)}</text>
-  
-  <!-- Top separator line -->
-  <line x1="60" y1="${yPos + 70}" x2="1050" y2="${yPos + 70}" stroke="#e6e8eb" stroke-width="1"/>
-  
-  <!-- Article title section -->`;
-  
+  <line x1="60" y1="${yPos + 70}" x2="1050" y2="${yPos + 70}" stroke="#e6e8eb" stroke-width="1"/>`;
+
   yPos += 150;
-  
-  // Article title (smaller, wrappable)
+
   titleLines.forEach((line, idx) => {
-    svg += `\n  <text x="60" y="${yPos + (idx * 68)}" font-size="52" font-weight="700" fill="#1b1f23" font-family="Georgia, serif">${escapeXml(line)}</text>`;
+    svg += `\n  <text x="60" y="${yPos + idx * 64}" font-size="52" font-weight="700" fill="#1b1f23" font-family="Georgia, serif">${escapeXml(line)}</text>`;
   });
-  
-  yPos += titleLines.length * 68 + 10;
-  
-  // Excerpt section (larger, full width)
-  excerptLines.slice(0, 3).forEach((line, idx) => {
-    svg += `\n  <text x="60" y="${yPos + (idx * 52)}" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">${escapeXml(line)}</text>`;
+
+  yPos += titleLines.length * 64 + 10;
+
+  excerptLines.slice(0, maxExcerptLines).forEach((line, idx) => {
+    svg += `\n  <text x="60" y="${yPos + idx * 48}" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">${escapeXml(line)}</text>`;
   });
-  
-  // Update yPos for bottom separator
-  yPos += excerptLines.slice(0, 3).length * 52 + 25;
-  
-  // Bottom separator line
+
+  yPos += excerptLines.slice(0, maxExcerptLines).length * 48 + 25;
+
   svg += `\n  <line x1="60" y1="${yPos}" x2="1050" y2="${yPos}" stroke="#e6e8eb" stroke-width="1"/>
-  
-  <!-- Domain footer (bottom right) -->
-  <text x="980" y="${yPos + 45}" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif" text-anchor="end">${escapeXml(domain)}</text>
+  <text x="1050" y="${yPos + 45}" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif" text-anchor="end">${escapeXml(domain)}</text>
 </svg>`;
-  
+
   return svg;
 }
 
 // Generate SVG for OG image - Homepage (no title/excerpt, larger header)
 function generateSVGHomepage(siteTitle, siteDescription, domain, authorName) {
-  let yPos = 200;
-  
+  const descLines = wrapText(siteDescription, 48);
+
+  let yPos = 180;
+
   let svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
-  <!-- White background -->
   <rect width="1200" height="630" fill="#ffffff"/>
-  
-  <!-- Site header section (larger) -->
-  <!-- Site title -->
-  <text x="60" y="${yPos}" font-size="100" font-weight="600" fill="#1b1f23" font-family="Georgia, serif">${escapeXml(siteTitle)}</text>
-  
-  <!-- Site description -->
-  <text x="60" y="${yPos + 80}" font-size="42" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">${escapeXml(siteDescription)}</text>
-  
-  <!-- Top separator line -->
-  <line x1="60" y1="${yPos + 124}" x2="1050" y2="${yPos + 124}" stroke="#e6e8eb" stroke-width="1"/>
-  
-  <!-- Tagline -->
-  <text x="60" y="${yPos + 170}" font-size="32" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">Published occasionally. Written for clarity over volume.</text>
-  
-  <!-- Bottom separator line -->
-  <line x1="60" y1="550" x2="1050" y2="550" stroke="#e6e8eb" stroke-width="1"/>
-  
-  <!-- Author footer (bottom left) -->
-  <text x="60" y="595" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">Written and maintained by ${escapeXml(authorName)}</text>
-  
-  <!-- Domain footer (bottom right) -->
-  <text x="980" y="595" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif" text-anchor="end">${escapeXml(domain)}</text>
+  <text x="60" y="${yPos}" font-size="100" font-weight="600" fill="#1b1f23" font-family="Georgia, serif">${escapeXml(siteTitle)}</text>`;
+
+  yPos += 90;
+
+  descLines.forEach((line, idx) => {
+    svg += `\n  <text x="60" y="${yPos + idx * 46}" font-size="36" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">${escapeXml(line)}</text>`;
+  });
+
+  yPos += descLines.length * 46 + 20;
+
+  svg += `\n  <line x1="60" y1="${yPos}" x2="1050" y2="${yPos}" stroke="#e6e8eb" stroke-width="1"/>`;
+  yPos += 50;
+
+  svg += `\n  <text x="60" y="${yPos}" font-size="28" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">Published occasionally. Written for clarity over volume.</text>
+  <line x1="60" y1="540" x2="1050" y2="540" stroke="#e6e8eb" stroke-width="1"/>
+  <text x="60" y="584" font-size="24" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif">Written and maintained by ${escapeXml(authorName)}</text>
+  <text x="1050" y="584" font-size="24" fill="#5b636a" font-family="system-ui, -apple-system, sans-serif" text-anchor="end">${escapeXml(domain)}</text>
 </svg>`;
   
   return svg;
@@ -221,9 +215,8 @@ async function generateImages() {
 
     // Generate article OG images
     for (const article of articles) {
-      const ogDir = path.join(ROOT_DIR, 'assets/og-images', article.category);
-      
-      // Create directory if it doesn't exist
+      const ogDir = path.join(ROOT_DIR, 'assets/og-images', article.category, article.relDir);
+
       fs.mkdirSync(ogDir, { recursive: true });
 
       const outputPath = path.join(ogDir, `${article.slug}.png`);
@@ -238,7 +231,8 @@ async function generateImages() {
       const svgBuffer = Buffer.from(svgString);
       await sharp(svgBuffer).webp({ quality: 85 }).toFile(outputPath.replace('.png', '.webp'));
 
-      console.log(`✓ Generated ${article.category}/${article.slug}.webp`);
+      const relPath = [article.category, article.relDir, `${article.slug}.webp`].filter(Boolean).join('/');
+      console.log(`✓ Generated ${relPath}`);
     }
 
     console.log('\n✨ All OG images generated successfully!');

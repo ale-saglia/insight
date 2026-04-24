@@ -21,8 +21,8 @@
     <meta property="og:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
     <meta property="og:site_name" content="{{ site.title }}" />
     {% if page.layout == 'article' and page.category %}
-      {% assign og_slug = page.url | split: '/' | reverse | first %}
-      <meta property="og:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ og_slug }}.webp" />
+      {% assign og_size = page.url | size | minus: 2 %}{% assign og_path = page.url | slice: 1, og_size %}
+      <meta property="og:image" content="{{ site.url }}/assets/og-images/{{ og_path }}.webp" />
     {% else %}
       <meta property="og:image" content="{{ site.url }}/assets/og-images/homepage.webp" />
     {% endif %}
@@ -35,8 +35,8 @@
     <meta name="twitter:title" content="{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}" />
     <meta name="twitter:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
     {% if page.layout == 'article' and page.category %}
-      {% assign tw_slug = page.url | split: '/' | reverse | first %}
-      <meta name="twitter:image" content="{{ site.url }}/assets/og-images/{{ page.category }}/{{ tw_slug }}.webp" />
+      {% assign og_size = page.url | size | minus: 2 %}{% assign og_path = page.url | slice: 1, og_size %}
+      <meta name="twitter:image" content="{{ site.url }}/assets/og-images/{{ og_path }}.webp" />
     {% else %}
       <meta name="twitter:image" content="{{ site.url }}/assets/og-images/homepage.webp" />
     {% endif %}
