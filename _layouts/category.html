@@ -49,7 +49,7 @@ layout: default
   {% endfor %}
 
   {% for child_cat in child_categories %}
-    <p class="section-label"><a href="{{ child_cat.url | relative_url }}">{{ child_cat.title }}</a></p>
+    <p class="subcategory-label"><a href="{{ child_cat.url | relative_url }}">{{ child_cat.title }}</a></p>
     {% if child_cat.summary %}<p class="section-description">{{ child_cat.summary }}</p>{% endif %}
     <ul class="article-list">
       {% assign child_articles = "" | split: "" %}
