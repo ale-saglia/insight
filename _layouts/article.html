@@ -78,15 +78,17 @@ layout: default
       const currentDomain = window.location.hostname;
       
       // Show back link if coming from any internal page that is not the homepage
+      let internalReferrerPath = null;
       if (referrer) {
         try {
           const referrerUrl = new URL(referrer);
           if (referrerUrl.hostname === currentDomain && referrerUrl.pathname !== '/') {
+            internalReferrerPath = referrerUrl.pathname;
             backLink.style.display = 'inline-block';
           }
         } catch (e) {}
       }
-      
+
       // Show top link after scrolling 400px
       window.addEventListener('scroll', function() {
         if (window.scrollY > 400) {
@@ -95,10 +97,10 @@ layout: default
           topLink.style.display = 'none';
         }
       });
-      
+
       // Add click handlers to buttons
       backLink.addEventListener('click', function() {
-        history.back();
+        window.location.href = internalReferrerPath || '/';
       });
       
       topLink.addEventListener('click', function() {
