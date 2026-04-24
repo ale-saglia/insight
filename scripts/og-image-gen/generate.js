@@ -196,8 +196,8 @@ async function generateImages() {
     console.log(`Site config - Title: "${siteConfig.title}", Description: "${siteConfig.description}"`);
     
     // Extract domain from URL
-    const domain = siteConfig.url ? siteConfig.url.replace(/^https?:\/\//, '') : 'insight.ale-saglia.com';
-    const authorName = siteConfig.author?.name || 'Alessandro Saglia';
+    const domain = siteConfig.url ? siteConfig.url.replace(/^https?:\/\//, '') : '';
+    const authorName = siteConfig.author?.name || '';
 
     // Generate homepage OG image
     const homepageOutputPath = path.join(ROOT_DIR, 'assets/og-images', 'homepage.png');

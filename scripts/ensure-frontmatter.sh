@@ -258,7 +258,8 @@ normalize_body() {
 while read -r file; do
   slug="$(basename "$file" .md)"
   category="$(basename "$(dirname "$file")")"
-  permalink="/${category}/${slug}/"
+  # Top-level domain folder under src/ (handles nested paths like src/domain/sub/file.md)
+  top_domain="$(echo "$file" | cut -d'/' -f2)"
 
   created_cache=""
   resolve_created() {
@@ -319,6 +320,21 @@ while read -r file; do
 
   fm_block="$(extract_front_matter_block "$file")"
   end_line="$(front_matter_end_line "$file")"
+
+  # Validate category/permalink coherence with folder structure
+  if has_key "category" "$fm_block"; then
+    fm_category="$(extract_front_matter_scalar category "$fm_block")"
+    if [[ "$fm_category" != "$category" && "$fm_category" != "$top_domain" ]]; then
+      warn "$file" "category mismatch: frontmatter has '${fm_category}', expected '${top_domain}' (or subcategory '${category}')"
+    fi
+  fi
+  if has_key "permalink" "$fm_block"; then
+    fm_permalink="$(extract_front_matter_scalar permalink "$fm_block")"
+    expected_prefix="/${top_domain}/"
+    if [[ "$fm_permalink" != "${expected_prefix}"* ]]; then
+      warn "$file" "permalink mismatch: '${fm_permalink}' does not start with '${expected_prefix}'"
+    fi
+  fi
 
   missing_lines=()
   missing_count=0

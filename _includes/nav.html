@@ -133,13 +133,7 @@
       setTimeout(checkLayout, 100);
     }
     
-    // Listen for window resize only (not ResizeObserver to avoid constant recalculation)
-    let resizeTimeout;
-    window.addEventListener('resize', function() {
-      clearTimeout(resizeTimeout);
-      // Reset cached width so it recalculates on next check
-      requiredWidth = null;
-      resizeTimeout = setTimeout(checkLayout, 150);
-    });
+    const ro = new ResizeObserver(checkLayout);
+    ro.observe(nav);
   })();
 </script>

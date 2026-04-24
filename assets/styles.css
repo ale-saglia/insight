@@ -432,6 +432,10 @@ h3 {
   .filter-btn-active {
     color: var(--bg);
   }
+
+  .filter-btn-active .count {
+    color: rgba(13, 17, 23, 0.7);
+  }
 }
 
 .filter-btn-active:hover {
