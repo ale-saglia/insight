@@ -1,8 +1,6 @@
-# Local preview stack (never versioned)
-.local/
-
 # Jekyll local build artifacts
 _site/
+.local/
 .jekyll-cache/
 .jekyll-metadata
 .sass-cache/
@@ -18,6 +16,9 @@ assets/og-images/
 scripts/og-image-gen/node_modules/
 
 # OS / editor
+.repomix/
+repomix-output.xml
+
 .DS_Store
 DESIGN_ANALYSIS_ALE_SAGLIA.md
 TODO.md
