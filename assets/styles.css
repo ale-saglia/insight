@@ -163,6 +163,7 @@ body {
   color: var(--link);
   text-decoration: none;
   transition: background 0.1s ease;
+  white-space: nowrap;
 }
 
 .domains-dropdown-item:hover {
