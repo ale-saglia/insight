@@ -29,7 +29,10 @@ layout: default
     {% endif %}
     <h1>{{ page.title }}</h1>
     {% if page.created %}
-      <p class="article-meta">{{ page.created | date: "%d %b %Y" }}</p>
+      {% assign words = content | number_of_words %}
+      {% assign reading_time = words | divided_by: 200 %}
+      {% if reading_time == 0 %}{% assign reading_time = 1 %}{% endif %}
+      <p class="article-meta">{{ page.created | date: "%d %b %Y" }} · {{ reading_time }} min read</p>
     {% endif %}
   </header>
 
