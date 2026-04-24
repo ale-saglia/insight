@@ -12,7 +12,7 @@ Articles are published with intent. The primary aim is clear thinking, not volum
 
 **Topics:** AI in institutional contexts, data governance, operational infrastructure, systems design.
 
---
+---
 
 ## 🏛️ Governance & Design Principles
 
