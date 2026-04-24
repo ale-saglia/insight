@@ -38,18 +38,23 @@ All content is authored and validated manually.
 ```text
 .
 ├── src/
-│   ├── infrastructure/      # Infrastructure and operational notes
-│   ├── digital-governance/  # AI and governance systems analysis
-│   ├── frontier/            # AI and emerging technology notes
-│   └── _general/            # Standalone cross-domain pieces
-├── _layouts/                # Jekyll templates
-├── _includes/               # Partials
-├── assets/                  # Styles and static files
-├── index.md                 # Homepage
-├── archive.md               # Archive index
-├── _config.yml              # Jekyll config
-└── README.md                # This file
+│   ├── infrastructure/           # Infrastructure and operational notes
+│   │   └── zero-to-homelab/      # Homelab series (episode-ordered)
+│   ├── digital-governance/       # AI and governance systems analysis
+│   ├── frontier/                 # AI and emerging technology notes
+│   │   └── ai/                   # AI subcategory
+│   └── _general/                 # Standalone cross-domain pieces
+├── _layouts/                     # Jekyll templates
+├── _plugins/                     # Custom Jekyll plugins
+├── _includes/                    # Partials
+├── assets/                       # Styles and static files
+├── index.md                      # Homepage
+├── archive.md                    # Archive index
+├── _config.yml                   # Jekyll config
+└── README.md                     # This file
 ```
+
+Each category (and nested subcategory) is a directory with a `README.md` that becomes the category index page, served at its natural URL path.
 
 ### Build & Deployment
 
@@ -75,9 +80,20 @@ All content is authored and validated manually.
 
 ## ✍️ Publishing
 
-Articles live in `src/[category]/` (or `src/[category]/[subcategory]/`) as Markdown files with frontmatter.
+Articles live in `src/[category]/` or `src/[category]/[subcategory]/` as Markdown files with frontmatter. Categories can be nested arbitrarily: a subcategory is just a category directory one level deeper.
+
+Each category directory contains a `README.md` that Jekyll renders as the category index. The custom plugin `_plugins/article_permalink.rb` derives the permalink, category, and last-modified date directly from the file path and Git history, with no manual configuration needed.
 
 Each article gets a permanent URL and appears in the category index and homepage feed.
+
+---
+
+## 📖 Article Features
+
+- **Reading time**: estimated at build time (~200 wpm) and shown inline with the publication date.
+- **Episode ordering**: articles in a series (e.g., `01-intro.md`, `02-setup.md`) are sorted by episode number and display "Episode N" in the metadata.
+- **Dynamic breadcrumbs**: article headers show the full category path as a clickable breadcrumb, regardless of nesting depth.
+- **Structured data**: each article includes a JSON-LD `Article` block (Schema.org) for search engine metadata.
 
 ---
 
@@ -88,12 +104,12 @@ Each article automatically gets a unique Open Graph preview image generated at b
 **Generation process:**
 - `scripts/og-image-gen/generate.js` reads article frontmatter (title, excerpt, category) and article metadata from `_config.yml`
 - Generates an SVG template with styled site header, article title, excerpt, and domain footer
-- Converts SVG → PNG via Sharp (1200×630, optimized for social media)
-- Outputs to `assets/og-images/[category]/[slug].png`
+- Converts SVG → WebP via Sharp (1200×630, optimized for social media)
+- Outputs to `assets/og-images/[category]/[slug].webp`
 
 **Generated for:**
-- `homepage.png` — shared when the site itself is linked
-- `[category]/[slug].png` — each article (automatically tagged in `_layouts/default.html`)
+- `homepage.webp` - shared when the site itself is linked
+- `[category]/[slug].webp` - each article (automatically tagged in `_layouts/default.html`)
 
 **Configuration:**
 - Site title and description read from `_config.yml`
