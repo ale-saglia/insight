@@ -115,7 +115,11 @@ layout: default
 
       // Add click handlers to buttons
       backLink.addEventListener('click', function() {
-        window.location.href = internalReferrerPath || '/';
+        if (internalReferrerPath) {
+          history.back();
+        } else {
+          window.location.href = '/';
+        }
       });
       
       topLink.addEventListener('click', function() {
