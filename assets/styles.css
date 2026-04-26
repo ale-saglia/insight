@@ -291,7 +291,7 @@ h3 {
 
 .featured-article-excerpt {
   margin: 0.7rem 0 0;
-  color: var(--muted);
+  color: var(--text);
   line-height: 1.55;
 }
 
@@ -346,7 +346,7 @@ h3 {
 }
 
 .article-list .article-excerpt {
-  color: var(--muted);
+  color: var(--text);
   font-size: 0.92rem;
   margin-top: 0.2rem;
   line-height: 1.5;
@@ -668,7 +668,7 @@ pre code {
   border: none;
   border-bottom: 1px solid transparent;
   padding: 0.1rem 0;
-  color: var(--muted);
+  color: var(--text);
   font-family: inherit;
   font-size: 0.9rem;
   cursor: pointer;
