@@ -20,30 +20,15 @@ jobs:
       - name: Check version alignment
         run: |
           set -e
-          # Extract versions from versions.env
+          # Only RUBY_VERSION is hardcoded in the Dockerfile (required before FROM).
+          # NODE_VERSION and BUNDLER_VERSION are sourced from versions.env at build time.
           RUBY_VERSION_ENV=$(grep '^RUBY_VERSION=' versions.env | cut -d'=' -f2)
-          NODE_VERSION_ENV=$(grep '^NODE_VERSION=' versions.env | cut -d'=' -f2)
-          BUNDLER_VERSION_ENV=$(grep '^BUNDLER_VERSION=' versions.env | cut -d'=' -f2)
+          RUBY_VERSION_DOCKER=$(grep '^ARG RUBY_VERSION=' .devcontainer/Dockerfile | cut -d'=' -f2)
 
-          # Extract versions from Dockerfile
-          RUBY_VERSION_DOCKER=$(grep '^ARG RUBY_VERSION=' .devcontainer/Dockerfile | cut -d'=' -f2 | cut -d'-' -f1)
-          NODE_VERSION_DOCKER=$(grep 'NODE_VERSION' .devcontainer/Dockerfile | grep 'setup_' | sed -E 's/.*setup_([0-9]+).x.*/\1/')
-          BUNDLER_VERSION_DOCKER=$(grep 'gem install bundler:' .devcontainer/Dockerfile | sed -E 's/.*bundler:([0-9.]+).*/\1/')
-
-          echo "RUBY_VERSION: $RUBY_VERSION_ENV (env) vs $RUBY_VERSION_DOCKER (Dockerfile)"
-          echo "NODE_VERSION: $NODE_VERSION_ENV (env) vs $NODE_VERSION_DOCKER (Dockerfile)"
-          echo "BUNDLER_VERSION: $BUNDLER_VERSION_ENV (env) vs $BUNDLER_VERSION_DOCKER (Dockerfile)"
+          echo "RUBY_VERSION: $RUBY_VERSION_ENV (versions.env) vs $RUBY_VERSION_DOCKER (Dockerfile)"
 
           if [ "$RUBY_VERSION_ENV" != "$RUBY_VERSION_DOCKER" ]; then
             echo "::error ::RUBY_VERSION is not aligned between versions.env and Dockerfile"
-            exit 1
-          fi
-          if [ "$NODE_VERSION_ENV" != "$NODE_VERSION_DOCKER" ]; then
-            echo "::error ::NODE_VERSION is not aligned between versions.env and Dockerfile"
-            exit 1
-          fi
-          if [ "$BUNDLER_VERSION_ENV" != "$BUNDLER_VERSION_DOCKER" ]; then
-            echo "::error ::BUNDLER_VERSION is not aligned between versions.env and Dockerfile"
             exit 1
           fi
 
