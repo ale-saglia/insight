@@ -16,7 +16,7 @@ Articles are published with intent. The primary aim is clear thinking, not volum
 
 ## 🏛️ Governance & Design Principles
 
-The architecture and stack of this project are not merely technical choices, but the practical implementation of core digital governance principles (digital sovereignty, engineering proportionality, and privacy by design). 
+The architecture and stack of this project are not merely technical choices, but the practical implementation of core digital governance principles (digital sovereignty, engineering proportionality, and privacy by design).
 
 To understand the rationale and the ethical framework behind these architectural decisions, please read the **[Manifesto & Governance Principles](MANIFESTO.md)**.
 
@@ -70,9 +70,12 @@ Each category (and nested subcategory) is a directory with a `README.md` that be
 
 ```text
 .
+├── .devcontainer/
+│   ├── Dockerfile               # Dev container image (Ruby + Node + Python); version pins at top
+│   └── devcontainer.json        # VS Code dev container config (ports, postCreateCommand)
 ├── scripts/
-│   ├── build-local.sh           # Local build script
-│   ├── preview-local.sh         # Local preview server
+│   ├── build-local.sh           # Local build (uses bundle exec inside devcontainer, Docker outside)
+│   ├── preview-local.sh         # Local preview server on port 4000
 │   ├── ensure-frontmatter.sh    # Adds missing article front matter fields + warnings
 │   ├── update-modified-dates.sh # Updates file modified timestamps from Git
 │   ├── generate-og-images.sh    # Generates OG images for social media
@@ -80,11 +83,23 @@ Each category (and nested subcategory) is a directory with a `README.md` that be
 │       ├── generate.js          # Node.js OG image generator
 │       ├── package.json         # Node dependencies (sharp, js-yaml)
 │       └── package-lock.json    # Locked dependency versions for reproducible builds
+├── Makefile                     # Shortcuts: make build / preview / rebuild / clean
 ├── feed.xml                     # Atom feed template
-├── build-local.md               # Build instructions
-├── .github/workflows/pages.yml  # GitHub Pages CI/CD automation
-└── _site/                       # Generated static site (build output)
+├── .github/workflows/pages.yml  # GitHub Pages CI/CD (reads Ruby/Node versions from Dockerfile)
+└── _site/                       # Generated static site (build output, gitignored)
 ```
+
+### Version Pinning
+
+All tool versions are pinned in a single place: `.devcontainer/Dockerfile` ARGs at the top of the file.
+
+```dockerfile
+ARG RUBY_VERSION=3.3
+ARG NODE_VERSION=20
+ARG BUNDLER_VERSION=2.3.25
+```
+
+The CI workflow reads these values at runtime so local, devcontainer, and CI always use the same versions. To update a version, change the ARG in the Dockerfile — no other file needs editing.
 
 ---
 
@@ -136,16 +151,19 @@ This is a deliberate architectural choice grounded in the blog's core editorial 
 Each article automatically gets a unique Open Graph preview image generated at build time, used when the article is shared on social media.
 
 **Generation process:**
+
 - `scripts/og-image-gen/generate.js` reads article frontmatter (title, excerpt, category) and article metadata from `_config.yml`
 - Generates an SVG template with styled site header, article title, excerpt, and domain footer
 - Converts SVG → WebP via Sharp (1200×630, optimized for social media)
 - Outputs to `assets/og-images/[category]/[slug].webp`
 
 **Generated for:**
+
 - `homepage.webp` - shared when the site itself is linked
 - `[category]/[slug].webp` - each article (automatically tagged in `_layouts/default.html`)
 
 **Configuration:**
+
 - Site title and description read from `_config.yml`
 - YAML parsing uses `js-yaml` for robust support of multiline syntax
 - Regenerated on every build; images are gitignored (build artifacts)
