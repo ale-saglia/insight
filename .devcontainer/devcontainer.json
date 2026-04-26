@@ -1,0 +1,19 @@
+{
+  "name": "Insight Jekyll Dev",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "forwardPorts": [4000],
+  "remoteEnv": {
+    "DEVCONTAINER": "true"
+  },
+  "postCreateCommand": "bundle lock --add-platform x86_64-linux && bundle install && cd scripts/og-image-gen && npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Shopify.ruby-lsp",
+        "sissel.shopify-liquid"
+      ]
+    }
+  }
+}

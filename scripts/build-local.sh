@@ -16,11 +16,15 @@ bash "$ROOT_DIR/scripts/ensure-frontmatter.sh"
 echo "🎨 Generating OG preview images..."
 bash "$ROOT_DIR/scripts/generate-og-images.sh"
 
-docker run --rm \
-  --platform "$PLATFORM" \
-  -v "$ROOT_DIR":/srv/jekyll \
-  -w /srv/jekyll \
-  "$IMAGE" \
-  jekyll build --config "$CONFIG"
+if [[ -n "${DEVCONTAINER:-}" ]]; then
+  bundle exec jekyll build --config "$CONFIG"
+else
+  docker run --rm \
+    --platform "$PLATFORM" \
+    -v "$ROOT_DIR":/srv/jekyll \
+    -w /srv/jekyll \
+    "$IMAGE" \
+    jekyll build --config "$CONFIG"
+fi
 
 echo "Build completed in $ROOT_DIR/_site"
