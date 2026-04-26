@@ -6,10 +6,7 @@
       "type": "shell",
       "command": "bash",
       "args": ["scripts/build-local.sh"],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
+      "group": "build",
       "presentation": {
         "reveal": "always",
         "panel": "shared"
@@ -21,14 +18,11 @@
       "type": "shell",
       "command": "bash",
       "args": ["scripts/preview-local.sh"],
+      "group": "build",
       "presentation": {
         "reveal": "always",
         "panel": "shared"
       },
-      "runOptions": {
-        "runOn": "folderOpen": false
-      },
-      "isBackground": false,
       "problemMatcher": []
     },
     {
@@ -36,6 +30,7 @@
       "type": "shell",
       "command": "bash",
       "args": ["-c", "rm -rf _site && bash scripts/build-local.sh"],
+      "group": "build",
       "presentation": {
         "reveal": "always",
         "panel": "shared"
@@ -47,6 +42,7 @@
       "type": "shell",
       "command": "bash",
       "args": ["scripts/update-modified-dates.sh"],
+      "group": "build",
       "presentation": {
         "reveal": "always",
         "panel": "shared"
