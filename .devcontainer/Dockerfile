@@ -27,3 +27,10 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 USER $USERNAME
+
+# Crea la virtualenv e installa le dipendenze Python
+WORKDIR /workspaces/insight
+COPY requirements.txt .
+RUN python3 -m venv .venv \
+ && .venv/bin/pip install --upgrade pip \
+ && .venv/bin/pip install -r requirements.txt
