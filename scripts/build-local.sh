@@ -2,10 +2,6 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-IMAGE="${JEKYLL_IMAGE:-jekyll/jekyll:4}"
-PLATFORM="${DOCKER_PLATFORM:-linux/amd64}"
-CONFIG="${1:-_config.yml,_config.local.yml}"
-
 cd "$ROOT_DIR"
 
 # Ensure front matter required fields before any downstream processing
@@ -13,18 +9,17 @@ echo "Checking and normalizing article front matter..."
 bash "$ROOT_DIR/scripts/ensure-frontmatter.sh"
 
 # Generate OG images before building
-echo "🎨 Generating OG preview images..."
+echo "Generating OG preview images..."
 bash "$ROOT_DIR/scripts/generate-og-images.sh"
 
-if [[ -n "${DEVCONTAINER:-}" ]]; then
-  bundle exec jekyll build --config "$CONFIG"
+echo "Building with Pelican..."
+if [[ -x "$ROOT_DIR/.venv/bin/pelican" ]]; then
+  "$ROOT_DIR/.venv/bin/pelican" --settings pelicanconf.py
+elif command -v pelican &>/dev/null; then
+  pelican --settings pelicanconf.py
 else
-  docker run --rm \
-    --platform "$PLATFORM" \
-    -v "$ROOT_DIR":/srv/jekyll \
-    -w /srv/jekyll \
-    "$IMAGE" \
-    jekyll build --config "$CONFIG"
+  echo "Error: pelican not found. Run: make setup"
+  exit 1
 fi
 
 echo "Build completed in $ROOT_DIR/_site"

@@ -1,27 +1,30 @@
 <nav class="site-nav" aria-label="Primary" id="site-nav" style="visibility: hidden">
-  <a href="{{ '/' | relative_url }}">Home</a>
+  <a href="{{ SITEURL }}/">Home</a>
   <span class="site-nav-divider" aria-hidden="true"></span>
   <a href="https://ale-saglia.com" target="_blank">About me</a>
   <span class="site-nav-divider" aria-hidden="true"></span>
-  
+
   <div class="domains-group" id="domains-group-nav">
     <span class="site-nav-label">Domains</span>
-    {% assign category_pages = site.pages | where: 'layout', 'category' | where: 'top_level', true | where_exp: 'p', "p.category != 'general'" | sort: 'title' %}
-    {% for category_page in category_pages %}
-      <a href="{{ category_page.url | relative_url }}">{{ category_page.title }}</a>
+    {% for cat in top_level_categories %}
+      {% if cat.category_path != 'general' %}
+        <a href="{{ SITEURL }}/{{ cat.url }}">{{ cat.title }}</a>
+      {% endif %}
     {% endfor %}
   </div>
-  
+
   <div class="domains-dropdown" id="domains-dropdown-nav" aria-label="Domains menu">
     <button class="domains-dropdown-trigger" aria-expanded="false" aria-haspopup="true">Domains <span class="domains-dropdown-arrow">▼</span></button>
     <div class="domains-dropdown-menu">
-      {% for category_page in category_pages %}
-        <a href="{{ category_page.url | relative_url }}" class="domains-dropdown-item">{{ category_page.title }}</a>
+      {% for cat in top_level_categories %}
+        {% if cat.category_path != 'general' %}
+          <a href="{{ SITEURL }}/{{ cat.url }}" class="domains-dropdown-item">{{ cat.title }}</a>
+        {% endif %}
       {% endfor %}
     </div>
   </div>
-  
-  <a href="{{ '/archive/' | relative_url }}" class="nav-archive">Archive</a>
+
+  <a href="{{ SITEURL }}/archive/" class="nav-archive">Archive</a>
 </nav>
 
 <script>
@@ -31,74 +34,54 @@
     const domainsDropdown = document.querySelector('.domains-dropdown');
     const domainsDropdownTrigger = document.querySelector('.domains-dropdown-trigger');
     const domainsDropdownMenu = document.querySelector('.domains-dropdown-menu');
-    
+
     if (!nav || !domainsGroup || !domainsDropdown || !domainsDropdownTrigger || !domainsDropdownMenu) return;
-    
+
     let lastExpanded = null;
     let requiredWidth = null;
     let isCalculatingWidth = false;
-    
+
     function calculateRequiredWidth() {
       if (isCalculatingWidth) return;
       isCalculatingWidth = true;
-
       try {
         const wasHidden = domainsGroup.classList.contains('hidden');
         domainsGroup.classList.remove('hidden');
-
-        // Disable wrapping temporarily so scrollWidth reflects true single-row width
         const prevWrap = nav.style.flexWrap;
         nav.style.flexWrap = 'nowrap';
         requiredWidth = nav.scrollWidth;
         nav.style.flexWrap = prevWrap;
-
-        if (wasHidden) {
-          domainsGroup.classList.add('hidden');
-        }
+        if (wasHidden) domainsGroup.classList.add('hidden');
       } finally {
         isCalculatingWidth = false;
       }
     }
-    
+
     function checkLayout() {
       const navWidth = nav.clientWidth;
-      
-      // Use cached requiredWidth; only recalculate if not set
-      if (requiredWidth === null) {
-        calculateRequiredWidth();
-      }
-      
-      // Check if nav has enough width to show inline links
+      if (requiredWidth === null) calculateRequiredWidth();
       const shouldExpand = navWidth >= requiredWidth;
-      
-      // Only update if state changed
       if (lastExpanded === shouldExpand) return;
       lastExpanded = shouldExpand;
-      
       if (shouldExpand) {
-        // Expand: show inline links, hide dropdown
         domainsGroup.classList.remove('hidden');
         domainsDropdown.classList.remove('visible');
-        // Close menu
         domainsDropdownMenu.classList.remove('open');
         domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
       } else {
-        // Collapse: hide inline links, show dropdown
         domainsGroup.classList.add('hidden');
         domainsDropdown.classList.add('visible');
       }
       nav.style.visibility = '';
     }
-    
-    // Handle dropdown toggle
+
     domainsDropdownTrigger.addEventListener('click', function(e) {
       e.preventDefault();
       domainsDropdownMenu.classList.toggle('open');
-      domainsDropdownTrigger.setAttribute('aria-expanded', 
+      domainsDropdownTrigger.setAttribute('aria-expanded',
         domainsDropdownMenu.classList.contains('open') ? 'true' : 'false');
     });
-    
-    // Close dropdown when clicking outside
+
     document.addEventListener('click', function(e) {
       if (!domainsDropdown.contains(e.target)) {
         domainsDropdownMenu.classList.remove('open');
@@ -106,7 +89,6 @@
       }
     });
 
-    // Close dropdown on Escape and return focus to trigger
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape' && domainsDropdownMenu.classList.contains('open')) {
         domainsDropdownMenu.classList.remove('open');
@@ -114,25 +96,20 @@
         domainsDropdownTrigger.focus();
       }
     });
-    
-    // Close dropdown when item is selected
+
     Array.from(domainsDropdownMenu.querySelectorAll('a')).forEach(function(link) {
       link.addEventListener('click', function() {
         domainsDropdownMenu.classList.remove('open');
         domainsDropdownTrigger.setAttribute('aria-expanded', 'false');
       });
     });
-    
-    // Wait for fonts to load, then do initial layout check
+
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function() {
-        checkLayout();
-      });
+      document.fonts.ready.then(function() { checkLayout(); });
     } else {
-      // Fallback for browsers that don't support FontFaceSet
       setTimeout(checkLayout, 100);
     }
-    
+
     const ro = new ResizeObserver(checkLayout);
     ro.observe(nav);
   })();

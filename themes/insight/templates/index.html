@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>There is a threshold where engineering becomes governance and infrastructure becomes policy. It is rarely marked, often crossed without noticing. I write here to think at that boundary: the hidden mechanics of digital public systems, the friction between technical possibility and institutional reality, and the quiet decisions that shape both.</p>
+
+{% set sorted_articles = articles | sort(attribute='date', reverse=True) %}
+{% set latest = sorted_articles | first %}
+
+{% if latest %}
+  <section class="featured-article" aria-labelledby="featured-article-title">
+    <p class="section-label">Start Here</p>
+    <a class="featured-article-card" href="{{ SITEURL }}/{{ latest.url }}">
+      <div class="featured-article-content">
+        {%- set ns = namespace(display_label='') -%}
+        {%- for crumb in latest.breadcrumbs -%}
+          {%- set part_ns = namespace(label=crumb.label) -%}
+          {%- for cat in category_pages -%}
+            {%- if cat.category_path == crumb.url.rstrip('/') -%}
+              {%- set part_ns.label = cat.title -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if ns.display_label -%}
+            {%- set ns.display_label = ns.display_label + ' / ' + part_ns.label -%}
+          {%- else -%}
+            {%- set ns.display_label = part_ns.label -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if latest.episode_num is not none -%}
+          {%- set ns.display_label = ns.display_label + ' · Episode ' + latest.episode_num | string -%}
+        {%- endif -%}
+        <p class="featured-article-meta">{{ latest.date.strftime('%d %b %Y') }}{% if latest.category_top != 'general' %} · <span class="featured-article-category">{{ ns.display_label }}</span>{% endif %}</p>
+        <h2 id="featured-article-title">{{ latest.title }}</h2>
+        {% if latest.summary %}<p class="featured-article-excerpt">{{ latest.summary | striptags }}</p>{% endif %}
+      </div>
+    </a>
+  </section>
+{% endif %}
+
+<div class="home-latest">
+  <section class="home-section">
+    <p class="section-label">Latest Articles</p>
+    <ul class="article-list">
+      {% for article in sorted_articles[1:6] %}
+        <li>
+          <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+          {%- set ns = namespace(display_label='') -%}
+          {%- for crumb in article.breadcrumbs -%}
+            {%- set part_ns = namespace(label=crumb.label) -%}
+            {%- for cat in category_pages -%}
+              {%- if cat.category_path == crumb.url.rstrip('/') -%}
+                {%- set part_ns.label = cat.title -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if ns.display_label -%}
+              {%- set ns.display_label = ns.display_label + ' / ' + part_ns.label -%}
+            {%- else -%}
+              {%- set ns.display_label = part_ns.label -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if article.episode_num is not none -%}
+            {%- set ns.display_label = ns.display_label + ' · Episode ' + article.episode_num | string -%}
+          {%- endif -%}
+          <span class="article-meta">{{ article.date.strftime('%d %b %Y') }}{% if article.category_top != 'general' %} · {{ ns.display_label }}{% endif %}</span>
+          {% if article.summary %}<span class="article-excerpt">{{ article.summary | striptags }}</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    <p class="latest-archive-link"><a href="{{ SITEURL }}/archive/">Browse all articles in the archive</a></p>
+  </section>
+</div>
+{% endblock %}

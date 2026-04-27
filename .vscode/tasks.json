@@ -2,7 +2,18 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Jekyll: Build",
+      "label": "Pelican: Setup (install deps)",
+      "type": "shell",
+      "command": "python3 -m venv .venv && .venv/bin/pip install -q -r requirements.txt && echo 'Setup complete.'",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Pelican: Build",
       "type": "shell",
       "command": "bash",
       "args": ["scripts/build-local.sh"],
@@ -14,7 +25,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Jekyll: Preview (localhost:4000)",
+      "label": "Pelican: Preview (localhost:4000)",
       "type": "shell",
       "command": "bash",
       "args": ["scripts/preview-local.sh"],
@@ -26,7 +37,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Jekyll: Clean & Build",
+      "label": "Pelican: Clean & Build",
       "type": "shell",
       "command": "bash",
       "args": ["-c", "rm -rf _site && bash scripts/build-local.sh"],

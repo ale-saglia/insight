@@ -20,8 +20,24 @@ function parseYaml(content) {
   }
 }
 
-// Read config to get site title and description
+// Read config to get site title and description.
+// Reads pelicanconf.py via simple regex; falls back to _config.yml for compatibility.
 function getSiteConfig() {
+  const pelicanPath = path.join(ROOT_DIR, 'pelicanconf.py');
+  if (fs.existsSync(pelicanPath)) {
+    const src = fs.readFileSync(pelicanPath, 'utf8');
+    const get = (key) => {
+      const m = src.match(new RegExp(`^${key}\\s*=\\s*['"]([^'"]+)['"]`, 'm'));
+      return m ? m[1] : '';
+    };
+    const authorUrlMatch = src.match(/^AUTHOR_URL\s*=\s*['"]([^'"]+)['"]/m);
+    return {
+      title: get('SITENAME'),
+      description: get('SITESUBTITLE'),
+      url: get('SITEURL') || 'https://insight.ale-saglia.com',
+      author: { name: get('AUTHOR'), url: authorUrlMatch ? authorUrlMatch[1] : '' },
+    };
+  }
   const configPath = path.join(ROOT_DIR, '_config.yml');
   const content = fs.readFileSync(configPath, 'utf8');
   return parseYaml(content);

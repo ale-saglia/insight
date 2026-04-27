@@ -20,15 +20,15 @@ jobs:
       - name: Check version alignment
         run: |
           set -e
-          # Only RUBY_VERSION is hardcoded in the Dockerfile (required before FROM).
-          # NODE_VERSION and BUNDLER_VERSION are sourced from versions.env at build time.
-          RUBY_VERSION_ENV=$(grep '^RUBY_VERSION=' versions.env | cut -d'=' -f2)
-          RUBY_VERSION_DOCKER=$(grep '^ARG RUBY_VERSION=' .devcontainer/Dockerfile | cut -d'=' -f2)
+          # Only PYTHON_VERSION is hardcoded in the Dockerfile (required before FROM).
+          # NODE_VERSION is sourced from versions.env at build time.
+          PYTHON_VERSION_ENV=$(grep '^PYTHON_VERSION=' versions.env | cut -d'=' -f2)
+          PYTHON_VERSION_DOCKER=$(grep '^ARG PYTHON_VERSION=' .devcontainer/Dockerfile | cut -d'=' -f2)
 
-          echo "RUBY_VERSION: $RUBY_VERSION_ENV (versions.env) vs $RUBY_VERSION_DOCKER (Dockerfile)"
+          echo "PYTHON_VERSION: $PYTHON_VERSION_ENV (versions.env) vs $PYTHON_VERSION_DOCKER (Dockerfile)"
 
-          if [ "$RUBY_VERSION_ENV" != "$RUBY_VERSION_DOCKER" ]; then
-            echo "::error ::RUBY_VERSION is not aligned between versions.env and Dockerfile"
+          if [ "$PYTHON_VERSION_ENV" != "$PYTHON_VERSION_DOCKER" ]; then
+            echo "::error ::PYTHON_VERSION is not aligned between versions.env and Dockerfile"
             exit 1
           fi
 

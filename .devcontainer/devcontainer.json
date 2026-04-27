@@ -1,5 +1,5 @@
 {
-  "name": "Insight Jekyll Dev",
+  "name": "Insight Pelican Dev",
   "build": {
     "dockerfile": "Dockerfile",
     "context": ".."
@@ -8,12 +8,11 @@
   "remoteEnv": {
     "DEVCONTAINER": "true"
   },
-  "postCreateCommand": "bundle lock --add-platform x86_64-linux && bundle install && cd scripts/og-image-gen && npm install",
+  "postCreateCommand": "pip install -r requirements.txt && cd scripts/og-image-gen && npm install",
   "customizations": {
     "vscode": {
       "extensions": [
-        "Shopify.ruby-lsp",
-        "sissel.shopify-liquid"
+        "ms-python.python"
       ]
     }
   }
