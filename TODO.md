@@ -14,6 +14,7 @@
 | 8   | Medium   | YAML frontmatter parser duplicated across two plugins        | insight_reader.py, insight_categories.py |       |
 | 9   | Medium   | O(n²) tag/year counting                                      | archives                               |         |
 | 10  | Medium   | `og_images.py` Linux-only fonts (silent fail elsewhere)      | plugins/og_images.py                   |         |
+| 10b | Medium   | OG images font is not Georgia (e.g. articles: wrong font, not matching design) | plugins/og_images.py                   |         |
 | 11  | Medium   | Unused `ycount` variable                                     | archives:31                            |         |
 | 12  | Low      | `_get_generators` misleading parameter name                  | plugins/insight_register.py            |         |
 | 13  | Low      | `layout: article` enforced but ignored                       | ensure-frontmatter.sh, articles        |         |
