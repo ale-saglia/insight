@@ -8,7 +8,7 @@
 | 2   | Critical | OG/Twitter/meta blocks triplicated                           | base + all children                    | ✅ Done |
 | 3   | Medium   | O(n) category lookup in templates                            | all                                    | ✅ Done |
 | 4   | Critical | `ensure-frontmatter.sh` is 430+ lines of bash                | scripts/ensure-frontmatter.sh          | ✅ Done |
-| 5   | Medium   | `versions.env` exists only to be diff-checked                | versions.env, check-versions.yml       |         |
+| 5   | Medium   | `versions.env` exists only to be diff-checked                | versions.env, check-versions.yml       | ✅ Done |
 | 6   | Medium   | `og_images.py` writes to source tree, not output             | plugins/og_images.py                   |         |
 | 7   | Medium   | `og_images.py` regenerates everything on each build          | plugins/og_images.py                   |         |
 | 8   | Medium   | YAML frontmatter parser duplicated across two plugins        | insight_reader.py, insight_categories.py |       |
