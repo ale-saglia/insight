@@ -6,16 +6,15 @@ cd "$ROOT_DIR"
 
 echo "📸 Generating OG preview images..."
 
-# Check if node_modules exists, if not install dependencies
-if [ ! -d "scripts/og-image-gen/node_modules" ]; then
-  echo "Installing dependencies..."
-  cd "$ROOT_DIR/scripts/og-image-gen"
-  npm install
-  cd "$ROOT_DIR"
+if [[ -x "$ROOT_DIR/.venv/bin/python" ]]; then
+  PYTHON="$ROOT_DIR/.venv/bin/python"
+elif command -v python3 &>/dev/null; then
+  PYTHON="python3"
+else
+  echo "Error: python3 not found. Run: make setup"
+  exit 1
 fi
 
-# Run the image generator
-cd "$ROOT_DIR/scripts/og-image-gen"
-npm run generate
+"$PYTHON" "$ROOT_DIR/scripts/generate_og_images.py"
 
 echo "✅ OG image generation complete"

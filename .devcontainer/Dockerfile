@@ -3,19 +3,12 @@
 ARG PYTHON_VERSION=3.12
 FROM python:${PYTHON_VERSION}-bookworm
 
-# All other versions come from /versions.env (build context is repo root)
-COPY versions.env /tmp/versions.env
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     git \
     build-essential \
     sudo \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN . /tmp/versions.env \
-    && curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
-    && apt-get install -y --no-install-recommends nodejs \
+    fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=vscode
