@@ -1,9 +1,10 @@
 ---
-layout: article
 title: A Single Source of Truth Is Not a Technical Problem
 created: 2026-03-27
-keywords: data governance, organisational alignment, single source of truth, institutional trust, federated systems
-excerpt: Why centralising authoritative data in federated institutional networks is fundamentally a coordination problem, not an architecture decision.
+keywords: data governance, organisational alignment, single source of truth, institutional
+  trust, federated systems
+excerpt: Why centralising authoritative data in federated institutional networks is
+  fundamentally a coordination problem, not an architecture decision.
 article_id: single-source-truth-no-tech-problem
 ---
 

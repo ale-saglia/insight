@@ -1,29 +1,18 @@
-# Jekyll local build artifacts
+# --- Build Artifacts ---
 _site/
-.local/
-.jekyll-cache/
-.jekyll-metadata
-.sass-cache/
-
-# Ruby / Bundler
-.bundle/
-vendor/bundle/
-
-# Node.js
-scripts/og-image-gen/node_modules/
-
-# Generated assets (build artifacts)
 assets/og-images/
 
-# Claude Code local settings
+# --- Python ---
+.venv/
+__pycache__/
+**/__pycache__/
+
+# --- Editor/Tooling ---
 .claude/
 
-# repomix
+# --- repomix ---
 .repomix/
 repomix-output.xml
 
-# OS
+# --- OS Files ---
 .DS_Store
-
-# Local working files
-TODO.md

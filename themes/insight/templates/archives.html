@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% from "_macros.html" import breadcrumb_label %}
+
+{% block title %}Archive | {{ SITENAME }}{% endblock %}
+{% block page_path %}archive/{% endblock %}
+
+{% block content %}
+<section class="article">
+  <header class="article-header">
+    <h1>Archive</h1>
+  </header>
+
+  <p>Browse all published articles by year.</p>
+
+  <div class="archive-search">
+    <input type="text" id="search-input" class="search-field" placeholder="Search articles..." aria-label="Search articles" />
+  </div>
+
+  {% set sorted_articles = articles | sort(attribute='date', reverse=True) %}
+  {% set year_groups = sorted_articles | groupby(attribute='date.year') | reverse | list %}
+
+  <div class="archive-filters">
+    <button class="filter-btn filter-btn-active" data-year="">All Years <span class="count">({{ sorted_articles | length }})</span></button>
+    {% for year_group in year_groups %}
+      <button class="filter-btn" data-year="{{ year_group.grouper }}">{{ year_group.grouper }} <span class="count">({{ year_group.list | length }})</span></button>
+    {% endfor %}
+  </div>
+
+  <!-- Keywords section -->
+  <div class="archive-keywords">
+    <p class="section-label">Filter by keywords</p>
+    <div class="keyword-filters" id="keyword-filters">
+      {% for kw, count in tag_counts.items() %}
+        <button class="keyword-btn" data-keyword="{{ kw | lower }}" data-count="{{ count }}">{{ kw }} <span class="count">({{ count }})</span></button>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% for year_group in year_groups %}
+    <h2 class="archive-year">{{ year_group.grouper }}</h2>
+    <ul class="article-list">
+      {% for article in year_group.list %}
+        {%- set meta_label = breadcrumb_label(article, category_by_path) -%}
+
+        {%- set tag_names = [] -%}
+        {%- if article.tags -%}
+          {%- for tag in article.tags -%}
+            {%- set _ = tag_names.append(tag.name | lower) -%}
+          {%- endfor -%}
+        {%- endif -%}
+
+        <li class="search-item"
+            data-year="{{ year_group.grouper }}"
+            data-title="{{ article.title | lower }}"
+            data-category="{{ meta_label | lower }}"
+            data-excerpt="{{ article.summary | striptags | lower }}"
+            data-keywords="{{ tag_names | join(',') }}">
+          <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+          <span class="article-meta">{{ article.date.strftime('%d %b %Y') }} • {{ meta_label }}</span>
+          {% if article.summary %}<span class="article-excerpt">{{ article.summary | striptags }}</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+
+  <p id="archive-no-results" class="archive-empty-state" role="status" aria-live="polite" hidden>
+    No articles match the selected filters. Try clearing the search, year, or keyword filters.
+  </p>
+
+  <script src="{{ SITEURL }}/assets/js/archives.js" defer></script>
+</section>
+{% endblock %}

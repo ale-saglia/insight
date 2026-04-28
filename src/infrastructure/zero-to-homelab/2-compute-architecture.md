@@ -1,9 +1,10 @@
 ---
-layout: article
 title: Two Nodes, One Lesson in Constraint
 created: 2026-04-15
-keywords: Proxmox VE, virtualization, LXC, VM, compute architecture, energy efficiency, ZFS, NFS
-excerpt: From a four-node plan to a two-node reality. How energy costs, operational complexity, and data management shaped the compute layer.
+keywords: Proxmox VE, virtualization, LXC, VM, compute architecture, energy efficiency,
+  ZFS, NFS
+excerpt: From a four-node plan to a two-node reality. How energy costs, operational
+  complexity, and data management shaped the compute layer.
 article_id: compute-architecture
 ---
 
@@ -69,7 +70,7 @@ I could have virtualized Home Assistant on one of the Proxmox nodes. But I alrea
 
 ### How the pieces fit together
 
-![Homelab compute architecture: two Proxmox VE nodes connected via a 10 Gbps switch. pve-network (Intel N150, 16 GB) runs OPNsense, network-services (reverse proxy and SSO), and UniFi controller. pve-storage (Ryzen 7 PRO, 96 GB, 8 bays) runs Proxmox Backup Server, Windows, NVR with Google Coral TPU, personal photo library, file cloud, secrets, monitoring, and storage services. Home Assistant Yellow is connected to the switch as a Corosync voter.]({{ '/assets/homelab-compute-architecture.svg' | relative_url }})
+![Homelab compute architecture: two Proxmox VE nodes connected via a 10 Gbps switch. pve-network (Intel N150, 16 GB) runs OPNsense, network-services (reverse proxy and SSO), and UniFi controller. pve-storage (Ryzen 7 PRO, 96 GB, 8 bays) runs Proxmox Backup Server, Windows, NVR with Google Coral TPU, personal photo library, file cloud, secrets, monitoring, and storage services. Home Assistant Yellow is connected to the switch as a Corosync voter.](/assets/images/homelab-compute-architecture.svg)
 
 ---
 

@@ -1,18 +1,9 @@
-name: Deploy Jekyll site to Pages
+name: Deploy Pelican site to Pages
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      skip_og_generation:
-        description: 'Skip OG image generation (deploy without images)'
-        required: false
-        default: 'false'
-        type: choice
-        options:
-          - 'false'
-          - 'true'
 
 permissions:
   contents: read
@@ -32,44 +23,33 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Read versions from Dockerfile
-        id: versions
-        run: |
-          echo "ruby=$(grep '^ARG RUBY_VERSION=' .devcontainer/Dockerfile | cut -d= -f2)" >> $GITHUB_OUTPUT
-          echo "node=$(grep '^ARG NODE_VERSION=' .devcontainer/Dockerfile | cut -d= -f2)" >> $GITHUB_OUTPUT
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          ruby-version: ${{ steps.versions.outputs.ruby }}
+          python-version-file: ".python-version"
 
-      - name: Install Ruby gems
-        run: bundle install
+      - name: Install uv
+        run: pip install uv
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ steps.versions.outputs.node }}
-          cache: 'npm'
-          cache-dependency-path: scripts/og-image-gen/package-lock.json
+      - name: Install system fonts
+        run: sudo apt-get install -y --no-install-recommends fonts-dejavu-core
+
+      - name: Install Python dependencies
+        run: uv pip install --require-hashes -r requirements.txt --system
 
       - name: Ensure article front matter
-        run: bash scripts/ensure-frontmatter.sh
-
-      - name: Generate OG images
-        if: ${{ github.event.inputs.skip_og_generation != 'true' }}
-        run: bash scripts/generate-og-images.sh
+        run: python scripts/ensure_frontmatter.py
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Build with Jekyll
-        run: bundle exec jekyll build --config _config.yml
-        env:
-          JEKYLL_ENV: production
+      - name: Build with Pelican
+        run: pelican --settings publishconf.py
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
 
   deploy:
     environment:

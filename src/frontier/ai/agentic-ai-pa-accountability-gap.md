@@ -1,9 +1,11 @@
 ---
-layout: article
-title: "The accountability satisfies the citizen, not the agent"
+title: The accountability satisfies the citizen, not the agent
 created: 2026-04-14
-keywords: agentic AI, public administration, accountability, explainability, open government, interoperability, institutional governance, AI Act
-excerpt: "Agentic AI promises to transform government. But in a system built on explainability and open government, where every decision must be traceable and attributed, where does the agent end and the bureaucrat begin?"
+keywords: agentic AI, public administration, accountability, explainability, open
+  government, interoperability, institutional governance, AI Act
+excerpt: Agentic AI promises to transform government. But in a system built on explainability
+  and open government, where every decision must be traceable and attributed, where
+  does the agent end and the bureaucrat begin?
 article_id: agentic-ai-pa-accountability-gap
 ---
 

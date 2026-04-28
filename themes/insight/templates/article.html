@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% from "_macros.html" import breadcrumb_links %}
+
+{% block title %}{{ article.title }} | {{ SITENAME }}{% endblock %}
+{% block description %}{{ article.summary | striptags | truncate(160, False, '') }}{% endblock %}
+{% block meta_keywords %}{{ article.category_top }}{% if article.tags %}, {% for tag in article.tags %}{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}, infrastructure, technology, systems{% endblock %}
+
+{% block page_path %}{{ article.url }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block page_image %}assets/og-images/{{ article.slug }}.webp{% endblock %}
+{% block og_article_meta %}
+  <meta property="article:published_time" content="{{ article.date.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}" />
+  {% if article.category_top %}<meta property="article:section" content="{{ article.category_top }}" />{% endif %}
+{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": {{ article.title | tojson }},
+  "description": {{ article.summary | striptags | tojson }},
+  "datePublished": "{{ article.date.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}",
+  {% if article.modified %}
+  "dateModified": "{{ article.modified.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}",
+  {% endif %}
+  "url": "{{ SITEURL }}/{{ article.url }}",
+  "image": "{{ SITEURL }}/assets/og-images/{{ article.slug }}.webp",
+  "author": {
+    "@type": "Person",
+    "name": {{ AUTHOR | tojson }},
+    "url": {{ AUTHOR_URL | tojson }}
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": {{ AUTHOR | tojson }},
+    "url": {{ AUTHOR_URL | tojson }}
+  },
+  "articleSection": {{ (category_by_path[article.category_top].title if article.category_top in category_by_path else article.category_top | replace('-', ' ') | title) | tojson }}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<article class="article">
+  <header class="article-header">
+    {% if article.breadcrumbs %}
+      <p class="article-category">{{ breadcrumb_links(article, category_by_path, SITEURL) }}</p>
+    {% endif %}
+    <h1>{{ article.title }}</h1>
+    <p class="article-meta">{{ article.date.strftime('%d %b %Y') }} · {{ article.reading_time }} min read</p>
+  </header>
+
+  {{ article.content }}
+
+  {% if article.prev_episode or article.next_episode %}
+  <nav class="episode-nav">
+    {% if article.prev_episode %}
+      <a href="{{ SITEURL }}/{{ article.prev_episode.url }}" class="episode-nav-link episode-nav-prev">← {{ article.prev_episode.title }}</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+    {% if article.next_episode %}
+      <a href="{{ SITEURL }}/{{ article.next_episode.url }}" class="episode-nav-link episode-nav-next">{{ article.next_episode.title }} →</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+  </nav>
+  {% endif %}
+
+  <nav class="article-nav" id="article-nav">
+    <a class="article-nav-link" id="back-link" href="/" style="display: none;">← Back to articles</a>
+    <a class="article-nav-link" id="top-link" href="#" style="display: none;">↑ Top</a>
+  </nav>
+
+  <script src="{{ SITEURL }}/assets/js/article.js" defer></script>
+</article>
+{% endblock %}

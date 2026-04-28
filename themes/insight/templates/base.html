@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- Primary Meta Tags -->
+    <title>{% block title %}{{ SITENAME }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{{ SITESUBTITLE }}{% endblock %}" />
+    <meta name="keywords" content="{% block meta_keywords %}infrastructure, technology, systems{% endblock %}" />
+    <meta name="author" content="{{ AUTHOR }}" />
+    <link rel="canonical" href="{{ SITEURL }}/{% block page_path %}{% endblock %}" />
+    <link rel="alternate" type="application/atom+xml" title="{{ SITENAME }}" href="{{ FEED_DOMAIN }}/{{ FEED_ATOM }}" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}" />
+    <meta property="og:url" content="{{ SITEURL }}/{{ self.page_path() }}" />
+    <meta property="og:title" content="{{ self.title() }}" />
+    <meta property="og:description" content="{{ self.description() }}" />
+    <meta property="og:site_name" content="{{ SITENAME }}" />
+    <meta property="og:image" content="{{ SITEURL }}/{% block page_image %}assets/og-images/homepage.webp{% endblock %}" />
+    {% block og_article_meta %}{% endblock %}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="{{ SITEURL }}/{{ self.page_path() }}" />
+    <meta name="twitter:title" content="{{ self.title() }}" />
+    <meta name="twitter:description" content="{{ self.description() }}" />
+    <meta name="twitter:image" content="{{ SITEURL }}/{{ self.page_image() }}" />
+
+    {% block extra_head %}{% endblock %}
+
+    <link rel="icon" type="image/svg+xml" href="{{ SITEURL }}/assets/favicon.svg" />
+    <link rel="stylesheet" href="{{ SITEURL }}/assets/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <p class="site-title"><a href="{{ SITEURL }}/">{{ SITENAME }}</a></p>
+        <p class="site-subtitle">{{ SITESUBTITLE }}</p>
+        {% include "nav.html" %}
+      </div>
+    </header>
+
+    <main class="wrap" aria-label="Content">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p class="site-footer-note">Published occasionally. Written for clarity over volume. • <a href="{{ SITEURL }}/feed.xml">RSS Feed</a></p>
+        <p class="site-footer-meta">
+          Written and maintained by <a href="{{ AUTHOR_URL }}">{{ AUTHOR }}</a>. All views are my own.
+        </p>
+        <p class="site-footer-note">No tracking. No cookies. <a href="https://github.com/ale-saglia/insight">Open for transparency</a>.</p>
+      </div>
+    </footer>
+  </body>
+</html>

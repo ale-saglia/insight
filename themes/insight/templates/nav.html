@@ -1,0 +1,30 @@
+{% macro category_links(extra_class='') %}
+  {% for cat in top_level_categories %}
+    {% if cat.category_path != 'general' %}
+      <a href="{{ SITEURL }}/{{ cat.url }}"{% if extra_class %} class="{{ extra_class }}"{% endif %}>{{ cat.title }}</a>
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+<nav class="site-nav" aria-label="Primary" id="site-nav" style="visibility: hidden">
+  <a href="{{ SITEURL }}/">Home</a>
+  <span class="site-nav-divider" aria-hidden="true"></span>
+  <a href="https://ale-saglia.com" target="_blank">About me</a>
+  <span class="site-nav-divider" aria-hidden="true"></span>
+
+  <div class="domains-group" id="domains-group-nav">
+    <span class="site-nav-label">Domains</span>
+    {{ category_links() }}
+  </div>
+
+  <div class="domains-dropdown" id="domains-dropdown-nav" aria-label="Domains menu">
+    <button class="domains-dropdown-trigger" aria-expanded="false" aria-haspopup="true">Domains <span class="domains-dropdown-arrow">▼</span></button>
+    <div class="domains-dropdown-menu">
+      {{ category_links('domains-dropdown-item') }}
+    </div>
+  </div>
+
+  <a href="{{ SITEURL }}/archive/" class="nav-archive">Archive</a>
+</nav>
+
+<script src="{{ SITEURL }}/assets/js/nav.js" defer></script>

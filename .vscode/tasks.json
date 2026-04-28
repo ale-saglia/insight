@@ -2,10 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Jekyll: Build",
+      "label": "Pelican: Setup",
       "type": "shell",
-      "command": "bash",
-      "args": ["scripts/build-local.sh"],
+      "command": "make setup",
       "group": "build",
       "presentation": {
         "reveal": "always",
@@ -14,10 +13,9 @@
       "problemMatcher": []
     },
     {
-      "label": "Jekyll: Preview (localhost:4000)",
+      "label": "Pelican: Setup (with test deps)",
       "type": "shell",
-      "command": "bash",
-      "args": ["scripts/preview-local.sh"],
+      "command": "make setup-dev",
       "group": "build",
       "presentation": {
         "reveal": "always",
@@ -26,10 +24,9 @@
       "problemMatcher": []
     },
     {
-      "label": "Jekyll: Clean & Build",
+      "label": "Pelican: Build",
       "type": "shell",
-      "command": "bash",
-      "args": ["-c", "rm -rf _site && bash scripts/build-local.sh"],
+      "command": "make build",
       "group": "build",
       "presentation": {
         "reveal": "always",
@@ -38,10 +35,20 @@
       "problemMatcher": []
     },
     {
-      "label": "Git: Update Modified Dates",
+      "label": "Pelican: Serve (localhost:4000)",
       "type": "shell",
-      "command": "bash",
-      "args": ["scripts/update-modified-dates.sh"],
+      "command": "make serve",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Pelican: Clean & Build",
+      "type": "shell",
+      "command": "make rebuild",
       "group": "build",
       "presentation": {
         "reveal": "always",

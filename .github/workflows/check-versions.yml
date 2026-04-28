@@ -3,11 +3,11 @@ name: Check version alignment
 on:
   push:
     paths:
-      - 'versions.env'
+      - '.python-version'
       - '.devcontainer/Dockerfile'
   pull_request:
     paths:
-      - 'versions.env'
+      - '.python-version'
       - '.devcontainer/Dockerfile'
 
 jobs:
@@ -17,19 +17,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check version alignment
-        run: |
-          set -e
-          # Only RUBY_VERSION is hardcoded in the Dockerfile (required before FROM).
-          # NODE_VERSION and BUNDLER_VERSION are sourced from versions.env at build time.
-          RUBY_VERSION_ENV=$(grep '^RUBY_VERSION=' versions.env | cut -d'=' -f2)
-          RUBY_VERSION_DOCKER=$(grep '^ARG RUBY_VERSION=' .devcontainer/Dockerfile | cut -d'=' -f2)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
 
-          echo "RUBY_VERSION: $RUBY_VERSION_ENV (versions.env) vs $RUBY_VERSION_DOCKER (Dockerfile)"
-
-          if [ "$RUBY_VERSION_ENV" != "$RUBY_VERSION_DOCKER" ]; then
-            echo "::error ::RUBY_VERSION is not aligned between versions.env and Dockerfile"
-            exit 1
-          fi
-
-          echo "All versions are aligned."
+      - name: Check Dockerfile Python version in sync
+        run: python scripts/sync_python_version.py
