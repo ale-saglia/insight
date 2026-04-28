@@ -26,6 +26,7 @@
 | 19  | Low      | ~235 lines of inline JS                                      | nav, article, archives                 |         |
 | 20  | Low      | `<button>` used for navigation                               | article                                |         |
 | 21  | Note     | `404.html` as TEMPLATE_PAGES                                 | —                                      |         |
+| 22  | Medium   | Dipendenze transitive non bloccate (lock parziale)           | requirements.txt, CI                   |         |
 
 ---
 
@@ -227,6 +228,21 @@ No browser caching (reloaded every page) and templates harder to read. Move to s
 ```
 
 "Back to articles" navigates via `history.back()` or `window.location.href` — semantically a link, not an action. Use `<a href>` with JS fallback for accessibility.
+
+---
+
+### 22. Dipendenze transitive non bloccate
+
+`requirements.txt` fissa le dipendenze dirette (es. `pelican==4.10.2`, `markdown==3.7`), ma non il loro albero. Pelican dipende da Jinja2, MarkupSafe, Pygments, ecc.: se una di quelle rilascia una versione breaking, il `pip install -r requirements.txt` su GitHub Actions la scaricherà comunque e la build si romperà silenziosamente.
+
+**Fix:** passare a un lock file completo generato da strumenti moderni:
+
+- `uv` (preferito per integrazione futura): `uv pip compile requirements.in -o requirements.txt`
+- oppure `pip-tools`: `pip-compile requirements.in`
+
+Il file `requirements.in` lista solo le dipendenze dirette; il `requirements.txt` generato congela l'intero albero con hash. Aggiornare le dipendenze diventa intenzionale (`uv pip compile --upgrade`) anziché implicito.
+
+Aprire la strada a integrare `uv` come unico tool per install + lock in CI e nel Dockerfile.
 
 ---
 
