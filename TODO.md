@@ -16,7 +16,7 @@
 | 10  | Medium   | `og_images.py` Linux-only fonts (silent fail elsewhere)      | plugins/og_images.py                   | ✅ Done |
 | 10b | Medium   | `og_images.py` font doesn't match design (not Georgia)       | plugins/og_images.py                   | ✅ Done |
 | 11  | Medium   | Unused `ycount` variable                                     | archives:31                            | ✅ Done |
-| 12  | Low      | `_get_generators` misleading parameter name                  | plugins/insight_register.py            |         |
+| 12  | Low      | `_get_generators` misleading parameter name                  | plugins/insight_register.py            | ✅ Done |
 | 13  | Low      | `layout: article` enforced but ignored                       | ensure-frontmatter.sh, articles        |         |
 | 14  | Low      | `ARTICLE_EXCLUDES` redundant with `IGNORE_FILES`             | pelicanconf.py                         |         |
 | 15  | Low      | `_general/` reachable via direct URL despite "hidden" intent | plugins, nav filter                    |         |

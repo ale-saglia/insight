@@ -19,7 +19,7 @@ def _add_reader(readers):
     readers.reader_classes['markdown'] = InsightMarkdownReader
 
 
-def _get_generators(generators):
+def _get_generators(_pelican):
     return CategoryPageGenerator
 
 
