@@ -22,7 +22,7 @@
 | 15  | Low      | `_general/` reachable via direct URL despite "hidden" intent | plugins, nav filter                    | ✅ Done |
 | 16  | Low      | `_git_last_modified` is O(N) subprocess calls                | plugins/insight_articles.py            | ✅ Done |
 | 17  | Low      | `article_id` slug not validated (path traversal surface)     | plugins/insight_articles.py            | ✅ Done |
-| 18  | Low      | Duplicate category loop in nav                               | nav                                    |         |
+| 18  | Low      | Duplicate category loop in nav                               | nav                                    | ✅ Done |
 | 19  | Low      | ~235 lines of inline JS                                      | nav, article, archives                 |         |
 | 20  | Low      | `<button>` used for navigation                               | article                                |         |
 | 21  | Note     | `404.html` as TEMPLATE_PAGES                                 | —                                      |         |
