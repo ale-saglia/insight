@@ -18,12 +18,12 @@ help:
 	@echo "  clean      Remove _site/"
 
 setup:
-	uv venv .venv
+	uv venv --clear .venv
 	uv pip install --require-hashes -r requirements.txt
 	@echo "Setup complete. Run 'make build' or 'make serve'."
 
 setup-dev:
-	uv venv .venv
+	uv venv --clear .venv
 	uv pip install --require-hashes -r requirements-dev.txt
 	@echo "Dev setup complete. Run 'make test' to run the test suite."
 
