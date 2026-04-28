@@ -9,17 +9,28 @@ from datetime import datetime
 from pathlib import Path
 
 
-def _git_last_modified(path):
+def _build_git_date_map():
+    """Return {relative_path: date} from a single git log pass."""
     try:
         result = subprocess.run(
-            ['git', 'log', '-1', '--format=%cd', '--date=format:%Y-%m-%d', '--', path],
-            capture_output=True, text=True, timeout=5,
+            ['git', 'log', '--name-only', '--format=COMMIT %cd', '--date=format:%Y-%m-%d'],
+            capture_output=True, text=True, timeout=30,
         )
-        if result.returncode == 0 and result.stdout.strip():
-            return datetime.strptime(result.stdout.strip(), '%Y-%m-%d').date()
+        if result.returncode != 0:
+            return {}
     except Exception:
-        pass
-    return None
+        return {}
+
+    date_map = {}
+    current_date = None
+    for line in result.stdout.splitlines():
+        if line.startswith('COMMIT '):
+            current_date = line[7:]
+        elif line.strip() and current_date:
+            path = line.strip()
+            if path not in date_map:  # first occurrence = most recent
+                date_map[path] = datetime.strptime(current_date, '%Y-%m-%d').date()
+    return date_map
 
 
 def _episode_number(source_path):
@@ -32,8 +43,9 @@ def _episode_number(source_path):
 def process_articles(generator):
     """Set custom slugs, breadcrumbs, reading time, git dates, and series nav."""
 
+    git_dates = _build_git_date_map()
     for article in generator.articles:
-        _enrich_article(article)
+        _enrich_article(article, git_dates)
 
     # Series navigation: group numbered articles by parent directory
     series_groups = {}
@@ -63,7 +75,7 @@ def process_articles(generator):
     generator.context['tag_counts'] = tag_counts
 
 
-def _enrich_article(article):
+def _enrich_article(article, git_dates):
     """Compute and attach all custom attributes to a single article."""
 
     # Use get_relative_source_path() to get a path relative to PATH,
@@ -115,6 +127,6 @@ def _enrich_article(article):
 
     # Git modified date (only when not already set from frontmatter)
     if not getattr(article, 'modified', None):
-        git_date = _git_last_modified(source_rel)
+        git_date = git_dates.get(source_rel)
         if git_date:
             article.modified = datetime(git_date.year, git_date.month, git_date.day)
