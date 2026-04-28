@@ -70,7 +70,7 @@ I could have virtualized Home Assistant on one of the Proxmox nodes. But I alrea
 
 ### How the pieces fit together
 
-![Homelab compute architecture: two Proxmox VE nodes connected via a 10 Gbps switch. pve-network (Intel N150, 16 GB) runs OPNsense, network-services (reverse proxy and SSO), and UniFi controller. pve-storage (Ryzen 7 PRO, 96 GB, 8 bays) runs Proxmox Backup Server, Windows, NVR with Google Coral TPU, personal photo library, file cloud, secrets, monitoring, and storage services. Home Assistant Yellow is connected to the switch as a Corosync voter.](/assets/homelab-compute-architecture.svg)
+![Homelab compute architecture: two Proxmox VE nodes connected via a 10 Gbps switch. pve-network (Intel N150, 16 GB) runs OPNsense, network-services (reverse proxy and SSO), and UniFi controller. pve-storage (Ryzen 7 PRO, 96 GB, 8 bays) runs Proxmox Backup Server, Windows, NVR with Google Coral TPU, personal photo library, file cloud, secrets, monitoring, and storage services. Home Assistant Yellow is connected to the switch as a Corosync voter.](/assets/images/homelab-compute-architecture.svg)
 
 ---
 
