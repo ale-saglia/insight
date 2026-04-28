@@ -6,6 +6,7 @@ Hooks into article_generator_finalized so articles are already enriched
 (slug, summary) by insight_articles.process_articles.
 """
 
+import hashlib
 import os
 import re
 from pathlib import Path
@@ -145,6 +146,20 @@ def _draw_homepage(draw, site_title, site_description, domain, author_name, font
     draw.text((W - MARGIN - tw, footer_text_y), domain, fill=COLOR_MUTED, font=fonts["sans_24"])
 
 
+# ── Cache helpers ─────────────────────────────────────────────────────────────
+
+def _content_hash(*parts: str) -> str:
+    return hashlib.sha256("\0".join(parts).encode()).hexdigest()
+
+def _is_current(path: Path, hash_val: str) -> bool:
+    sha_file = path.with_suffix('.sha256')
+    return path.exists() and sha_file.exists() and sha_file.read_text().strip() == hash_val
+
+def _save_image(img: Image.Image, path: Path, hash_val: str) -> None:
+    img.save(path, 'WEBP', quality=85)
+    path.with_suffix('.sha256').write_text(hash_val)
+
+
 # ── Plugin hook ───────────────────────────────────────────────────────────────
 
 def _generate(generator):
@@ -156,14 +171,17 @@ def _generate(generator):
     domain     = re.sub(r'^https?://', '', site_url)
 
     fonts    = _preload_fonts()
-    out_base = Path(generator.path) / 'assets' / 'og-images'
+    out_base = Path(generator.output_path) / 'assets' / 'og-images'
+    out_base.mkdir(parents=True, exist_ok=True)
 
     # Homepage
-    img = Image.new('RGB', (W, H), COLOR_BG)
-    _draw_homepage(ImageDraw.Draw(img), site_title, site_desc, domain, author, fonts)
-    out_base.mkdir(parents=True, exist_ok=True)
-    img.save(out_base / 'homepage.webp', 'WEBP', quality=85)
-    print('✓ OG: homepage.webp')
+    hp_hash = _content_hash(site_title, site_desc, domain, author)
+    hp_out  = out_base / 'homepage.webp'
+    if not _is_current(hp_out, hp_hash):
+        img = Image.new('RGB', (W, H), COLOR_BG)
+        _draw_homepage(ImageDraw.Draw(img), site_title, site_desc, domain, author, fonts)
+        _save_image(img, hp_out, hp_hash)
+        print('✓ OG: homepage.webp')
 
     # Articles — slug already set by insight_articles.process_articles
     for article in generator.articles:
@@ -171,23 +189,24 @@ def _generate(generator):
         if not slug:
             continue
 
-        # Strip HTML from summary to get plain text for the image
         summary = re.sub(r'<[^>]+>', '', getattr(article, 'summary', '') or '')
 
         out_path = out_base / f'{slug}.webp'
         out_path.parent.mkdir(parents=True, exist_ok=True)
 
-        img = Image.new('RGB', (W, H), COLOR_BG)
-        _draw_article(
-            ImageDraw.Draw(img),
-            site_title, site_desc,
-            article.title or slug,
-            summary,
-            domain,
-            fonts,
-        )
-        img.save(out_path, 'WEBP', quality=85)
-        print(f'✓ OG: {slug}.webp')
+        art_hash = _content_hash(article.title or slug, slug, summary)
+        if not _is_current(out_path, art_hash):
+            img = Image.new('RGB', (W, H), COLOR_BG)
+            _draw_article(
+                ImageDraw.Draw(img),
+                site_title, site_desc,
+                article.title or slug,
+                summary,
+                domain,
+                fonts,
+            )
+            _save_image(img, out_path, art_hash)
+            print(f'✓ OG: {slug}.webp')
 
 
 def register():
