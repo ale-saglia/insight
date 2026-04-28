@@ -6,7 +6,6 @@ AUTHOR_URL = 'https://ale-saglia.com'
 
 PATH = '.'
 ARTICLE_PATHS = ['src']
-ARTICLE_EXCLUDES = ['README.md', '*README.md']
 IGNORE_FILES = ['README.md', '.#*']
 PAGE_PATHS = []
 
