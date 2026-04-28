@@ -1,6 +1,5 @@
 VENV_BIN  ?= .venv/bin
 PYTHON    ?= $(VENV_BIN)/python
-PIP       ?= $(VENV_BIN)/pip
 PELICAN   ?= $(VENV_BIN)/pelican
 PORT      ?= 4000
 
@@ -18,28 +17,14 @@ help:
 	@echo "  rebuild    Clean and rebuild"
 	@echo "  clean      Remove _site/"
 
-
-# Internal function for venv creation and requirements install
-define create_venv_and_install
-  test -d .venv || python3 -m venv .venv
-  @echo "Installing dependencies: $(1)"
-  @if ! .venv/bin/pip install -q -r $(1); then \
-    echo "[ERROR] Installation failed. Removing .venv and retrying..."; \
-    rm -rf .venv; \
-    python3 -m venv .venv; \
-    if ! .venv/bin/pip install -q -r $(1); then \
-      echo "[ERROR] Installation failed again. Check your Python setup and $(1)."; \
-      exit 1; \
-    fi; \
-  fi
-endef
-
 setup:
-	$(call create_venv_and_install,requirements.txt)
+	uv venv .venv
+	uv pip install --require-hashes -r requirements.txt
 	@echo "Setup complete. Run 'make build' or 'make serve'."
 
 setup-dev:
-	$(call create_venv_and_install,requirements-dev.txt)
+	uv venv .venv
+	uv pip install --require-hashes -r requirements-dev.txt
 	@echo "Dev setup complete. Run 'make test' to run the test suite."
 
 build:

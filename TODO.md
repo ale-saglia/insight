@@ -26,7 +26,7 @@
 | 19  | Low      | ~235 lines of inline JS                                      | nav, article, archives                 |         |
 | 20  | Low      | `<button>` used for navigation                               | article                                |         |
 | 21  | Note     | `404.html` as TEMPLATE_PAGES                                 | —                                      |         |
-| 22  | Medium   | Unpinned transitive dependencies (partial lock)              | requirements.txt, CI                   |         |
+| 22  | Medium   | Unpinned transitive dependencies (partial lock)              | requirements.txt, CI                   | ✅ Done |
 
 ---
 
