@@ -73,7 +73,7 @@
       {% set current_year.val = article_year %}
     {% endif %}
 
-    {%- set meta_label = breadcrumb_label(article, category_pages) -%}
+    {%- set meta_label = breadcrumb_label(article, category_by_path) -%}
 
     {%- set tag_names = [] -%}
     {%- if article.tags -%}

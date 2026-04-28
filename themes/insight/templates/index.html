@@ -12,7 +12,7 @@
     <p class="section-label">Start Here</p>
     <a class="featured-article-card" href="{{ SITEURL }}/{{ latest.url }}">
       <div class="featured-article-content">
-        <p class="featured-article-meta">{{ latest.date.strftime('%d %b %Y') }}{% if latest.category_top != 'general' %} · <span class="featured-article-category">{{ breadcrumb_label(latest, category_pages) }}</span>{% endif %}</p>
+        <p class="featured-article-meta">{{ latest.date.strftime('%d %b %Y') }}{% if latest.category_top != 'general' %} · <span class="featured-article-category">{{ breadcrumb_label(latest, category_by_path) }}</span>{% endif %}</p>
         <h2 id="featured-article-title">{{ latest.title }}</h2>
         {% if latest.summary %}<p class="featured-article-excerpt">{{ latest.summary | striptags }}</p>{% endif %}
       </div>
@@ -27,7 +27,7 @@
       {% for article in sorted_articles[1:6] %}
         <li>
           <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
-          <span class="article-meta">{{ article.date.strftime('%d %b %Y') }}{% if article.category_top != 'general' %} · {{ breadcrumb_label(article, category_pages) }}{% endif %}</span>
+          <span class="article-meta">{{ article.date.strftime('%d %b %Y') }}{% if article.category_top != 'general' %} · {{ breadcrumb_label(article, category_by_path) }}{% endif %}</span>
           {% if article.summary %}<span class="article-excerpt">{{ article.summary | striptags }}</span>{% endif %}
         </li>
       {% endfor %}

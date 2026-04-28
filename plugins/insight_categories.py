@@ -104,6 +104,7 @@ class CategoryPageGenerator(Generator):
 
         self.category_pages = category_pages
         self.context['category_pages'] = category_pages
+        self.context['category_by_path'] = by_path
         self.context['top_level_categories'] = [p for p in category_pages if p.top_level]
 
     def generate_output(self, writer):

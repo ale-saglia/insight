@@ -36,7 +36,7 @@
     "name": {{ AUTHOR | tojson }},
     "url": {{ AUTHOR_URL | tojson }}
   },
-  "articleSection": {% set ns = namespace(domain_label=article.category_top | replace('-', ' ') | title) %}{% for cat in category_pages %}{% if cat.category_path == article.category_top %}{% set ns.domain_label = cat.title %}{% endif %}{% endfor %}{{ ns.domain_label | tojson }}
+  "articleSection": {{ (category_by_path[article.category_top].title if article.category_top in category_by_path else article.category_top | replace('-', ' ') | title) | tojson }}
 }
 </script>
 {% endblock %}
@@ -45,7 +45,7 @@
 <article class="article">
   <header class="article-header">
     {% if article.breadcrumbs %}
-      <p class="article-category">{{ breadcrumb_links(article, category_pages, SITEURL) }}</p>
+      <p class="article-category">{{ breadcrumb_links(article, category_by_path, SITEURL) }}</p>
     {% endif %}
     <h1>{{ article.title }}</h1>
     <p class="article-meta">{{ article.date.strftime('%d %b %Y') }} · {{ article.reading_time }} min read</p>

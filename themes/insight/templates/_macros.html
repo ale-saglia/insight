@@ -1,13 +1,8 @@
 {#- Breadcrumb label as plain text (for article lists, meta, etc.) -#}
-{% macro breadcrumb_label(article, category_pages) -%}
+{% macro breadcrumb_label(article, category_by_path) -%}
   {%- set ns = namespace(label='') -%}
   {%- for crumb in article.breadcrumbs -%}
-    {%- set part_ns = namespace(label=crumb.label) -%}
-    {%- for cat in category_pages -%}
-      {%- if cat.category_path == crumb.url.rstrip('/') -%}
-        {%- set part_ns.label = cat.title -%}
-      {%- endif -%}
-    {%- endfor -%}
+    {%- set part_ns = namespace(label=category_by_path[crumb.url.rstrip('/')].title if crumb.url.rstrip('/') in category_by_path else crumb.label) -%}
     {%- if ns.label -%}{%- set ns.label = ns.label + ' / ' + part_ns.label -%}
     {%- else -%}{%- set ns.label = part_ns.label -%}{%- endif -%}
   {%- endfor -%}
@@ -18,14 +13,9 @@
 {%- endmacro %}
 
 {#- Breadcrumb as linked HTML (for article headers) -#}
-{% macro breadcrumb_links(article, category_pages, siteurl) -%}
+{% macro breadcrumb_links(article, category_by_path, siteurl) -%}
   {%- for crumb in article.breadcrumbs -%}
-    {%- set ns = namespace(label=crumb.label) -%}
-    {%- for cat in category_pages -%}
-      {%- if cat.category_path == crumb.url.rstrip('/') -%}
-        {%- set ns.label = cat.title -%}
-      {%- endif -%}
-    {%- endfor -%}
+    {%- set ns = namespace(label=category_by_path[crumb.url.rstrip('/')].title if crumb.url.rstrip('/') in category_by_path else crumb.label) -%}
     {%- if not loop.first %} / {% endif -%}
     <a href="{{ siteurl }}/{{ crumb.url }}">{{ ns.label }}</a>
   {%- endfor -%}
