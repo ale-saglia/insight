@@ -1,6 +1,6 @@
 # Insight: Manifesto & Governance Principles
 
-Technology is never neutral. The architecture of a system, the way data is processed, and the cadence of content delivery are all governance choices. 
+Technology is never neutral. The architecture of a system, the way data is processed, and the cadence of content delivery are all governance choices.
 
 *Insight* is built and maintained following a rigorous set of principles that bridge software engineering, editorial ethics, and interaction design. This document outlines the guidelines governing the project, aligning them with the core values of digital sovereignty, proportionality, and transparency.
 

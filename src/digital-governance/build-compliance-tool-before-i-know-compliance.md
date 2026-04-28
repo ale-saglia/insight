@@ -26,7 +26,7 @@ The problem was not incompetence. It was scale. Spreadsheets work fine for ten c
 
 I built DESU to address this directly. The architecture was deliberately simple: a Java/JavaFX desktop client with a PostgreSQL backend, a DAO layer for clean data access, and a set of server-side Python scripts for automated email notifications. Every month, the system would query the database and send a digest of upcoming billing deadlines and expired engagements that still lacked an invoice, the two failure modes the firm cared most about.
 
-```
+```java
 subject = "Incarichi da fatturare per il mese di " + calendar.month_name[datetime.now().month]
 ```
 
