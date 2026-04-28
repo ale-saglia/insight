@@ -23,15 +23,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Read versions from Dockerfile
-        id: versions
-        run: |
-          echo "python=$(grep '^ARG PYTHON_VERSION=' .devcontainer/Dockerfile | cut -d= -f2)" >> $GITHUB_OUTPUT
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ steps.versions.outputs.python }}
+          python-version-file: ".python-version"
           cache: 'pip'
           cache-dependency-path: requirements.txt
 

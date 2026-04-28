@@ -3,11 +3,11 @@ name: Check version alignment
 on:
   push:
     paths:
-      - 'versions.env'
+      - '.python-version'
       - '.devcontainer/Dockerfile'
   pull_request:
     paths:
-      - 'versions.env'
+      - '.python-version'
       - '.devcontainer/Dockerfile'
 
 jobs:
@@ -17,19 +17,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check version alignment
-        run: |
-          set -e
-          # Only PYTHON_VERSION is hardcoded in the Dockerfile (required before FROM).
-          # NODE_VERSION is sourced from versions.env at build time.
-          PYTHON_VERSION_ENV=$(grep '^PYTHON_VERSION=' versions.env | cut -d'=' -f2)
-          PYTHON_VERSION_DOCKER=$(grep '^ARG PYTHON_VERSION=' .devcontainer/Dockerfile | cut -d'=' -f2)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
 
-          echo "PYTHON_VERSION: $PYTHON_VERSION_ENV (versions.env) vs $PYTHON_VERSION_DOCKER (Dockerfile)"
-
-          if [ "$PYTHON_VERSION_ENV" != "$PYTHON_VERSION_DOCKER" ]; then
-            echo "::error ::PYTHON_VERSION is not aligned between versions.env and Dockerfile"
-            exit 1
-          fi
-
-          echo "All versions are aligned."
+      - name: Check Dockerfile Python version in sync
+        run: python scripts/sync_python_version.py

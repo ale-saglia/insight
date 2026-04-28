@@ -1,5 +1,5 @@
-# PYTHON_VERSION duplicated here: Docker requires ARG before FROM and cannot read external files.
-# Keep in sync with /versions.env.
+# Docker requires ARG before FROM and cannot read external files.
+# .python-version is the source of truth; scripts/sync_python_version.py keeps this in sync.
 ARG PYTHON_VERSION=3.12
 FROM python:${PYTHON_VERSION}-bookworm
 
