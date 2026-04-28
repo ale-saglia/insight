@@ -1,6 +1,6 @@
 {
     "chat.tools.terminal.autoApprove": {
-        "/^bash scripts/build-local\\.sh$/": {
+        "/^make (build|serve|preview|rebuild|clean|setup|setup-dev)$/": {
             "approve": true,
             "matchCommandLine": true
         }

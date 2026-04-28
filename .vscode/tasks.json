@@ -2,9 +2,20 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Pelican: Setup (install deps)",
+      "label": "Pelican: Setup",
       "type": "shell",
-      "command": "rm -rf .venv && python3 -m venv .venv && .venv/bin/pip install -q -r requirements.txt && echo 'Setup complete.'",
+      "command": "make setup",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Pelican: Setup (with test deps)",
+      "type": "shell",
+      "command": "make setup-dev",
       "group": "build",
       "presentation": {
         "reveal": "always",
@@ -15,8 +26,7 @@
     {
       "label": "Pelican: Build",
       "type": "shell",
-      "command": "bash",
-      "args": ["scripts/build-local.sh"],
+      "command": "make build",
       "group": "build",
       "presentation": {
         "reveal": "always",
@@ -25,10 +35,9 @@
       "problemMatcher": []
     },
     {
-      "label": "Pelican: Preview (localhost:4000)",
+      "label": "Pelican: Serve (localhost:4000)",
       "type": "shell",
-      "command": "bash",
-      "args": ["scripts/preview-local.sh"],
+      "command": "make serve",
       "group": "build",
       "presentation": {
         "reveal": "always",
@@ -39,20 +48,7 @@
     {
       "label": "Pelican: Clean & Build",
       "type": "shell",
-      "command": "bash",
-      "args": ["-c", "rm -rf _site && bash scripts/build-local.sh"],
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Git: Update Modified Dates",
-      "type": "shell",
-      "command": "bash",
-      "args": ["scripts/update-modified-dates.sh"],
+      "command": "make rebuild",
       "group": "build",
       "presentation": {
         "reveal": "always",
