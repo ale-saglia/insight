@@ -1,9 +1,11 @@
 ---
-layout: article
 title: The Ciphertext Outlives Its Key
 created: 2026-04-24
-keywords: post-quantum cryptography, genetic databases, HNDL, crypto-agility, data sovereignty, biobanks
-excerpt: Nine years ago I asked whether quantum computing would eventually kill Bitcoin. The same question, asked today about a national genetic database, has none of the qualities that made the original speculative.
+keywords: post-quantum cryptography, genetic databases, HNDL, crypto-agility, data
+  sovereignty, biobanks
+excerpt: Nine years ago I asked whether quantum computing would eventually kill Bitcoin.
+  The same question, asked today about a national genetic database, has none of the
+  qualities that made the original speculative.
 article_id: ciphertext-outlives-key
 ---
 

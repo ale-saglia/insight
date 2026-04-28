@@ -145,7 +145,7 @@ class TestNormalizeBody:
 class TestProcess:
     def test_complete_file_is_not_modified(self, make_article):
         content = (
-            '---\nlayout: article\ntitle: My Article\ncreated: 2024-01-01\n'
+            '---\ntitle: My Article\ncreated: 2024-01-01\n'
             'keywords: python\nexcerpt: A summary\n---\n\nContent here.\n'
         )
         path = make_article(content)
@@ -282,7 +282,7 @@ class TestProcess:
 
     def test_category_mismatch_warns_without_modifying_file(self, make_article):
         content = (
-            '---\nlayout: article\ntitle: T\ncreated: 2024-01-01\n'
+            '---\ntitle: T\ncreated: 2024-01-01\n'
             'keywords: py\nexcerpt: ok\ncategory: wrong\n---\n\nBody.\n'
         )
         path = make_article(content)
@@ -290,10 +290,21 @@ class TestProcess:
         assert ef._warn_count >= 1
         assert ef._update_count == 0
 
+    def test_strips_layout_field(self, make_article):
+        content = (
+            '---\nlayout: article\ntitle: Test\ncreated: 2024-01-01\n'
+            'keywords: python\nexcerpt: A summary\n---\n\nBody.\n'
+        )
+        path = make_article(content)
+        ef._process(path)
+        meta, _ = ef._parse_frontmatter(path.read_text(encoding='utf-8'))
+        assert 'layout' not in meta
+        assert ef._update_count == 1
+
     def test_idempotent_after_normalization(self, make_article):
         """A second run on an already-normalized file produces no changes."""
         content = (
-            '---\nlayout: article\ntitle: Test\ncreated: 2024-01-01\n'
+            '---\ntitle: Test\ncreated: 2024-01-01\n'
             'keywords: python\nexcerpt: A summary\n---\n\nBody.\n'
         )
         path = make_article(content)

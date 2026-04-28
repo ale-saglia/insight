@@ -93,8 +93,6 @@ class InsightMarkdownReader(MarkdownReader):
         if 'article_id' in fm_meta:
             meta_strings['article_id'] = str(fm_meta['article_id'])
 
-        # layout ignored (template selection is done by Pelican)
-
         # Convert to Pelican-typed metadata
         processed = {}
         for key, value in meta_strings.items():

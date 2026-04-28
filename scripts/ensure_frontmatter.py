@@ -7,7 +7,6 @@ ERROR-level issue is found; warnings are non-fatal.
 Rules applied to each article file (README.md excluded):
   title    — from first H1; fallback to filename stem (WARNING).
   created  — from git first-commit date; fallback to today (WARNING).
-  layout   — inserted as "article" when missing (silent).
   keywords — inserted empty when missing (WARNING).
   excerpt  — inserted empty when missing (WARNING).
 
@@ -28,7 +27,7 @@ from pathlib import Path
 import yaml
 
 SRC = Path('src')
-_KNOWN_FIELDS = ['layout', 'title', 'created', 'modified', 'keywords', 'excerpt']
+_KNOWN_FIELDS = ['title', 'created', 'modified', 'keywords', 'excerpt']
 
 _warn_count = 0
 _error_count = 0
@@ -153,9 +152,8 @@ def _process(path):
             meta['created'] = today
             _warn(path, f'created not found in git history: using today ({today})')
 
-    # layout (additive, silent — see TODO #13 for removal)
-    if 'layout' not in meta:
-        meta['layout'] = 'article'
+    # layout is Jekyll migration cruft — strip it (Pelican ignores it)
+    meta.pop('layout', None)
 
     # keywords (additive)
     if 'keywords' not in meta:
@@ -186,9 +184,9 @@ def _process(path):
 
     normalized = _normalize_body(body, strip_h1=strip_h1)
 
-    fields_added = bool(set(meta) - original_keys)
+    fields_changed = set(meta) != original_keys
     expected_body_section = f'\n{normalized}\n' if trailing_newline else f'\n{normalized}'
-    if fields_added or body != expected_body_section:
+    if fields_changed or body != expected_body_section:
         _write(path, meta, normalized, trailing_newline)
 
 

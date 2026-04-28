@@ -1,9 +1,9 @@
 ---
-layout: article
 title: Building a Home Network You Actually Control
 created: 2026-04-11
 keywords: home network design, network segmentation, firewall, OPNsense, network infrastructure
-excerpt: Designing residential network infrastructure from scratch with architectural separation of concerns and principled infrastructure design.
+excerpt: Designing residential network infrastructure from scratch with architectural
+  separation of concerns and principled infrastructure design.
 article_id: home-network-design
 ---
 
