@@ -19,7 +19,7 @@
 | 12  | Low      | `_get_generators` misleading parameter name                  | plugins/insight_register.py            | ✅ Done |
 | 13  | Low      | `layout: article` enforced but ignored                       | ensure-frontmatter.sh, articles        | ✅ Done |
 | 14  | Low      | `ARTICLE_EXCLUDES` redundant with `IGNORE_FILES`             | pelicanconf.py                         | ✅ Done |
-| 15  | Low      | `_general/` reachable via direct URL despite "hidden" intent | plugins, nav filter                    |         |
+| 15  | Low      | `_general/` reachable via direct URL despite "hidden" intent | plugins, nav filter                    | ✅ Done |
 | 16  | Low      | `_git_last_modified` is O(N) subprocess calls                | plugins/insight_articles.py            | ✅ Done |
 | 17  | Low      | `article_id` slug not validated (path traversal surface)     | plugins/insight_articles.py            |         |
 | 18  | Low      | Duplicate category loop in nav                               | nav                                    |         |

@@ -66,7 +66,7 @@ Example: `src/infrastructure/zero-to-homelab/0-why-homelab-matters.md`
 → slug = `infrastructure/zero-to-homelab/why-homelab-matters`
 → URL = `infrastructure/zero-to-homelab/why-homelab-matters/`
 
-Leading underscores in directory names (e.g. `_general`) are stripped from the URL path, making those categories invisible in the nav while still generating articles.
+Leading underscores in directory names (e.g. `_general`) are stripped from the URL path. "Hidden" means no nav link — the category index and its articles are still publicly reachable via direct URL. This is intentional: `_general/` is a catch-all for standalone articles that don't belong to a series and shouldn't clutter the nav.
 
 Pelican's built-in category/tag/author index pages are disabled (`*_SAVE_AS = ''`).
 
@@ -217,7 +217,7 @@ summary: Short description shown on the category page.
 ---
 ```
 
-The directory name becomes the URL path segment. Prefix with `_` to hide from the nav while still publishing.
+The directory name becomes the URL path segment. Prefix with `_` to hide from the nav while still publishing all articles at their normal URLs.
 
 ### New series
 
