@@ -1,68 +1,74 @@
 # Local Build & Preview
 
-This document describes how to build and preview the site locally using Docker.
+This document describes how to build and preview the site locally using Python.
 
 ## Prerequisites
 
-- Docker installed and running.
-- Python 3 (for serving the preview).
+- Python — version pinned in `versions.env` and `.devcontainer/Dockerfile`
+- Recommended: use the VS Code dev container, which sets up the environment automatically
 
-## Build Locally
+## First-time setup
 
-Build the site with Jekyll using Docker:
+Create the virtual environment and install dependencies:
 
 ```bash
-./scripts/build-local.sh
+make setup
 ```
 
-Before building, the script now ensures each article in `src/*/*.md` has required front matter keys (`layout`, `title`, `created`, `category`, `keywords`, `excerpt`, `permalink`) without overwriting existing values. Missing `keywords` and `excerpt` raise warnings.
+This creates `.venv/` and installs all dependencies from `requirements.txt`.
 
-This runs Jekyll with the local config override (`_config.local.yml`) so the site builds at the root path (`/`) instead of under `/insight`.
-
-Output is generated in `_site/`.
-
-## Preview Locally
-
-Start a local HTTP server to preview the built site:
+## Build
 
 ```bash
-./scripts/preview-local.sh
+make build
 ```
 
-This will:
-1. Run `./scripts/build-local.sh` if `_site` doesn't exist or is stale.
-2. Start a Python HTTP server on port 4000.
+This runs `scripts/build-local.sh`, which:
 
-Then open:
+1. Runs `scripts/ensure-frontmatter.sh` — validates and normalises frontmatter on all articles under `src/`
+2. Runs `pelican --settings pelicanconf.py` — builds the site into `_site/`
 
-**`http://127.0.0.1:4000/`**
+OG images are generated automatically during the Pelican build by the `og_images` plugin (no separate step required).
 
-CSS and navigation will load correctly because the local config removes the `/insight` prefix.
-
-## Environment & Script Customization
-
-Both scripts support environment variable overrides:
+## Preview
 
 ```bash
-# Use a custom Jekyll image
-JEKYLL_IMAGE=jekyll/jekyll:3.9 ./scripts/build-local.sh
+make serve
+```
 
-# Use a custom platform
-DOCKER_PLATFORM=linux/arm64 ./scripts/build-local.sh
+Builds the site and starts a local HTTP server on port 4000.
 
-# Start preview on a different port
+Then open: **`http://127.0.0.1:4000/`**
+
+To use a different port:
+
+```bash
 ./scripts/preview-local.sh 8080
 ```
 
-## Config Files
+## Rebuild from scratch
 
-- **`_config.yml`**: Production config with `baseurl: ""` (empty unless deploying to subdirectory).
-- **`_config.local.yml`**: Local override with `baseurl: ""` for root-level preview.
+```bash
+make rebuild
+```
 
-The build scripts merge both when running locally.
+Deletes `_site/` and runs a full build.
+
+## Clean
+
+```bash
+make clean
+```
+
+Removes `_site/` only. Does not touch `.venv/`.
+
+## Config files
+
+- **`pelicanconf.py`**: Base config used for local builds (`RELATIVE_URLS = True`).
+- **`publishconf.py`**: Production overrides (`SITEURL`, `RELATIVE_URLS = False`, `DELETE_OUTPUT_DIRECTORY = True`). Used by CI only.
 
 ## Notes
 
-- The local build respects all Jekyll templating and Liquid filters.
+- The local build uses relative URLs, so all links and assets work correctly when served from the root.
 - Dynamic category navigation (from `src/*/README.md` metadata) works the same locally as in production.
-- The static files in `_site` are ready to be deployed to GitHub Pages.
+- The `_site/` directory is gitignored and ready to be deployed to GitHub Pages.

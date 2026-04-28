@@ -25,7 +25,7 @@ To understand the rationale and the ethical framework behind these architectural
 ## 🛠️ Editorial Stack
 
 - **Format**: Markdown for authoring
-- **Generation**: Jekyll static site generator
+- **Generation**: Pelican (Python static site generator — version in `requirements.txt`)
 - **Delivery**: GitHub Pages
 - **Versioning**: Git for history and editorial refinement
 
@@ -42,25 +42,26 @@ To understand the rationale and the ethical framework behind these architectural
 │   │   └── zero-to-homelab/      # Homelab series (episode-ordered)
 │   ├── digital-governance/       # AI and governance systems analysis
 │   ├── frontier/                 # AI and emerging technology notes
-│   │   └── ai/                   # AI subcategory
+│   │   ├── ai/                   # AI subcategory
+│   │   └── quantum-computing/    # Quantum computing subcategory
 │   └── _general/                 # Standalone cross-domain pieces
-├── _layouts/                     # Jekyll templates
-│   ├── default.html              # Base shell (includes nav, head)
+├── themes/insight/templates/     # Jinja2 templates
+│   ├── base.html                 # Base shell (includes nav, head, OG/Twitter tags)
 │   ├── article.html              # Article page (breadcrumbs, metadata, episode nav)
 │   ├── category.html             # Category index page
-│   └── archive.html              # Archive page with search and filters
-├── _plugins/                     # Custom Jekyll plugins
-│   ├── article_permalink.rb      # Derives permalink, category, last-modified from path/Git
-│   └── series_nav.rb             # Injects prev/next episode links for series articles
-├── _includes/
-│   └── nav.html                  # Responsive site navigation (inline + dropdown)
+│   └── archives.html             # Archive page with search and filters
+├── plugins/                      # Custom Pelican plugins
+│   ├── insight_register.py       # Entry point; wires Pelican signals to handlers
+│   ├── insight_reader.py         # Custom MarkdownReader (YAML frontmatter + Jekyll field mapping)
+│   ├── insight_articles.py       # Article enrichment (slugs, breadcrumbs, series nav, reading time)
+│   ├── insight_categories.py     # CategoryPageGenerator (README.md → category index pages)
+│   └── og_images.py              # OG image generation (Python/Pillow)
 ├── assets/
 │   ├── styles.css                # Site stylesheet
 │   ├── favicon.svg               # Site favicon
 │   └── *.svg / *.bpmn            # Diagrams used in articles
-├── index.md                      # Homepage
-├── archive.md                    # Archive index
-├── _config.yml                   # Jekyll config
+├── pelicanconf.py                # Base Pelican config (RELATIVE_URLS = True)
+├── publishconf.py                # Production overrides (SITEURL, RELATIVE_URLS = False)
 └── README.md                     # This file
 ```
 
@@ -71,35 +72,22 @@ Each category (and nested subcategory) is a directory with a `README.md` that be
 ```text
 .
 ├── .devcontainer/
-│   ├── Dockerfile               # Dev container image (Ruby + Node + Python); version pins at top
+│   ├── Dockerfile               # Dev container image (Python 3.12 + fonts); version pin at top
 │   └── devcontainer.json        # VS Code dev container config (ports, postCreateCommand)
 ├── scripts/
-│   ├── build-local.sh           # Local build (uses bundle exec inside devcontainer, Docker outside)
-│   ├── preview-local.sh         # Local preview server on port 4000
-│   ├── ensure-frontmatter.sh    # Adds missing article front matter fields + warnings
-│   ├── update-modified-dates.sh # Updates file modified timestamps from Git
-│   ├── generate-og-images.sh    # Generates OG images for social media
-│   └── og-image-gen/
-│       ├── generate.js          # Node.js OG image generator
-│       ├── package.json         # Node dependencies (sharp, js-yaml)
-│       └── package-lock.json    # Locked dependency versions for reproducible builds
-├── Makefile                     # Shortcuts: make build / preview / rebuild / clean
-├── feed.xml                     # Atom feed template
-├── .github/workflows/pages.yml  # GitHub Pages CI/CD (reads Ruby/Node versions from Dockerfile)
-└── _site/                       # Generated static site (build output, gitignored)
+│   ├── build-local.sh           # Local build (ensure-frontmatter + pelican)
+│   ├── preview-local.sh         # Build then serve on port 4000
+│   └── ensure-frontmatter.sh    # Validates and adds missing article frontmatter fields
+├── Makefile                     # Shortcuts: make setup / build / serve / rebuild / clean
+├── requirements.txt             # Python dependencies (Pelican, Markdown, PyYAML, Pillow)
+├── versions.env                 # PYTHON_VERSION pin (kept in sync with Dockerfile)
+└── .github/workflows/pages.yml  # GitHub Pages CI/CD (reads Python version from Dockerfile)
 ```
 
 ### Version Pinning
 
-All tool versions are pinned in a single place: `.devcontainer/Dockerfile` ARGs at the top of the file.
-
-```dockerfile
-ARG RUBY_VERSION=3.3
-ARG NODE_VERSION=20
-ARG BUNDLER_VERSION=2.3.25
-```
-
-The CI workflow reads these values at runtime so local, devcontainer, and CI always use the same versions. To update a version, change the ARG in the Dockerfile — no other file needs editing.
+- **Python**: pinned in `versions.env` (read by CI) and `.devcontainer/Dockerfile` (required before `FROM`). The `check-versions.yml` workflow enforces that they stay in sync. To update, change both files.
+- **Python dependencies**: pinned in `requirements.txt`.
 
 ---
 
@@ -107,7 +95,7 @@ The CI workflow reads these values at runtime so local, devcontainer, and CI alw
 
 Articles live in `src/[category]/` or `src/[category]/[subcategory]/` as Markdown files with frontmatter. Categories can be nested arbitrarily: a subcategory is just a category directory one level deeper.
 
-Each category directory contains a `README.md` that Jekyll renders as the category index. The custom plugin `_plugins/article_permalink.rb` derives the permalink, category, and last-modified date directly from the file path and Git history, with no manual configuration needed.
+Each category directory contains a `README.md` that becomes the category index page. The `insight_articles` plugin derives the permalink, category, and last-modified date directly from the file path and Git history, with no manual configuration needed.
 
 Each article gets a permanent URL and appears in the category index and homepage feed.
 
@@ -116,8 +104,8 @@ Each article gets a permanent URL and appears in the category index and homepage
 ## 📖 Article Features
 
 - **Reading time**: estimated at build time (~200 wpm) and shown inline with the publication date.
-- **Episode ordering**: articles in a series (e.g., `01-intro.md`, `02-setup.md`) are sorted by episode number and display "Episode N" in the metadata.
-- **Episode navigation**: the `series_nav.rb` plugin injects `prev_episode` / `next_episode` data at build time; series articles render previous and next links at the bottom of the page.
+- **Episode ordering**: articles in a series (e.g., `0-intro.md`, `1-setup.md`) are sorted by episode number and display "Episode N" in the metadata.
+- **Episode navigation**: the `insight_articles` plugin injects `prev_episode` / `next_episode` data at build time; series articles render previous and next links at the bottom of the page.
 - **Dynamic breadcrumbs**: article headers show the full category path as a clickable breadcrumb, regardless of nesting depth.
 - **Structured data**: each article includes a JSON-LD `Article` block (Schema.org) for search engine metadata.
 - **Responsive navigation**: the site nav displays domain links inline on wide viewports and collapses them into a dropdown menu on narrow ones, with no layout reflow on load (visibility toggled after font-ready).
@@ -130,7 +118,7 @@ The Archive page (`/archive/`) lists all published articles grouped by year, wit
 
 ### Implementation: DOM-based filtering
 
-The search is intentionally implemented as pure DOM filtering with no external dependencies. During the Jekyll build, all articles are pre-rendered and embedded in the HTML as list items carrying `data-*` attributes (title, year, category, excerpt, keywords). When a filter is applied, a small inline Vanilla JS script sets `display: none` on non-matching nodes and hides empty year headings. No network request, no JSON index, no third-party library.
+The search is intentionally implemented as pure DOM filtering with no external dependencies. During the Pelican build, all articles are pre-rendered and embedded in the HTML as list items carrying `data-*` attributes (title, year, category, excerpt, keywords). When a filter is applied, a small inline Vanilla JS script sets `display: none` on non-matching nodes and hides empty year headings. No network request, no JSON index, no third-party library.
 
 ### Why not the "scalable" approach?
 
@@ -152,21 +140,20 @@ Each article automatically gets a unique Open Graph preview image generated at b
 
 **Generation process:**
 
-- `scripts/og-image-gen/generate.js` reads article frontmatter (title, excerpt, category) and article metadata from `_config.yml`
-- Generates an SVG template with styled site header, article title, excerpt, and domain footer
-- Converts SVG → WebP via Sharp (1200×630, optimized for social media)
+- `plugins/og_images.py` hooks into the `article_generator_finalized` Pelican signal
+- Reads article metadata (title, excerpt) and site settings (SITENAME, SITESUBTITLE, SITEURL) from the Pelican config
+- Draws a styled image (1200×630) using Python/Pillow with DejaVu system fonts
 - Outputs to `assets/og-images/[category]/[slug].webp`
 
 **Generated for:**
 
-- `homepage.webp` - shared when the site itself is linked
-- `[category]/[slug].webp` - each article (automatically tagged in `_layouts/default.html`)
+- `homepage.webp` — shared when the site itself is linked
+- `[category]/[slug].webp` — each article (automatically tagged in `base.html`)
 
 **Configuration:**
 
-- Site title and description read from `_config.yml`
-- YAML parsing uses `js-yaml` for robust support of multiline syntax
-- Regenerated on every build; images are gitignored (build artifacts)
+- Site title, subtitle, and domain read from `pelicanconf.py`
+- Regenerated on every full build; images are gitignored (build artifacts)
 
 ---
 
