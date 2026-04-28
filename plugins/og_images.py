@@ -28,28 +28,20 @@ W, H = 1200, 630
 
 # ── Fonts ─────────────────────────────────────────────────────────────────────
 
-def _load_font(size, *, bold=False, serif=False):
-    if serif and bold:
+def _load_font(size, *, bold=False):
+    if bold:
         candidates = [
+            "/usr/share/fonts/truetype/msttcorefonts/Georgiab.ttf",
             "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
             "/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf",
             "/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf",
         ]
-    elif serif:
+    else:
         candidates = [
+            "/usr/share/fonts/truetype/msttcorefonts/Georgia.ttf",
             "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
             "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
             "/usr/share/fonts/truetype/freefont/FreeSerif.ttf",
-        ]
-    elif bold:
-        candidates = [
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-            "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
-        ]
-    else:
-        candidates = [
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-            "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
         ]
     for path in candidates:
         if os.path.exists(path):
@@ -57,27 +49,31 @@ def _load_font(size, *, bold=False, serif=False):
                 return ImageFont.truetype(path, size)
             except OSError:
                 continue
-    return ImageFont.load_default()
+    raise RuntimeError(
+        f"No usable serif {'bold' if bold else 'regular'} font found. "
+        "OG image generation requires Georgia (ttf-mscorefonts-installer) "
+        "or DejaVu fonts. Use the devcontainer."
+    )
 
 
 def _preload_fonts():
     return {
-        "serif_bold_100": _load_font(100, bold=True, serif=True),
-        "serif_64":       _load_font(64,  serif=True),
-        "serif_bold_52":  _load_font(52,  bold=True, serif=True),
-        "sans_36":        _load_font(36),
-        "sans_28":        _load_font(28),
-        "sans_24":        _load_font(24),
+        "bold_100": _load_font(100, bold=True),
+        "bold_64":  _load_font(64,  bold=True),
+        "bold_52":  _load_font(52,  bold=True),
+        "reg_36":   _load_font(36),
+        "reg_28":   _load_font(28),
+        "reg_24":   _load_font(24),
     }
 
 
 # ── Text helpers ──────────────────────────────────────────────────────────────
 
-def _wrap_text(text, max_chars):
+def _wrap_text(draw, text, font, max_width):
     lines, current = [], ""
     for word in text.split():
         candidate = current + " " + word if current else word
-        if len(candidate) > max_chars:
+        if draw.textlength(candidate, font=font) > max_width:
             if current:
                 lines.append(current)
             current = word
@@ -98,52 +94,52 @@ def _text_width(draw, text, font):
 def _draw_article(draw, site_title, site_description, article_title, excerpt, domain, fonts):
     y = 28
 
-    draw.text((MARGIN, y), site_title, fill=COLOR_DARK, font=fonts["serif_64"])
+    draw.text((MARGIN, y), site_title, fill=COLOR_DARK, font=fonts["bold_64"])
     y += 72
-    draw.text((MARGIN, y), site_description, fill=COLOR_MUTED, font=fonts["sans_28"])
+    draw.text((MARGIN, y), site_description, fill=COLOR_MUTED, font=fonts["reg_28"])
     y += 42
     draw.line([(MARGIN, y), (W - MARGIN, y)], fill=COLOR_LINE, width=1)
     y += 30
 
-    title_lines = _wrap_text(article_title, 32)
+    title_lines = _wrap_text(draw, article_title, fonts["bold_52"], W - 2 * MARGIN)
     for i, line in enumerate(title_lines):
-        draw.text((MARGIN, y + i * 64), line, fill=COLOR_DARK, font=fonts["serif_bold_52"])
+        draw.text((MARGIN, y + i * 64), line, fill=COLOR_DARK, font=fonts["bold_52"])
     y += len(title_lines) * 64 + 14
 
     max_excerpt = min(3, max(1, 5 - len(title_lines)))
-    excerpt_lines = _wrap_text(excerpt, 60)[:max_excerpt]
+    excerpt_lines = _wrap_text(draw, excerpt, fonts["reg_28"], W - 2 * MARGIN)[:max_excerpt]
     for i, line in enumerate(excerpt_lines):
-        draw.text((MARGIN, y + i * 48), line, fill=COLOR_MUTED, font=fonts["sans_28"])
+        draw.text((MARGIN, y + i * 48), line, fill=COLOR_MUTED, font=fonts["reg_28"])
     if excerpt_lines:
         y += len(excerpt_lines) * 48 + 28
 
     draw.line([(MARGIN, y), (W - MARGIN, y)], fill=COLOR_LINE, width=1)
     y += 14
-    tw = _text_width(draw, domain, fonts["sans_28"])
-    draw.text((W - MARGIN - tw, y), domain, fill=COLOR_MUTED, font=fonts["sans_28"])
+    tw = _text_width(draw, domain, fonts["reg_28"])
+    draw.text((W - MARGIN - tw, y), domain, fill=COLOR_MUTED, font=fonts["reg_28"])
 
 
 def _draw_homepage(draw, site_title, site_description, domain, author_name, fonts):
     y = 80
 
-    draw.text((MARGIN, y), site_title, fill=COLOR_DARK, font=fonts["serif_bold_100"])
+    draw.text((MARGIN, y), site_title, fill=COLOR_DARK, font=fonts["bold_100"])
     y += 118
 
-    desc_lines = _wrap_text(site_description, 48)
+    desc_lines = _wrap_text(draw, site_description, fonts["reg_36"], W - 2 * MARGIN)
     for i, line in enumerate(desc_lines):
-        draw.text((MARGIN, y + i * 46), line, fill=COLOR_MUTED, font=fonts["sans_36"])
+        draw.text((MARGIN, y + i * 46), line, fill=COLOR_MUTED, font=fonts["reg_36"])
     y += len(desc_lines) * 46 + 24
 
     draw.line([(MARGIN, y), (W - MARGIN, y)], fill=COLOR_LINE, width=1)
     y += 50
-    draw.text((MARGIN, y), "Published occasionally. Written for clarity over volume.", fill=COLOR_MUTED, font=fonts["sans_28"])
+    draw.text((MARGIN, y), "Published occasionally. Written for clarity over volume.", fill=COLOR_MUTED, font=fonts["reg_28"])
 
     footer_y = H - 72
     draw.line([(MARGIN, footer_y), (W - MARGIN, footer_y)], fill=COLOR_LINE, width=1)
     footer_text_y = footer_y + 20
-    draw.text((MARGIN, footer_text_y), f"Written and maintained by {author_name}", fill=COLOR_MUTED, font=fonts["sans_24"])
-    tw = _text_width(draw, domain, fonts["sans_24"])
-    draw.text((W - MARGIN - tw, footer_text_y), domain, fill=COLOR_MUTED, font=fonts["sans_24"])
+    draw.text((MARGIN, footer_text_y), f"Written and maintained by {author_name}", fill=COLOR_MUTED, font=fonts["reg_24"])
+    tw = _text_width(draw, domain, fonts["reg_24"])
+    draw.text((W - MARGIN - tw, footer_text_y), domain, fill=COLOR_MUTED, font=fonts["reg_24"])
 
 
 # ── Cache helpers ─────────────────────────────────────────────────────────────
