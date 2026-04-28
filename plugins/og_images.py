@@ -31,17 +31,31 @@ W, H = 1200, 630
 def _load_font(size, *, bold=False):
     if bold:
         candidates = [
+            # Linux
             "/usr/share/fonts/truetype/msttcorefonts/Georgiab.ttf",
             "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
             "/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf",
             "/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf",
+            # macOS
+            "/Library/Fonts/Georgia Bold.ttf",
+            "/System/Library/Fonts/Supplemental/Georgia Bold.ttf",
+            # Windows
+            "C:/Windows/Fonts/georgiab.ttf",
+            "C:/Windows/Fonts/Georgia Bold.ttf",
         ]
     else:
         candidates = [
+            # Linux
             "/usr/share/fonts/truetype/msttcorefonts/Georgia.ttf",
             "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
             "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
             "/usr/share/fonts/truetype/freefont/FreeSerif.ttf",
+            # macOS
+            "/Library/Fonts/Georgia.ttf",
+            "/System/Library/Fonts/Supplemental/Georgia.ttf",
+            # Windows
+            "C:/Windows/Fonts/georgia.ttf",
+            "C:/Windows/Fonts/Georgia.ttf",
         ]
     for path in candidates:
         if os.path.exists(path):
@@ -51,8 +65,8 @@ def _load_font(size, *, bold=False):
                 continue
     raise RuntimeError(
         f"No usable serif {'bold' if bold else 'regular'} font found. "
-        "OG image generation requires Georgia (ttf-mscorefonts-installer) "
-        "or DejaVu fonts. Use the devcontainer."
+        "OG image generation requires Georgia, DejaVu, Liberation, or FreeSerif fonts. "
+        "Install one of these or use the devcontainer."
     )
 
 
