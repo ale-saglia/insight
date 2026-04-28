@@ -7,7 +7,7 @@
 | 1   | Critical | Breadcrumb label duplicated 4x                               | index, archives, article               | ✅ Done |
 | 2   | Critical | OG/Twitter/meta blocks triplicated                           | base + all children                    | ✅ Done |
 | 3   | Medium   | O(n) category lookup in templates                            | all                                    | ✅ Done |
-| 4   | Critical | `ensure-frontmatter.sh` is 430+ lines of bash                | scripts/ensure-frontmatter.sh          |         |
+| 4   | Critical | `ensure-frontmatter.sh` is 430+ lines of bash                | scripts/ensure-frontmatter.sh          | ✅ Done |
 | 5   | Medium   | `versions.env` exists only to be diff-checked                | versions.env, check-versions.yml       |         |
 | 6   | Medium   | `og_images.py` writes to source tree, not output             | plugins/og_images.py                   |         |
 | 7   | Medium   | `og_images.py` regenerates everything on each build          | plugins/og_images.py                   |         |
