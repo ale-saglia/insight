@@ -16,7 +16,7 @@ DEFAULT_DATE_FORMAT = '%d %b %Y'
 
 THEME = 'themes/insight'
 PLUGIN_PATHS = ['plugins']
-PLUGINS = ['insight']
+PLUGINS = ['insight_register', 'og_images']
 
 OUTPUT_PATH = '_site'
 

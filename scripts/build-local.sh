@@ -8,10 +8,6 @@ cd "$ROOT_DIR"
 echo "Checking and normalizing article front matter..."
 bash "$ROOT_DIR/scripts/ensure-frontmatter.sh"
 
-# Generate OG images before building
-echo "Generating OG preview images..."
-bash "$ROOT_DIR/scripts/generate-og-images.sh"
-
 echo "Building with Pelican..."
 if [[ -x "$ROOT_DIR/.venv/bin/pelican" ]]; then
   "$ROOT_DIR/.venv/bin/pelican" --settings pelicanconf.py
