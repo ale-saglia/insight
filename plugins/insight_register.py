@@ -7,17 +7,11 @@ Wires up signals to logic modules:
   insight_categories → CategoryPageGenerator  (README.md → category index pages)
 """
 
-import os
-import sys
-
-# Ensure the plugins directory is importable regardless of Pelican's sys.path order
-sys.path.insert(0, os.path.dirname(__file__))
-
 from pelican import signals
 
-from insight_articles import process_articles
-from insight_categories import CategoryPageGenerator
-from insight_reader import InsightMarkdownReader
+from .insight_articles import process_articles
+from .insight_categories import CategoryPageGenerator
+from .insight_reader import InsightMarkdownReader
 
 
 def _add_reader(readers):

@@ -8,10 +8,7 @@ Hooks into article_generator_finalized so articles are already enriched
 
 import os
 import re
-import sys
 from pathlib import Path
-
-sys.path.insert(0, os.path.dirname(__file__))
 
 from pelican import signals
 from PIL import Image, ImageDraw, ImageFont
