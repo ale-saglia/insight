@@ -17,83 +17,51 @@
   </div>
 
   {% set sorted_articles = articles | sort(attribute='date', reverse=True) %}
-
-  {% set years = [] %}
-  {% for article in sorted_articles %}
-    {% set y = article.date.strftime('%Y') %}
-    {% if y not in years %}{% set _ = years.append(y) %}{% endif %}
-  {% endfor %}
+  {% set year_groups = sorted_articles | groupby(attribute='date.year') | reverse | list %}
 
   <div class="archive-filters">
     <button class="filter-btn filter-btn-active" data-year="">All Years <span class="count">({{ sorted_articles | length }})</span></button>
-    {% for year in years %}
-      {% set ycount = sorted_articles | selectattr('date', 'defined') | selectattr('date', 'ne', none) | list %}
-      {% set ycount_val = namespace(n=0) %}
-      {% for a in sorted_articles %}
-        {% if a.date.strftime('%Y') == year %}{% set ycount_val.n = ycount_val.n + 1 %}{% endif %}
-      {% endfor %}
-      <button class="filter-btn" data-year="{{ year }}">{{ year }} <span class="count">({{ ycount_val.n }})</span></button>
+    {% for year_group in year_groups %}
+      <button class="filter-btn" data-year="{{ year_group.grouper }}">{{ year_group.grouper }} <span class="count">({{ year_group.list | length }})</span></button>
     {% endfor %}
   </div>
 
   <!-- Keywords section -->
-  {% set all_tags = [] %}
-  {% for article in sorted_articles %}
-    {% if article.tags %}
-      {% for tag in article.tags %}
-        {% if tag.name not in all_tags %}{% set _ = all_tags.append(tag.name) %}{% endif %}
-      {% endfor %}
-    {% endif %}
-  {% endfor %}
-
   <div class="archive-keywords">
     <p class="section-label">Filter by keywords</p>
     <div class="keyword-filters" id="keyword-filters">
-      {% for kw in all_tags %}
-        {% set kw_count = namespace(n=0) %}
-        {% for article in sorted_articles %}
-          {% if article.tags %}
-            {% for tag in article.tags %}
-              {% if tag.name | lower == kw | lower %}{% set kw_count.n = kw_count.n + 1 %}{% endif %}
-            {% endfor %}
-          {% endif %}
-        {% endfor %}
-        <button class="keyword-btn" data-keyword="{{ kw | lower }}" data-count="{{ kw_count.n }}">{{ kw }} <span class="count">({{ kw_count.n }})</span></button>
+      {% for kw, count in tag_counts.items() %}
+        <button class="keyword-btn" data-keyword="{{ kw | lower }}" data-count="{{ count }}">{{ kw }} <span class="count">({{ count }})</span></button>
       {% endfor %}
     </div>
   </div>
 
-  {% set current_year = namespace(val='') %}
-  {% for article in sorted_articles %}
-    {% set article_year = article.date.strftime('%Y') %}
-    {% if article_year != current_year.val %}
-      {% if current_year.val != '' %}</ul>{% endif %}
-      <h2 class="archive-year">{{ article_year }}</h2>
-      <ul class="article-list">
-      {% set current_year.val = article_year %}
-    {% endif %}
+  {% for year_group in year_groups %}
+    <h2 class="archive-year">{{ year_group.grouper }}</h2>
+    <ul class="article-list">
+      {% for article in year_group.list %}
+        {%- set meta_label = breadcrumb_label(article, category_by_path) -%}
 
-    {%- set meta_label = breadcrumb_label(article, category_by_path) -%}
+        {%- set tag_names = [] -%}
+        {%- if article.tags -%}
+          {%- for tag in article.tags -%}
+            {%- set _ = tag_names.append(tag.name | lower) -%}
+          {%- endfor -%}
+        {%- endif -%}
 
-    {%- set tag_names = [] -%}
-    {%- if article.tags -%}
-      {%- for tag in article.tags -%}
-        {%- set _ = tag_names.append(tag.name | lower) -%}
-      {%- endfor -%}
-    {%- endif -%}
-
-    <li class="search-item"
-        data-year="{{ article_year }}"
-        data-title="{{ article.title | lower }}"
-        data-category="{{ meta_label | lower }}"
-        data-excerpt="{{ article.summary | striptags | lower }}"
-        data-keywords="{{ tag_names | join(',') }}">
-      <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
-      <span class="article-meta">{{ article.date.strftime('%d %b %Y') }} • {{ meta_label }}</span>
-      {% if article.summary %}<span class="article-excerpt">{{ article.summary | striptags }}</span>{% endif %}
-    </li>
+        <li class="search-item"
+            data-year="{{ year_group.grouper }}"
+            data-title="{{ article.title | lower }}"
+            data-category="{{ meta_label | lower }}"
+            data-excerpt="{{ article.summary | striptags | lower }}"
+            data-keywords="{{ tag_names | join(',') }}">
+          <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+          <span class="article-meta">{{ article.date.strftime('%d %b %Y') }} • {{ meta_label }}</span>
+          {% if article.summary %}<span class="article-excerpt">{{ article.summary | striptags }}</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
   {% endfor %}
-  {% if current_year.val != '' %}</ul>{% endif %}
 
   <p id="archive-no-results" class="archive-empty-state" role="status" aria-live="polite" hidden>
     No articles match the selected filters. Try clearing the search, year, or keyword filters.

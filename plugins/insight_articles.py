@@ -56,6 +56,12 @@ def process_articles(generator):
                 nxt = sorted_series[i + 1]
                 article.next_episode = {'url': nxt.slug + '/', 'title': nxt.title}
 
+    tag_counts = {}
+    for article in generator.articles:
+        for tag in getattr(article, 'tags', None) or []:
+            tag_counts[tag.name] = tag_counts.get(tag.name, 0) + 1
+    generator.context['tag_counts'] = tag_counts
+
 
 def _enrich_article(article):
     """Compute and attach all custom attributes to a single article."""

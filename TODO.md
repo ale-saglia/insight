@@ -12,10 +12,10 @@
 | 6   | Medium   | `og_images.py` writes to source tree, not output             | plugins/og_images.py                   | ✅ Done |
 | 7   | Medium   | `og_images.py` regenerates everything on each build          | plugins/og_images.py                   | ✅ Done |
 | 8   | Medium   | YAML frontmatter parser duplicated across two plugins        | insight_{reader,categories}.py         | ✅ Done |
-| 9   | Medium   | O(n²) tag/year counting                                      | archives                               |         |
+| 9   | Medium   | O(n²) tag/year counting                                      | archives                               | ✅ Done |
 | 10  | Medium   | `og_images.py` Linux-only fonts (silent fail elsewhere)      | plugins/og_images.py                   |         |
 | 10b | Medium   | `og_images.py` font doesn't match design (not Georgia)       | plugins/og_images.py                   |         |
-| 11  | Medium   | Unused `ycount` variable                                     | archives:31                            |         |
+| 11  | Medium   | Unused `ycount` variable                                     | archives:31                            | ✅ Done |
 | 12  | Low      | `_get_generators` misleading parameter name                  | plugins/insight_register.py            |         |
 | 13  | Low      | `layout: article` enforced but ignored                       | ensure-frontmatter.sh, articles        |         |
 | 14  | Low      | `ARTICLE_EXCLUDES` redundant with `IGNORE_FILES`             | pelicanconf.py                         |         |
