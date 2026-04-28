@@ -69,8 +69,8 @@
   {% endif %}
 
   <nav class="article-nav" id="article-nav">
-    <button class="article-nav-link" id="back-link" style="display: none;">← Back to articles</button>
-    <button class="article-nav-link" id="top-link" style="display: none;">↑ Top</button>
+    <a class="article-nav-link" id="back-link" href="/" style="display: none;">← Back to articles</a>
+    <a class="article-nav-link" id="top-link" href="#" style="display: none;">↑ Top</a>
   </nav>
 
   <script>
@@ -95,11 +95,12 @@
         topLink.style.display = window.scrollY > 400 ? 'inline-block' : 'none';
       });
 
-      backLink.addEventListener('click', function() {
-        if (internalReferrerPath) { history.back(); } else { window.location.href = '/'; }
+      backLink.addEventListener('click', function(e) {
+        if (internalReferrerPath) { e.preventDefault(); history.back(); }
       });
 
-      topLink.addEventListener('click', function() {
+      topLink.addEventListener('click', function(e) {
+        e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     })();
