@@ -10,23 +10,23 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  {% for page in category_pages %}
+  {%- for page in category_pages %}
   <url>
     <loc>{{ SITEURL }}/{{ page.url }}</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  {% endfor %}
-  {% for article in articles | sort(attribute='date', reverse=True) %}
+  {%- endfor %}
+  {%- for article in articles | sort(attribute='date', reverse=True) %}
   <url>
     <loc>{{ SITEURL }}/{{ article.url }}</loc>
-    {% if article.modified %}
+    {%- if article.modified %}
     <lastmod>{{ article.modified.strftime('%Y-%m-%d') }}</lastmod>
-    {% else %}
+    {%- else %}
     <lastmod>{{ article.date.strftime('%Y-%m-%d') }}</lastmod>
-    {% endif %}
+    {%- endif %}
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  {% endfor %}
+  {%- endfor %}
 </urlset>
