@@ -4,7 +4,7 @@
     {
       "label": "Pelican: Setup (install deps)",
       "type": "shell",
-      "command": "python3 -m venv .venv && .venv/bin/pip install -q -r requirements.txt && echo 'Setup complete.'",
+      "command": "rm -rf .venv && python3 -m venv .venv && .venv/bin/pip install -q -r requirements.txt && echo 'Setup complete.'",
       "group": "build",
       "presentation": {
         "reveal": "always",
