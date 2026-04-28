@@ -2,11 +2,6 @@
 _site/
 assets/og-images/
 
-
-
-# --- Node.js ---
-scripts/og-image-gen/node_modules/
-
 # --- Python ---
 .venv/
 __pycache__/
@@ -21,6 +16,3 @@ repomix-output.xml
 
 # --- OS Files ---
 .DS_Store
-
-# --- Local working files ---
-TODO.md
