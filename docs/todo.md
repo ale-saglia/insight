@@ -2,31 +2,31 @@
 
 ## Priority Summary
 
-| #   | Severity | Issue                                                        | Location                               | Status  |
-| --- | -------- | ------------------------------------------------------------ | -------------------------------------- | ------- |
-| 1   | Critical | Breadcrumb label duplicated 4x                               | index, archives, article               | ✅ Done |
-| 2   | Critical | OG/Twitter/meta blocks triplicated                           | base + all children                    | ✅ Done |
-| 3   | Medium   | O(n) category lookup in templates                            | all                                    | ✅ Done |
-| 4   | Critical | `ensure-frontmatter.sh` is 430+ lines of bash                | scripts/ensure-frontmatter.sh          | ✅ Done |
-| 5   | Medium   | `versions.env` exists only to be diff-checked                | versions.env, check-versions.yml       | ✅ Done |
-| 6   | Medium   | `og_images.py` writes to source tree, not output             | plugins/og_images.py                   | ✅ Done |
-| 7   | Medium   | `og_images.py` regenerates everything on each build          | plugins/og_images.py                   | ✅ Done |
-| 8   | Medium   | YAML frontmatter parser duplicated across two plugins        | insight_{reader,categories}.py         | ✅ Done |
-| 9   | Medium   | O(n²) tag/year counting                                      | archives                               | ✅ Done |
-| 10  | Medium   | `og_images.py` Linux-only fonts (silent fail elsewhere)      | plugins/og_images.py                   | ✅ Done |
-| 10b | Medium   | `og_images.py` font doesn't match design (not Georgia)       | plugins/og_images.py                   | ✅ Done |
-| 11  | Medium   | Unused `ycount` variable                                     | archives:31                            | ✅ Done |
-| 12  | Low      | `_get_generators` misleading parameter name                  | plugins/insight_register.py            | ✅ Done |
-| 13  | Low      | `layout: article` enforced but ignored                       | ensure-frontmatter.sh, articles        | ✅ Done |
-| 14  | Low      | `ARTICLE_EXCLUDES` redundant with `IGNORE_FILES`             | pelicanconf.py                         | ✅ Done |
-| 15  | Low      | `_general/` reachable via direct URL despite "hidden" intent | plugins, nav filter                    | ✅ Done |
-| 16  | Low      | `_git_last_modified` is O(N) subprocess calls                | plugins/insight_articles.py            | ✅ Done |
-| 17  | Low      | `article_id` slug not validated (path traversal surface)     | plugins/insight_articles.py            | ✅ Done |
-| 18  | Low      | Duplicate category loop in nav                               | nav                                    | ✅ Done |
-| 19  | Low      | ~235 lines of inline JS                                      | nav, article, archives                 | ✅ Done |
-| 20  | Low      | `<button>` used for navigation                               | article                                | ✅ Done |
-| 21  | Note     | `404.html` as TEMPLATE_PAGES                                 | —                                      |         |
-| 22  | Medium   | Unpinned transitive dependencies (partial lock)              | requirements.txt, CI                   | ✅ Done |
+| #   | Severity | Issue                                                        | Location                               | Status         |
+| --- | -------- | ------------------------------------------------------------ | -------------------------------------- | -------------- |
+| 1   | Critical | Breadcrumb label duplicated 4x                               | index, archives, article               | ✅ Done        |
+| 2   | Critical | OG/Twitter/meta blocks triplicated                           | base + all children                    | ✅ Done        |
+| 3   | Medium   | O(n) category lookup in templates                            | all                                    | ✅ Done        |
+| 4   | Critical | `ensure-frontmatter.sh` is 430+ lines of bash                | scripts/ensure-frontmatter.sh          | ✅ Done        |
+| 5   | Medium   | `versions.env` exists only to be diff-checked                | versions.env, check-versions.yml       | ✅ Done        |
+| 6   | Medium   | `og_images.py` writes to source tree, not output             | plugins/og_images.py                   | ✅ Done        |
+| 7   | Medium   | `og_images.py` regenerates everything on each build          | plugins/og_images.py                   | ✅ Done        |
+| 8   | Medium   | YAML frontmatter parser duplicated across two plugins        | insight_{reader,categories}.py         | ✅ Done        |
+| 9   | Medium   | O(n²) tag/year counting                                      | archives                               | ✅ Done        |
+| 10  | Medium   | `og_images.py` Linux-only fonts (silent fail elsewhere)      | plugins/og_images.py                   | ✅ Done        |
+| 10b | Medium   | `og_images.py` font doesn't match design (not Georgia)       | plugins/og_images.py                   | ✅ Done        |
+| 11  | Medium   | Unused `ycount` variable                                     | archives:31                            | ✅ Done        |
+| 12  | Low      | `_get_generators` misleading parameter name                  | plugins/insight_register.py            | ✅ Done        |
+| 13  | Low      | `layout: article` enforced but ignored                       | ensure-frontmatter.sh, articles        | ✅ Done        |
+| 14  | Low      | `ARTICLE_EXCLUDES` redundant with `IGNORE_FILES`             | pelicanconf.py                         | ✅ Done        |
+| 15  | Low      | `_general/` reachable via direct URL despite "hidden" intent | plugins, nav filter                    | ✅ Done        |
+| 16  | Low      | `_git_last_modified` is O(N) subprocess calls                | plugins/insight_articles.py            | ✅ Done        |
+| 17  | Low      | `article_id` slug not validated (path traversal surface)     | plugins/insight_articles.py            | ✅ Done        |
+| 18  | Low      | Duplicate category loop in nav                               | nav                                    | ✅ Done        |
+| 19  | Low      | ~235 lines of inline JS                                      | nav, article, archives                 | ✅ Done        |
+| 20  | Low      | `<button>` used for navigation                               | article                                | ✅ Done        |
+| 21  | Note     | `404.html` as TEMPLATE_PAGES                                 | —                                      | ✅ Documented  |
+| 22  | Medium   | Unpinned transitive dependencies (partial lock)              | requirements.txt, CI                   | ✅ Done        |
 
 ---
 
@@ -232,6 +232,8 @@ No browser caching (reloaded every page) and templates harder to read. Move to s
 ### 21. `404.html` used as TEMPLATE_PAGES — note
 
 `pelicanconf.py:56` includes `'404.html': '404.html'` in `TEMPLATE_PAGES`, meaning Pelican renders it as a standalone template with full context access. Works with `extends`, no issue — just worth noting that this page is generated as a template page, not as an article.
+
+Documented in [docs/architecture.md — Templates](architecture.md#templates-themesinsighttemplates).
 
 ---
 

@@ -4,7 +4,7 @@ This document describes how to build and preview the site locally using Python.
 
 ## Prerequisites
 
-- Python — version pinned in `versions.env` and `.devcontainer/Dockerfile`
+- Python — version pinned in `.devcontainer/Dockerfile` (authoritative source)
 - Recommended: use the VS Code dev container, which sets up the environment automatically
 
 ## First-time setup
