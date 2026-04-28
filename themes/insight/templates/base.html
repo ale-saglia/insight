@@ -8,28 +8,28 @@
     <meta name="color-scheme" content="light dark" />
 
     <!-- Primary Meta Tags -->
-    <title>{% block meta_title %}{{ SITENAME }}{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}{{ SITESUBTITLE }}{% endblock %}" />
+    <title>{% block title %}{{ SITENAME }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{{ SITESUBTITLE }}{% endblock %}" />
     <meta name="keywords" content="{% block meta_keywords %}infrastructure, technology, systems{% endblock %}" />
     <meta name="author" content="{{ AUTHOR }}" />
-    <link rel="canonical" href="{{ SITEURL }}/{% block canonical_path %}{% endblock %}" />
+    <link rel="canonical" href="{{ SITEURL }}/{% block page_path %}{% endblock %}" />
     <link rel="alternate" type="application/atom+xml" title="{{ SITENAME }}" href="{{ FEED_DOMAIN }}/{{ FEED_ATOM }}" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="{% block og_type %}website{% endblock %}" />
-    <meta property="og:url" content="{{ SITEURL }}/{% block og_path %}{% endblock %}" />
-    <meta property="og:title" content="{% block og_title %}{{ SITENAME }}{% endblock %}" />
-    <meta property="og:description" content="{% block og_description %}{{ SITESUBTITLE }}{% endblock %}" />
+    <meta property="og:url" content="{{ SITEURL }}/{{ self.page_path() }}" />
+    <meta property="og:title" content="{{ self.title() }}" />
+    <meta property="og:description" content="{{ self.description() }}" />
     <meta property="og:site_name" content="{{ SITENAME }}" />
-    <meta property="og:image" content="{{ SITEURL }}/{% block og_image %}assets/og-images/homepage.webp{% endblock %}" />
+    <meta property="og:image" content="{{ SITEURL }}/{% block page_image %}assets/og-images/homepage.webp{% endblock %}" />
     {% block og_article_meta %}{% endblock %}
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="{{ SITEURL }}/{% block twitter_path %}{% endblock %}" />
-    <meta name="twitter:title" content="{% block twitter_title %}{{ SITENAME }}{% endblock %}" />
-    <meta name="twitter:description" content="{% block twitter_description %}{{ SITESUBTITLE }}{% endblock %}" />
-    <meta name="twitter:image" content="{{ SITEURL }}/{% block twitter_image %}assets/og-images/homepage.webp{% endblock %}" />
+    <meta name="twitter:url" content="{{ SITEURL }}/{{ self.page_path() }}" />
+    <meta name="twitter:title" content="{{ self.title() }}" />
+    <meta name="twitter:description" content="{{ self.description() }}" />
+    <meta name="twitter:image" content="{{ SITEURL }}/{{ self.page_image() }}" />
 
     {% block extra_head %}{% endblock %}
 

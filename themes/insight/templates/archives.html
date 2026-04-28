@@ -1,9 +1,8 @@
 {% extends "base.html" %}
+{% from "_macros.html" import breadcrumb_label %}
 
-{% block meta_title %}Archive | {{ SITENAME }}{% endblock %}
-{% block canonical_path %}archive/{% endblock %}
-{% block og_path %}archive/{% endblock %}
-{% block og_title %}Archive | {{ SITENAME }}{% endblock %}
+{% block title %}Archive | {{ SITENAME }}{% endblock %}
+{% block page_path %}archive/{% endblock %}
 
 {% block content %}
 <section class="article">
@@ -74,23 +73,7 @@
       {% set current_year.val = article_year %}
     {% endif %}
 
-    {%- set ns = namespace(meta_label='') -%}
-    {%- for crumb in article.breadcrumbs -%}
-      {%- set part_ns = namespace(label=crumb.label) -%}
-      {%- for cat in category_pages -%}
-        {%- if cat.category_path == crumb.url.rstrip('/') -%}
-          {%- set part_ns.label = cat.title -%}
-        {%- endif -%}
-      {%- endfor -%}
-      {%- if ns.meta_label -%}
-        {%- set ns.meta_label = ns.meta_label + ' / ' + part_ns.label -%}
-      {%- else -%}
-        {%- set ns.meta_label = part_ns.label -%}
-      {%- endif -%}
-    {%- endfor -%}
-    {%- if article.episode_num is not none -%}
-      {%- set ns.meta_label = ns.meta_label + ' · Episode ' + article.episode_num | string -%}
-    {%- endif -%}
+    {%- set meta_label = breadcrumb_label(article, category_pages) -%}
 
     {%- set tag_names = [] -%}
     {%- if article.tags -%}
@@ -102,11 +85,11 @@
     <li class="search-item"
         data-year="{{ article_year }}"
         data-title="{{ article.title | lower }}"
-        data-category="{{ ns.meta_label | lower }}"
+        data-category="{{ meta_label | lower }}"
         data-excerpt="{{ article.summary | striptags | lower }}"
         data-keywords="{{ tag_names | join(',') }}">
       <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
-      <span class="article-meta">{{ article.date.strftime('%d %b %Y') }} • {{ ns.meta_label }}</span>
+      <span class="article-meta">{{ article.date.strftime('%d %b %Y') }} • {{ meta_label }}</span>
       {% if article.summary %}<span class="article-excerpt">{{ article.summary | striptags }}</span>{% endif %}
     </li>
   {% endfor %}

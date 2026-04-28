@@ -1,24 +1,17 @@
 {% extends "base.html" %}
+{% from "_macros.html" import breadcrumb_links %}
 
-{% block meta_title %}{{ article.title }} | {{ SITENAME }}{% endblock %}
-{% block meta_description %}{{ article.summary | striptags | truncate(160, False, '') }}{% endblock %}
+{% block title %}{{ article.title }} | {{ SITENAME }}{% endblock %}
+{% block description %}{{ article.summary | striptags | truncate(160, False, '') }}{% endblock %}
 {% block meta_keywords %}{{ article.category_top }}{% if article.tags %}, {% for tag in article.tags %}{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}, infrastructure, technology, systems{% endblock %}
 
-{% block canonical_path %}{{ article.url }}{% endblock %}
+{% block page_path %}{{ article.url }}{% endblock %}
 {% block og_type %}article{% endblock %}
-{% block og_path %}{{ article.url }}{% endblock %}
-{% block og_title %}{{ article.title }} | {{ SITENAME }}{% endblock %}
-{% block og_description %}{{ article.summary | striptags | truncate(160, False, '') }}{% endblock %}
-{% block og_image %}assets/og-images/{{ article.slug }}.webp{% endblock %}
+{% block page_image %}assets/og-images/{{ article.slug }}.webp{% endblock %}
 {% block og_article_meta %}
   <meta property="article:published_time" content="{{ article.date.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}" />
   {% if article.category_top %}<meta property="article:section" content="{{ article.category_top }}" />{% endif %}
 {% endblock %}
-
-{% block twitter_path %}{{ article.url }}{% endblock %}
-{% block twitter_title %}{{ article.title }} | {{ SITENAME }}{% endblock %}
-{% block twitter_description %}{{ article.summary | striptags | truncate(160, False, '') }}{% endblock %}
-{% block twitter_image %}assets/og-images/{{ article.slug }}.webp{% endblock %}
 
 {% block extra_head %}
 <script type="application/ld+json">
@@ -52,19 +45,7 @@
 <article class="article">
   <header class="article-header">
     {% if article.breadcrumbs %}
-      <p class="article-category">
-        {%- for crumb in article.breadcrumbs -%}
-          {%- set ns = namespace(label=crumb.label) -%}
-          {%- for cat in category_pages -%}
-            {%- if cat.category_path == crumb.url.rstrip('/') -%}
-              {%- set ns.label = cat.title -%}
-            {%- endif -%}
-          {%- endfor -%}
-          {%- if not loop.first %} / {% endif -%}
-          <a href="{{ SITEURL }}/{{ crumb.url }}">{{ ns.label }}</a>
-        {%- endfor -%}
-        {%- if article.episode_num is not none %} · Episode {{ article.episode_num }}{%- endif -%}
-      </p>
+      <p class="article-category">{{ breadcrumb_links(article, category_pages, SITEURL) }}</p>
     {% endif %}
     <h1>{{ article.title }}</h1>
     <p class="article-meta">{{ article.date.strftime('%d %b %Y') }} · {{ article.reading_time }} min read</p>

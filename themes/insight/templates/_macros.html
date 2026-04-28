@@ -1,0 +1,33 @@
+{#- Breadcrumb label as plain text (for article lists, meta, etc.) -#}
+{% macro breadcrumb_label(article, category_pages) -%}
+  {%- set ns = namespace(label='') -%}
+  {%- for crumb in article.breadcrumbs -%}
+    {%- set part_ns = namespace(label=crumb.label) -%}
+    {%- for cat in category_pages -%}
+      {%- if cat.category_path == crumb.url.rstrip('/') -%}
+        {%- set part_ns.label = cat.title -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if ns.label -%}{%- set ns.label = ns.label + ' / ' + part_ns.label -%}
+    {%- else -%}{%- set ns.label = part_ns.label -%}{%- endif -%}
+  {%- endfor -%}
+  {%- if article.episode_num is not none -%}
+    {%- set ns.label = ns.label + ' · Episode ' + article.episode_num | string -%}
+  {%- endif -%}
+  {{ ns.label }}
+{%- endmacro %}
+
+{#- Breadcrumb as linked HTML (for article headers) -#}
+{% macro breadcrumb_links(article, category_pages, siteurl) -%}
+  {%- for crumb in article.breadcrumbs -%}
+    {%- set ns = namespace(label=crumb.label) -%}
+    {%- for cat in category_pages -%}
+      {%- if cat.category_path == crumb.url.rstrip('/') -%}
+        {%- set ns.label = cat.title -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if not loop.first %} / {% endif -%}
+    <a href="{{ siteurl }}/{{ crumb.url }}">{{ ns.label }}</a>
+  {%- endfor -%}
+  {%- if article.episode_num is not none %} · Episode {{ article.episode_num }}{%- endif -%}
+{%- endmacro %}
