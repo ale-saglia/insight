@@ -92,6 +92,11 @@ def _enrich_article(article, git_dates):
 
     # Determine article_id / slug stem
     article_id = getattr(article, 'article_id', None)
+    if article_id and not re.match(r'^[a-z0-9][a-z0-9-]*$', article_id):
+        raise ValueError(
+            f"Invalid article_id {article_id!r} in {source_rel}: "
+            "only lowercase letters, digits, and hyphens are allowed."
+        )
     if not article_id:
         stem = Path(parts[-1]).stem        # e.g. '0-why-homelab-matters'
         article_id = re.sub(r'^\d+-', '', stem)  # strip leading 'N-'
