@@ -6,9 +6,10 @@ category index pages.
 import os
 from pathlib import Path
 
-import yaml
 from markdown import Markdown
 from pelican.generators import Generator
+
+from ._frontmatter import parse_frontmatter
 
 
 class CategoryPage:
@@ -35,18 +36,7 @@ class CategoryPage:
         with open(self.source_path, encoding='utf-8') as f:
             raw = f.read()
 
-        fm_meta = {}
-        body = raw
-        if raw.startswith('---\n') or raw.startswith('---\r\n'):
-            end = raw.find('\n---\n', 4)
-            if end == -1:
-                end = raw.find('\n---\r\n', 4)
-            if end != -1:
-                try:
-                    fm_meta = yaml.safe_load(raw[4:end]) or {}
-                except yaml.YAMLError:
-                    fm_meta = {}
-                body = raw[end + 5:].lstrip('\n')
+        fm_meta, body = parse_frontmatter(raw)
 
         self.title = str(fm_meta.get('title', ''))
         self.summary = str(fm_meta.get('summary', ''))

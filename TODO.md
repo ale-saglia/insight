@@ -9,12 +9,12 @@
 | 3   | Medium   | O(n) category lookup in templates                            | all                                    | ✅ Done |
 | 4   | Critical | `ensure-frontmatter.sh` is 430+ lines of bash                | scripts/ensure-frontmatter.sh          | ✅ Done |
 | 5   | Medium   | `versions.env` exists only to be diff-checked                | versions.env, check-versions.yml       | ✅ Done |
-| 6   | Medium   | `og_images.py` writes to source tree, not output             | plugins/og_images.py                   |         |
-| 7   | Medium   | `og_images.py` regenerates everything on each build          | plugins/og_images.py                   |         |
-| 8   | Medium   | YAML frontmatter parser duplicated across two plugins        | insight_reader.py, insight_categories.py |       |
+| 6   | Medium   | `og_images.py` writes to source tree, not output             | plugins/og_images.py                   | ✅ Done |
+| 7   | Medium   | `og_images.py` regenerates everything on each build          | plugins/og_images.py                   | ✅ Done |
+| 8   | Medium   | YAML frontmatter parser duplicated across two plugins        | insight_{reader,categories}.py         | ✅ Done |
 | 9   | Medium   | O(n²) tag/year counting                                      | archives                               |         |
 | 10  | Medium   | `og_images.py` Linux-only fonts (silent fail elsewhere)      | plugins/og_images.py                   |         |
-| 10b | Medium   | OG images font is not Georgia (e.g. articles: wrong font, not matching design) | plugins/og_images.py                   |         |
+| 10b | Medium   | `og_images.py` font doesn't match design (not Georgia)       | plugins/og_images.py                   |         |
 | 11  | Medium   | Unused `ycount` variable                                     | archives:31                            |         |
 | 12  | Low      | `_get_generators` misleading parameter name                  | plugins/insight_register.py            |         |
 | 13  | Low      | `layout: article` enforced but ignored                       | ensure-frontmatter.sh, articles        |         |
@@ -233,6 +233,16 @@ No browser caching (reloaded every page) and templates harder to read. Move to s
 ### 21. `404.html` used as TEMPLATE_PAGES — note
 
 `pelicanconf.py:56` includes `'404.html': '404.html'` in `TEMPLATE_PAGES`, meaning Pelican renders it as a standalone template with full context access. Works with `extends`, no issue — just worth noting that this page is generated as a template page, not as an article.
+
+---
+
+## Long Term
+
+Items not urgent now but worth revisiting as the site grows.
+
+| # | Trigger | Action |
+| - | ------- | ------ |
+| L1 | Article count becomes visible | Cache `_site/assets/og-images/` in CI via `actions/cache` keyed on plugin + source files hash |
 
 ---
 

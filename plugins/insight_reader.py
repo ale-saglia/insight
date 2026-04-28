@@ -8,9 +8,10 @@ import os
 from copy import copy
 from datetime import date, datetime
 
-import yaml
 from markdown import Markdown
 from pelican.readers import MarkdownReader
+
+from ._frontmatter import parse_frontmatter
 
 logger = logging.getLogger(__name__)
 
@@ -38,22 +39,10 @@ class InsightMarkdownReader(MarkdownReader):
         with open(source_path, encoding='utf-8') as f:
             raw = f.read()
 
-        fm_meta = {}
-        body = raw
-
-        if raw.startswith('---\n') or raw.startswith('---\r\n'):
-            end = raw.find('\n---\n', 4)
-            if end == -1:
-                end = raw.find('\n---\r\n', 4)
-            if end != -1:
-                try:
-                    fm_meta = yaml.safe_load(raw[4:end]) or {}
-                except yaml.YAMLError:
-                    _build_error(source_path, 'YAML frontmatter is malformed — article will have no metadata')
-                    fm_meta = {}
-                # Skip past closing delimiter
-                skip = 5 if raw[end + 4:end + 5] == '\n' else 6
-                body = raw[end + skip:].lstrip('\n')
+        fm_meta, body = parse_frontmatter(
+            raw,
+            on_error=lambda _: _build_error(source_path, 'YAML frontmatter is malformed — article will have no metadata'),
+        )
 
         # Validate required frontmatter fields
         if not fm_meta.get('created'):
