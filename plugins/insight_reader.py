@@ -3,12 +3,30 @@ InsightMarkdownReader — reads Markdown files with YAML frontmatter,
 mapping Jekyll field names to Pelican equivalents.
 """
 
+import logging
+import os
 from copy import copy
 from datetime import date, datetime
 
 import yaml
 from markdown import Markdown
 from pelican.readers import MarkdownReader
+
+logger = logging.getLogger(__name__)
+
+
+def _build_warn(source_path, msg):
+    if os.environ.get('GITHUB_ACTIONS') == 'true':
+        print(f'::warning file={source_path}::{msg}', flush=True)
+    else:
+        logger.warning('%s: %s', source_path, msg)
+
+
+def _build_error(source_path, msg):
+    if os.environ.get('GITHUB_ACTIONS') == 'true':
+        print(f'::error file={source_path}::{msg}', flush=True)
+    else:
+        logger.error('%s: %s', source_path, msg)
 
 
 class InsightMarkdownReader(MarkdownReader):
@@ -31,10 +49,19 @@ class InsightMarkdownReader(MarkdownReader):
                 try:
                     fm_meta = yaml.safe_load(raw[4:end]) or {}
                 except yaml.YAMLError:
+                    _build_error(source_path, 'YAML frontmatter is malformed — article will have no metadata')
                     fm_meta = {}
                 # Skip past closing delimiter
                 skip = 5 if raw[end + 4:end + 5] == '\n' else 6
                 body = raw[end + skip:].lstrip('\n')
+
+        # Validate required frontmatter fields
+        if not fm_meta.get('created'):
+            _build_error(source_path, 'missing frontmatter "created" — article will have no date and may break category sort')
+        if not fm_meta.get('keywords'):
+            _build_warn(source_path, 'missing frontmatter "keywords" — article will have no tags')
+        if not fm_meta.get('excerpt'):
+            _build_warn(source_path, 'missing frontmatter "excerpt" — article will have no summary')
 
         # Map Jekyll / custom fields to Pelican field names
         meta_strings = {}

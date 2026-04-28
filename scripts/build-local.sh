@@ -4,9 +4,17 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
+if [[ -x "$ROOT_DIR/.venv/bin/python" ]]; then
+  PYTHON="$ROOT_DIR/.venv/bin/python"
+elif command -v python3 &>/dev/null; then
+  PYTHON=python3
+else
+  PYTHON=python
+fi
+
 # Ensure front matter required fields before any downstream processing
 echo "Checking and normalizing article front matter..."
-bash "$ROOT_DIR/scripts/ensure-frontmatter.sh"
+"$PYTHON" "$ROOT_DIR/scripts/ensure_frontmatter.py"
 
 echo "Building with Pelican..."
 if [[ -x "$ROOT_DIR/.venv/bin/pelican" ]]; then
