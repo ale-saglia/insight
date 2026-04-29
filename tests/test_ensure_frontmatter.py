@@ -280,16 +280,6 @@ class TestProcess:
         ef._process(path)
         assert not path.read_text(encoding='utf-8').endswith('\n')
 
-    def test_category_mismatch_warns_without_modifying_file(self, make_article):
-        content = (
-            '---\ntitle: T\ncreated: 2024-01-01\n'
-            'keywords: py\nexcerpt: ok\ncategory: wrong\n---\n\nBody.\n'
-        )
-        path = make_article(content)
-        ef._process(path)
-        assert ef._warn_count >= 1
-        assert ef._update_count == 0
-
     def test_strips_layout_field(self, make_article):
         content = (
             '---\nlayout: article\ntitle: Test\ncreated: 2024-01-01\n'

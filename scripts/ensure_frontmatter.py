@@ -12,10 +12,6 @@ Rules applied to each article file (README.md excluded):
 
 Body normalisation: leading blank lines stripped, duplicate H1 removed when
 it matches the title, trailing blank lines stripped. EOF newline preserved.
-
-Validation (warn-only, no mutation):
-  category  — warns if frontmatter value doesn't match directory structure.
-  permalink — warns if frontmatter value doesn't start with /top-domain/.
 """
 
 import os
@@ -164,19 +160,6 @@ def _process(path):
     if 'excerpt' not in meta:
         meta['excerpt'] = ''
         _warn(path, 'excerpt missing: inserted empty placeholder')
-
-    # Validation: category / permalink coherence (warn-only)
-    parts = path.parts  # ('src', 'top_domain', ..., 'file.md')
-    top_domain = parts[1] if len(parts) > 2 else ''
-    category = parts[-2] if len(parts) > 2 else ''
-    if 'category' in meta:
-        fm_cat = str(meta['category'])
-        if fm_cat not in (category, top_domain):
-            _warn(path, f'category mismatch: frontmatter has "{fm_cat}", expected "{top_domain}"')
-    if 'permalink' in meta:
-        fm_perm = str(meta['permalink'])
-        if not fm_perm.startswith(f'/{top_domain}/'):
-            _warn(path, f'permalink mismatch: "{fm_perm}" does not start with "/{top_domain}/"')
 
     # Determine H1 to strip (strip when it duplicates the title)
     title_val = str(meta.get('title', ''))
