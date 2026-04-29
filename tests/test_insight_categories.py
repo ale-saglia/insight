@@ -204,3 +204,54 @@ class TestCategoryPageGeneratorContext:
         gen = self._make_generator(tmp_path)
         gen.generate_context()
         assert gen.category_pages == []
+
+    def test_direct_articles_empty_when_no_articles_in_context(self, tmp_path, monkeypatch):
+        monkeypatch.chdir(tmp_path)
+        _write_readme(tmp_path / 'src' / 'infrastructure', title='Infra')
+        gen = self._make_generator(tmp_path)
+        gen.generate_context()
+        assert gen.category_pages[0].direct_articles == []
+
+    def test_direct_articles_sorted_by_date_descending(self, tmp_path, monkeypatch):
+        from datetime import date
+        from types import SimpleNamespace
+
+        monkeypatch.chdir(tmp_path)
+        _write_readme(tmp_path / 'src' / 'infrastructure', title='Infra')
+        gen = self._make_generator(tmp_path)
+        a1 = SimpleNamespace(category_path='infrastructure', date=date(2024, 1, 1), episode_num=None)
+        a2 = SimpleNamespace(category_path='infrastructure', date=date(2025, 6, 1), episode_num=None)
+        gen.context['articles'] = [a1, a2]
+        gen.generate_context()
+        assert gen.category_pages[0].direct_articles == [a2, a1]
+
+    def test_direct_articles_sorted_by_episode_num_ascending(self, tmp_path, monkeypatch):
+        from types import SimpleNamespace
+
+        monkeypatch.chdir(tmp_path)
+        _write_readme(tmp_path / 'src' / 'infrastructure', title='Infra')
+        gen = self._make_generator(tmp_path)
+        a1 = SimpleNamespace(category_path='infrastructure', episode_num=3)
+        a2 = SimpleNamespace(category_path='infrastructure', episode_num=1)
+        gen.context['articles'] = [a1, a2]
+        gen.generate_context()
+        assert gen.category_pages[0].direct_articles == [a2, a1]
+
+    def test_child_direct_articles_populated_in_generate_context(self, tmp_path, monkeypatch):
+        from datetime import date
+        from types import SimpleNamespace
+
+        monkeypatch.chdir(tmp_path)
+        _write_readme(tmp_path / 'src' / 'infrastructure', title='Infra')
+        _write_readme(tmp_path / 'src' / 'infrastructure' / 'zero-to-homelab', title='Series')
+        gen = self._make_generator(tmp_path)
+        article = SimpleNamespace(
+            category_path='infrastructure/zero-to-homelab',
+            date=date(2025, 1, 1),
+            episode_num=None,
+        )
+        gen.context['articles'] = [article]
+        gen.generate_context()
+        parent = next(p for p in gen.category_pages if p.depth == 1)
+        child = parent.child_categories[0]
+        assert child.direct_articles == [article]

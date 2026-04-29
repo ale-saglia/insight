@@ -60,6 +60,12 @@ class CategoryPage:
             self.parent_path = '/'.join(path_parts[:-1])
 
 
+def _sort_articles(arts):
+    if any(getattr(a, 'episode_num', None) is not None for a in arts):
+        return sorted(arts, key=lambda a: a.episode_num if a.episode_num is not None else 0)
+    return sorted(arts, key=lambda a: a.date, reverse=True)
+
+
 class CategoryPageGenerator(Generator):
     """Generates category index pages from README.md files in src/."""
 
@@ -92,45 +98,29 @@ class CategoryPageGenerator(Generator):
                 if p.parent_path == page.category_path
             ]
 
+        # Populate and sort direct_articles for every page now, so the sorted
+        # list is available to any generator that reads context before generate_output.
+        articles = self.context.get('articles', [])
+        arts_by_path = {}
+        for article in articles:
+            cp = getattr(article, 'category_path', '')
+            arts_by_path.setdefault(cp, []).append(article)
+
+        for page in category_pages:
+            page.direct_articles = _sort_articles(arts_by_path.get(page.category_path, []))
+
         self.category_pages = category_pages
         self.context['category_pages'] = category_pages
         self.context['category_by_path'] = by_path
         self.context['top_level_categories'] = [p for p in category_pages if p.top_level]
 
     def generate_output(self, writer):
-        articles = self.context.get('articles', [])
-
-        # Index articles by category_path
-        arts_by_path = {}
-        for article in articles:
-            cp = getattr(article, 'category_path', '')
-            arts_by_path.setdefault(cp, []).append(article)
-
         template = self.get_template('category')
 
         for page in self.category_pages:
-            direct = arts_by_path.get(page.category_path, [])
-            # Sort: episodes by number, others by date descending
-            if any(getattr(a, 'episode_num', None) is not None for a in direct):
-                direct = sorted(direct, key=lambda a: a.episode_num if a.episode_num is not None else 0)
-            else:
-                direct = sorted(direct, key=lambda a: a.date, reverse=True)
-
-            # Populate child category article lists
-            for child in page.child_categories:
-                child_arts = arts_by_path.get(child.category_path, [])
-                if any(getattr(a, 'episode_num', None) is not None for a in child_arts):
-                    child.direct_articles = sorted(
-                        child_arts, key=lambda a: a.episode_num if a.episode_num is not None else 0
-                    )
-                else:
-                    child.direct_articles = sorted(
-                        child_arts, key=lambda a: a.date, reverse=True
-                    )
-
             ctx = self.context.copy()
             ctx['page'] = page
-            ctx['direct_articles'] = direct
+            ctx['direct_articles'] = page.direct_articles
             ctx['child_categories'] = page.child_categories
 
             writer.write_file(
