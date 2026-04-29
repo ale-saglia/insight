@@ -35,7 +35,7 @@ jobs:
         run: sudo apt-get install -y --no-install-recommends fonts-dejavu-core
 
       - name: Install Python dependencies
-        run: uv pip install --require-hashes -r requirements.txt --system
+        run: uv pip install --require-hashes -r requirements-dev.txt --system
 
       - name: Ensure article front matter
         run: python scripts/ensure_frontmatter.py
