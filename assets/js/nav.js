@@ -74,11 +74,7 @@
     });
   });
 
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function() { checkLayout(); });
-  } else {
-    setTimeout(checkLayout, 100);
-  }
+  document.fonts.ready.then(checkLayout);
 
   const ro = new ResizeObserver(checkLayout);
   ro.observe(nav);

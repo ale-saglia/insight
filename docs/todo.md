@@ -15,7 +15,7 @@ Updated state after senior review. Issues closed in previous rounds are archived
 | 40 | Medium    | No E2E build test: nothing guarantees `_site/index.html` is generated correctly                        | tests/                                                | ✅ Done |
 | 41 | Low       | `_build_git_date_map` reads the entire git history, not just `src/`                                    | plugins/insight_articles.py:14                        | ✅ Done |
 | 42 | Low       | `_first_commit_date` doesn't check `result.returncode`: git error indistinguishable from new file      | scripts/ensure_frontmatter.py                         | ✅ Done |
-| 43 | Low       | `nav.js` uses `setTimeout(checkLayout, 100)` as font fallback: dropdown flicker on slow connections    | assets/js/nav.js                                      | Open   |
+| 43 | Low       | `nav.js` uses `setTimeout(checkLayout, 100)` as font fallback: dropdown flicker on slow connections    | assets/js/nav.js                                      | ✅ Done |
 | 44 | Low       | `archives.js`: no debounce on search input; expensive recomputation on every keystroke                 | assets/js/archives.js                                 | Open   |
 | 46 | Note      | #31 marked "Done" but only partial: `HOMEPAGE_INTRO` still in `pelicanconf.py`, not in `src/`          | pelicanconf.py                                        | Open   |
 | 47 | Note      | OG image generation runs single-threaded; ~10s on 250 articles                                         | plugins/og_images.py                                  | Open   |
