@@ -9,6 +9,7 @@ Hooks into article_generator_finalized so articles are already enriched
 import hashlib
 import os
 import re
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from pelican import signals
@@ -199,29 +200,29 @@ def _generate(generator):
         print('✓ OG: homepage.webp')
 
     # Articles — slug already set by insight_articles.process_articles
+    def _render(task):
+        title, slug, summary, out_path, art_hash = task
+        img = Image.new('RGB', (W, H), COLOR_BG)
+        _draw_article(ImageDraw.Draw(img), site_title, site_desc, title, summary, domain, fonts)
+        _save_image(img, out_path, art_hash)
+        return slug
+
+    tasks = []
     for article in generator.articles:
         slug = getattr(article, 'slug', '')
         if not slug:
             continue
-
         summary = re.sub(r'<[^>]+>', '', getattr(article, 'summary', '') or '')
-
         out_path = out_base / f'{slug}.webp'
         out_path.parent.mkdir(parents=True, exist_ok=True)
-
         art_hash = _content_hash(_RENDERER_HASH, article.title or slug, slug, summary)
         if not _is_current(out_path, art_hash):
-            img = Image.new('RGB', (W, H), COLOR_BG)
-            _draw_article(
-                ImageDraw.Draw(img),
-                site_title, site_desc,
-                article.title or slug,
-                summary,
-                domain,
-                fonts,
-            )
-            _save_image(img, out_path, art_hash)
-            print(f'✓ OG: {slug}.webp')
+            tasks.append((article.title or slug, slug, summary, out_path, art_hash))
+
+    if tasks:
+        with ThreadPoolExecutor(max_workers=os.cpu_count()) as pool:
+            for slug in pool.map(_render, tasks):
+                print(f'✓ OG: {slug}.webp')
 
 
 def register():
