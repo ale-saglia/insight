@@ -1,161 +1,268 @@
 # Code Review — Pelican Template "Insight"
 
+Updated state after AI agent senior review. Issues closed in previous rounds are archived at the bottom for historical reference.
+
 ## Priority Summary
 
-| #   | Severity | Issue                                                                                | Location                                  | Status     |
-| --- | -------- | ------------------------------------------------------------------------------------ | ----------------------------------------- | ---------- |
-| 23  | Critical | Three different ways to install dependencies (uv hashed / pip plain / wipe & reinstall) | Dockerfile, devcontainer.json, Makefile   | ✅ Done    |
-| 24  | Medium   | Pelican plugins have no tests (slug, breadcrumbs, category gen, OG cache)            | tests/, plugins/                          | ✅ Done    |
-| 25  | Medium   | No internal link checker in CI: renaming an `article_id` silently breaks inbound links | .github/workflows/, src/*.md cross-refs   | ✅ Done    |
-| 26  | Medium   | `tag_counts` does not lowercase tag names; `archives.html` filter compares with `lower()` → potential mismatch | plugins/insight_articles.py, themes/insight/templates/archives.html | ✅ Done    |
-| 27  | Low      | LICENSE references Jekyll-era files (`_layouts/`, `_includes/`) that don't exist in this repo | LICENSE                                   | ✅ Done    |
-| 28  | Low      | `.gitignore` ignores `assets/og-images/` but the plugin now writes into `_site/assets/og-images/` | .gitignore                                | ✅ Done    |
-| 29  | Low      | `ensure_frontmatter.py` validates `category` and `permalink` but no article uses these fields anymore | scripts/ensure_frontmatter.py             | ✅ Done    |
-| 30  | Low      | `robots.txt` hardcodes `https://insight.ale-saglia.com/sitemap.xml` instead of using `SITEURL` | robots.txt, pelicanconf.py                | ✅ Done    |
-| 31  | Low      | Homepage intro hardcoded in template instead of a content file                       | themes/insight/templates/index.html       | ✅ Done    |
-| 32  | Note     | `DEFAULT_DATE_FORMAT` likely unused (templates call `strftime` directly)             | pelicanconf.py                            | ✅ Done    |
-| 33  | Note     | `_episode_number(...) or 0` is dead defensive code: in `series_groups` the value is never `None` | plugins/insight_articles.py               | ✅ Done    |
+| #  | Severity  | Issue                                                                                                  | Location                                              | Status |
+| -- | --------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | ------ |
+| 34 | High      | `_episode_number` + `or 0` pattern rejected in #33 but replicated in `insight_categories.py` (4 spots) | plugins/insight_categories.py:80, 86, 88, 92          | Open   |
+| 35 | High      | `og_images.py` cache hash does not include rendering version: edits to `_draw_*` don't invalidate cache | plugins/og_images.py                                  | Open   |
+| 36 | High      | `InsightMarkdownReader` subclasses `MarkdownReader` but never calls `super().read()`: fake inheritance | plugins/insight_reader.py                             | Open   |
+| 37 | Medium    | #26 fix changed tag display in archive: buttons now always render lowercase, regardless of source tag  | themes/insight/templates/archives.html                | Open   |
+| 38 | Medium    | `CategoryPageGenerator`: child article sort happens only in `generate_output`, not in `generate_context` | plugins/insight_categories.py                       | Open   |
+| 39 | Medium    | `_enrich_article` returns silently on failed precondition: no log, debugging impossible                | plugins/insight_articles.py:91                        | Open   |
+| 40 | Medium    | No E2E build test: nothing guarantees `_site/index.html` is generated correctly                        | tests/                                                | Open   |
+| 41 | Low       | `_build_git_date_map` reads the entire git history, not just `src/`                                    | plugins/insight_articles.py:14                        | Open   |
+| 42 | Low       | `_first_commit_date` doesn't check `result.returncode`: git error indistinguishable from new file      | scripts/ensure_frontmatter.py                         | Open   |
+| 43 | Low       | `nav.js` uses `setTimeout(checkLayout, 100)` as font fallback: dropdown flicker on slow connections    | assets/js/nav.js                                      | Open   |
+| 44 | Low       | `archives.js`: no debounce on search input; expensive recomputation on every keystroke                 | assets/js/archives.js                                 | Open   |
+| 45 | Low       | `Dockerfile`: lychee downloaded from `latest` without checksum, inconsistent with Python hash-pinning  | .devcontainer/Dockerfile                              | Open   |
+| 46 | Note      | #31 marked "Done" but only partial: `HOMEPAGE_INTRO` still in `pelicanconf.py`, not in `src/`          | pelicanconf.py                                        | Open   |
+| 47 | Note      | OG image generation runs single-threaded; ~10s on 250 articles                                         | plugins/og_images.py                                  | Open   |
+| 48 | Note      | `ensure_frontmatter.py` parses YAML and rewrites the file, then `InsightMarkdownReader` reparses it    | scripts/ensure_frontmatter.py + plugins/insight_reader.py | Open |
 
 ---
 
 ## Details
 
-### 23. Three different ways to install dependencies
+### 34. `or 0` replicated after being rejected in #33
 
-There are three independent install paths for the Python environment, and they don't agree:
-
-1. **Makefile** (`make setup` / `make setup-dev`) → `uv venv` + `uv pip install --require-hashes` from `requirements.txt` / `requirements-dev.txt`. Hashed, locked, deterministic.
-2. **Dockerfile** → `uv venv .venv` + `uv pip install --require-hashes -r requirements.txt`. Same approach, only direct deps (no test deps).
-3. **devcontainer.json `postCreateCommand`** → `rm -rf .venv && python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt`. **Wipes the venv created by the Dockerfile** and rebuilds it with plain `pip`, no hash verification, no `uv`.
-
-This is the worst of both worlds: the Dockerfile does work that gets thrown away, and the actual venv used by the developer bypasses the hash pinning that exists everywhere else. Drift waiting to happen.
-
-**Fix:** make the Dockerfile install `requirements-dev.txt` directly (it's a superset of `requirements.in`), and let `postCreateCommand` be a no-op or a `make` sanity check. Single install path, single source of truth.
-
----
-
-### 24. Pelican plugins have no tests
-
-✅ **Done** (commit `8ecbb71`) — 66 new tests in three files:
-
-- `tests/test_insight_articles.py` — `_episode_number`, `_enrich_article` (slug, underscore stripping, breadcrumbs, reading time, git date, series placeholders)
-- `tests/test_insight_categories.py` — `CategoryPage`, `CategoryPageGenerator.generate_context` (filesystem walk, parent resolution, child_categories)
-- `tests/test_og_images.py` — `_content_hash`, `_is_current`, `_save_image`
-
----
-
-### 25. No internal link checker in CI
-
-✅ **Done** — added `lycheeverse/lychee-action@v2` step in `.github/workflows/pages.yml` after the Pelican build, before the artifact upload. Runs offline (no HTTP requests), resolves absolute paths against `_site/`, excludes `mailto:` links. Breaks CI before deploy if any internal link is dead.
-
----
-
-### 26. `tag_counts` case mismatch
-
-In `plugins/insight_articles.py:75-78`:
+In #33 you removed `_episode_number(...) or 0` from `insight_articles.py` because it was defensive and misleading. The same pattern exists in `insight_categories.py:80,86,88,92`:
 
 ```python
-for tag in getattr(article, 'tags', None) or []:
-    tag_counts[tag.name] = tag_counts.get(tag.name, 0) + 1
+direct = sorted(direct, key=lambda a: getattr(a, 'episode_num', 0) or 0)
 ```
 
-Tags are counted with their original case. But the frontend filter in `archives.html` uses `data-keyword="{{ kw | lower }}"` and the JS in `archives.js` compares lowercased values. If two articles tag `Python` and `python`, `tag_counts` shows two separate entries; the filter merges them.
+`getattr(a, 'episode_num', 0)` already covers the "missing attribute" case. The trailing `or 0` only handles `episode_num is None`, which is exactly what the surrounding `if any(... is not None ...)` guard already excludes.
 
-**Fix:** lowercase in the plugin: `tag_counts[tag.name.lower()] = ...`. Two-line change, eliminates a class of latent bugs.
-
----
-
-### 27. LICENSE references files that don't exist
-
-The MIT section lists "`_layouts/`, `_includes/`, `scripts/`, `assets/`" as files covered. `_layouts/` and `_includes/` are Jekyll conventions; this repo uses `themes/insight/templates/` and `plugins/`. The license is technically still valid, but the file list is misleading and looks like the LICENSE was copied from a Jekyll repo without updating.
-
-**Fix:** replace with the actual paths: `themes/`, `plugins/`, `scripts/`, `assets/`, `pelicanconf.py`, `publishconf.py`, `Makefile`, `.github/`, `.devcontainer/`.
-
----
-
-### 28. `.gitignore` references obsolete OG images path
-
-```gitignore
-# --- Build Artifacts ---
-_site/
-assets/og-images/
-```
-
-After issue #6 was fixed, `og_images.py` writes to `_site/assets/og-images/` (already covered by `_site/`). The `assets/og-images/` line is now dead.
-
-**Fix:** remove the line. Either it's redundant with `_site/`, or — if the path is gone entirely — it's obsolete documentation.
-
----
-
-### 29. `ensure_frontmatter.py` validates dead fields
-
-In `scripts/ensure_frontmatter.py:172-181`, the script warns on `category` / `permalink` mismatches:
+**Fix:** drop `or 0` from all four spots, or rewrite the guard to handle None explicitly:
 
 ```python
-if 'category' in meta:
-    fm_cat = str(meta['category'])
-    if fm_cat not in (category, top_domain):
-        _warn(path, f'category mismatch: ...')
+key=lambda a: a.episode_num if a.episode_num is not None else 0
 ```
 
-These were Jekyll fields. None of the current articles use them — Pelican derives category from path, and slugs come from `article_id`. The validation can never fire on real content; it only adds maintenance surface.
-
-**Fix:** drop both blocks (same logic as #13 — strip Jekyll cruft on both sides).
+Internal consistency first: either zero-sentinels everywhere or nowhere.
 
 ---
 
-### 30. `robots.txt` hardcodes the production URL
-
-```
-Sitemap: https://insight.ale-saglia.com/sitemap.xml
-```
-
-Every other URL in the build is derived from `SITEURL`. This one is hardcoded, which means:
-- Local builds advertise the production sitemap URL.
-- Changing the domain requires editing two places (`publishconf.py` and `robots.txt`).
-
-**Fix:** move `robots.txt` to `TEMPLATE_PAGES` and use `{{ SITEURL }}/sitemap.xml`. Same pattern already used for `sitemap.xml` and `404.html`.
-
----
-
-### 31. Homepage intro hardcoded in template
-
-The opening paragraph in `themes/insight/templates/index.html:5` ("There is a threshold where engineering becomes governance...") is a piece of editorial content embedded in a Jinja2 template. Editing it means touching the theme.
-
-**Fix:** move it to a content file (`src/_general/_intro.md` or similar), load via the page system or a template variable. Editorial content lives in `src/`, not in `themes/`.
-
----
-
-### 33. Dead defensive code in series sort
-
-In `plugins/insight_articles.py:53`:
+### 35. OG cache doesn't invalidate on rendering changes
 
 ```python
-sorted_series = sorted(articles, key=lambda a: _episode_number(a.get_relative_source_path()) or 0)
+hp_hash = _content_hash(site_title, site_desc, domain, author)
+art_hash = _content_hash(article.title or slug, slug, summary)
 ```
 
-The `or 0` handles a `None` from `_episode_number`. But articles only enter `series_groups` after the same function returned a non-None value (line 47). The fallback can never trigger.
+The hash depends only on content. If you change `_draw_article` (font, layout, palette, dimensions), the cache stays "current" and images are not regenerated until `make rebuild`. On CI it's not a problem (`DELETE_OUTPUT_DIRECTORY = True`), locally it is.
 
-**Fix:** drop the `or 0`. If the assumption ever changes, a `TypeError` is more informative than a silent zero.
+**Fix:** add a version tag to the module:
+
+```python
+_RENDERER_VERSION = "v1"  # bump when you change _draw_*
+hp_hash = _content_hash(_RENDERER_VERSION, site_title, ...)
+```
+
+Or more robust: hash the contents of `og_images.py` itself (computed once at load time).
+
+---
+
+### 36. `InsightMarkdownReader` doesn't call `super().read()`
+
+```python
+class InsightMarkdownReader(MarkdownReader):
+    def read(self, source_path):
+        with open(source_path, encoding='utf-8') as f:
+            raw = f.read()
+        # ... custom parsing, super() never called
+```
+
+You subclass `MarkdownReader` but override `read()` entirely. That's not inheritance — it's polymorphism in disguise. If Pelican adds logic to `MarkdownReader.read()` (encoding handling, plugin hooks, internal signals), you don't get it.
+
+**Fix:** pick one of two options:
+1. Subclass `BaseReader` directly — more honest about what you're doing.
+2. Call `super().read()` and then remap metadata — safer against Pelican upgrades.
+
+The current setup is the worst of both: you declare an inheritance you don't honor.
+
+---
+
+### 37. #26 fix changed tag display in archive
+
+After lowercasing `tag_counts`, `archives.html` renders:
+
+```jinja
+<button class="keyword-btn" data-keyword="{{ kw | lower }}" ...>{{ kw }} <span class="count">...</span></button>
+```
+
+Where `kw` is now already lowercase. If you ever had a tag like `Python`, the button used to read "Python". Now it reads "python". Your tags happen to be all lowercase already, so you don't see it — but the #26 fix changed UI behavior without declaring it.
+
+**Fix options:**
+- Lowercase only the *matching key*, keep the *display* original: `tag_counts[tag.name] = ...` and compare with `.toLowerCase()` on both sides in JS.
+- Document the choice: "all tags rendered in lowercase for visual consistency" (legitimate editorial decision).
+
+I'd take the second. But the choice should be explicit.
+
+---
+
+### 38. Child articles sorted only in `generate_output`
+
+`CategoryPageGenerator.generate_context` populates `category_pages` with `child_categories` but **without** sorted `direct_articles`. That sort happens later, in `generate_output`. So if any other template (e.g. a future `index.html`) accesses `child.direct_articles` from a render phase invoked before `generate_output`, it sees `[]`.
+
+**Fix:** move the sort into `generate_context`. Cost is zero (single pass over articles, already happening) and removes an implicit ordering dependency.
+
+---
+
+### 39. `_enrich_article` returns silently
+
+```python
+if len(parts) < 3 or parts[0] != 'src':
+    return
+```
+
+An article that violates this precondition ends up in the site without `slug`, without `breadcrumbs`, without `category_path`. Pelican doesn't complain. The template hits `{{ article.slug }}` and produces an empty string or an `AttributeError` at runtime in unpredictable ways.
+
+**Fix:**
+
+```python
+if len(parts) < 3 or parts[0] != 'src':
+    logger.warning('Article %s skipped: path does not match src/<category>/<file>', source_rel)
+    return
+```
+
+If you want to be more aggressive, raise. For a personal site I'd prefer the warning.
+
+---
+
+### 40. No E2E build test
+
+You have 66 plugin tests, but nothing verifies that a Pelican build actually produces valid HTML. A minimal test:
+
+```python
+def test_build_produces_index(tmp_path):
+    # copy a minimal src/ fixture, run pelican, assert _site/index.html exists
+    ...
+```
+
+Mostly valuable as a safety net for Pelican upgrades or dependency bumps.
+
+---
+
+### 41. `git log` runs against entire repo
+
+```python
+result = subprocess.run(
+    ['git', 'log', '--name-only', '--format=COMMIT %cd', ...],
+)
+```
+
+Adding `'--', 'src/'` limits the parsing work to the path that actually matters. Three characters, scaling becomes linear with `src/` history rather than the whole repo.
+
+---
+
+### 42. `_first_commit_date` ignores `returncode`
+
+```python
+result = subprocess.run([...], capture_output=True, text=True)
+lines = result.stdout.strip().splitlines()
+return ... if lines else None
+```
+
+A git error becomes indistinguishable from "file not yet committed". Practical difference is zero today, but if git starts misbehaving you'll have no signal.
+
+**Fix:** check `result.returncode != 0`, log a warning, return None.
+
+---
+
+### 43. `nav.js` font fallback is fragile
+
+```javascript
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(checkLayout);
+} else {
+  setTimeout(checkLayout, 100);
+}
+```
+
+`document.fonts.ready` is supported everywhere except IE (which you don't target). The `setTimeout(100)` is a guess. On a 3G connection the font may take 300-500ms, the first `checkLayout` runs against system fonts, and the dropdown flickers.
+
+**Fix:** drop the fallback, or hard-cap with `Promise.race` at 500ms.
+
+---
+
+### 44. `archives.js` has no debounce
+
+At 250 articles, every keystroke recomputes the count on N year buttons + N keyword buttons. Not blocking now, will be at 500+. A 100ms debounce is 4 lines.
+
+---
+
+### 45. `Dockerfile` pulls lychee from `latest`
+
+```dockerfile
+RUN ARCH=$(uname -m) && \
+    curl -sSL "https://github.com/lycheeverse/lychee/releases/latest/..." \
+    | tar -xz -C /usr/local/bin lychee
+```
+
+Inconsistent with the rest: you hash-pin Python requirements, you grab a binary with no checksum. Pin to a specific version + verify SHA256.
+
+---
+
+### 46. #31 is only partial
+
+You moved `HOMEPAGE_INTRO` from `index.html` into `pelicanconf.py`. Better, but it's still "editorial content inside a config file". Full resolution is reading it from `src/_general/_intro.md` (or similar). For the current site volume, accepting the compromise and marking #31 as "partial" is honest.
+
+---
+
+### 47. OG single-threaded
+
+`_generate` iterates over articles serially. ~40ms per article in Pillow → ~10s at 250 articles. `multiprocessing.Pool` with N=cores brings it to ~2s. Not urgent, but the refactor is trivial.
+
+---
+
+### 48. Double YAML parsing
+
+`ensure_frontmatter.py` parses YAML on every `.md`, normalizes, rewrites. Then `InsightMarkdownReader` parses the same YAML again. At current volume the cost is invisible. Future evolution: the pre-step could expose already-parsed metadata via a cache file (e.g. `.frontmatter-cache.json`) that the reader consumes directly.
 
 ---
 
 ## Long Term
 
-Items not urgent now but worth revisiting as the site grows.
-
 | # | Trigger | Action |
 | - | ------- | ------ |
-| L1 | Article count becomes visible | Cache `_site/assets/og-images/` in CI via `actions/cache` keyed on plugin + source files hash |
+| L1 | Article count > 50 | Cache `_site/assets/og-images/` in CI via `actions/cache` |
+| L2 | Article count > 100 | Multiprocess OG generation (#47) |
+| L3 | Article count > 250 | Debounce + virtualization in archives.js (#44) |
+| L4 | Pelican major upgrade | E2E build test (#40) becomes mandatory, not optional |
 
 ---
 
 ## Suggested order of attack
 
-By impact / effort ratio:
+By impact / effort:
 
-1. ~~**#23 Unify dependency setup**~~ ✅
-2. ~~**#25 Link checker in CI**~~ ✅
-3. ~~**#24 Plugin tests**~~ ✅
-4. **#26 Tag case-normalization** — latent bug, two-line fix.
-5. **#27–#33** — incidental polish during normal work.
+1. **#34** Cleanup `or 0` — consistency with #33, 5 minutes.
+2. **#39** Logging in `_enrich_article` — future debugging, 5 minutes.
+3. **#37** Explicit decision on lowercase tag display — documentation or UI fix.
+4. **#35** Versioned OG hash — local-build robustness, 10 minutes.
+5. **#41, #42** Git ops polish — 10 minutes total.
+6. **#36** Refactor `InsightMarkdownReader` — riskier, do after writing #40.
+7. **#40** E2E build test — serious investment, but unlocks all future refactors.
+8. **#38, #43, #44, #45, #47, #48** — incidental polish, as before.
+
+---
+
+## Archive (closed issues)
+
+| #   | Issue | Status |
+| --- | ----- | ------ |
+| 23  | Three inconsistent install paths for dependencies | ✅ Done |
+| 24  | Plugins without tests (slug, breadcrumbs, category gen, OG cache) | ✅ Done |
+| 25  | No internal link checker in CI | ✅ Done |
+| 26  | `tag_counts` case mismatch | ✅ Done (but see #37) |
+| 27  | LICENSE referenced non-existent Jekyll files | ✅ Done |
+| 28  | `.gitignore` referenced obsolete OG path | ✅ Done |
+| 29  | `ensure_frontmatter.py` validated dead `category` and `permalink` fields | ✅ Done |
+| 30  | `robots.txt` hardcoded production URL | ✅ Done |
+| 31  | Homepage intro hardcoded in template | ⚠️ Partial (see #46) |
+| 32  | `DEFAULT_DATE_FORMAT` unused | ✅ Done |
+| 33  | Dead `or 0` defensive code in series sort | ✅ Done (but see #34) |
