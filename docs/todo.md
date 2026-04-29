@@ -17,7 +17,7 @@ Updated state after senior review. Issues closed in previous rounds are archived
 | 42 | Low       | `_first_commit_date` doesn't check `result.returncode`: git error indistinguishable from new file      | scripts/ensure_frontmatter.py                         | ✅ Done |
 | 43 | Low       | `nav.js` uses `setTimeout(checkLayout, 100)` as font fallback: dropdown flicker on slow connections    | assets/js/nav.js                                      | ✅ Done |
 | 44 | Low       | `archives.js`: no debounce on search input; expensive recomputation on every keystroke                 | assets/js/archives.js                                 | ✅ Done |
-| 46 | Note      | #31 marked "Done" but only partial: `HOMEPAGE_INTRO` still in `pelicanconf.py`, not in `src/`          | pelicanconf.py                                        | Open   |
+| 46 | Note      | #31 marked "Done" but only partial: `HOMEPAGE_INTRO` still in `pelicanconf.py`, not in `src/`          | pelicanconf.py                                        | ✅ Done |
 | 47 | Note      | OG image generation runs single-threaded; ~10s on 250 articles                                         | plugins/og_images.py                                  | Open   |
 | 48 | Note      | `ensure_frontmatter.py` parses YAML and rewrites the file, then `InsightMarkdownReader` reparses it    | scripts/ensure_frontmatter.py + plugins/insight_reader.py | Open |
 | 49 | Note      | `make check-links` and CI need `CHECK_PORT` documented in `local-development.md` (default 4567)        | Makefile + docs/local-development.md                  | Open   |
@@ -197,9 +197,9 @@ At 250 articles, every keystroke recomputes the count on N year buttons + N keyw
 
 ---
 
-### 46. #31 is only partial
+### 46. #31 is only partial — accepted, closed
 
-You moved `HOMEPAGE_INTRO` from `index.html` into `pelicanconf.py`. Better, but it's still "editorial content inside a config file". Full resolution is reading it from `src/_general/_intro.md` (or similar). For the current site volume, accepting the compromise and marking #31 as "partial" is honest.
+`HOMEPAGE_INTRO` stays in `pelicanconf.py`. It is site-identity prose — closer to `AUTHOR` or `SITESUBTITLE` than to an article. It has no publication date, no URL, no reading time, and changes with the same cadence as other site-identity settings. Moving it to `src/` would require a mini-plugin or a template hack to read and inject it, adding complexity with no editorial benefit. See `docs/architecture.md` § Configuration → `HOMEPAGE_INTRO` for the full rationale.
 
 ---
 

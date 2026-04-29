@@ -154,7 +154,7 @@ Images are regenerated on every full build; the output directory is gitignored (
 | `nav.html` | — | Top nav; excludes `general` category |
 | `article.html` | Article pages | Breadcrumbs, JSON-LD schema, episode nav, reading time |
 | `category.html` | Category index pages | Child categories + direct articles |
-| `index.html` | `index.html` | Latest article + 5-article list (intro text from `SITE_INTRO` in `pelicanconf.py`) |
+| `index.html` | `index.html` | Latest article + 5-article list (intro text from `HOMEPAGE_INTRO` in `pelicanconf.py`) |
 | `archives.html` | `archive/index.html` | JS search/filter with year grouping, URL state |
 | `sitemap.xml` | `sitemap.xml` | Via `TEMPLATE_PAGES` |
 | `404.html` | `404.html` | Via `TEMPLATE_PAGES` |
@@ -204,6 +204,18 @@ DELETE_OUTPUT_DIRECTORY = True
 ```
 
 `README.md` files are excluded via `IGNORE_FILES = ['README.md', ...]`. Pelican 4.x's `_include_path()` checks `IGNORE_FILES` against the basename; `ARTICLE_EXCLUDES` is not checked at that stage.
+
+### `HOMEPAGE_INTRO`
+
+The homepage intro text lives in `pelicanconf.py` rather than in `src/`. This is an intentional exception to the content/config separation, not an oversight.
+
+`HOMEPAGE_INTRO` is site-identity prose — it belongs in the same class as `AUTHOR` or `SITESUBTITLE`, not in the article pipeline. The distinguishing criteria:
+
+- **No pipeline metadata**: no publication date, no URL, no slug, no reading time, no OG image of its own.
+- **Same change cadence as config**: it is edited alongside other site-identity settings (rarely, and as part of a deliberate site-identity update), not as an independent editorial act.
+- **Rendered as a static block**: `index.html` uses it as a single `{{ HOMEPAGE_INTRO }}` — a frameless "extended hero" paragraph, not a content object with lifecycle.
+
+Moving it to `src/` (e.g. `src/_general/_intro.md`) would require reading and injecting it outside Pelican's normal article pipeline — a mini-plugin or a `TEMPLATE_PAGES` hack — adding indirection with no editorial benefit. The content/config boundary is about lifecycle, not location: editorial content that accumulates, gets dated, and is listed in archives belongs in `src/`; site-framing text that is effectively permanent belongs in config.
 
 ### Version pinning
 
