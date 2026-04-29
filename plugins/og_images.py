@@ -156,6 +156,11 @@ def _draw_homepage(draw, site_title, site_description, domain, author_name, font
     draw.text((W - MARGIN - tw, footer_text_y), domain, fill=COLOR_MUTED, font=fonts["reg_24"])
 
 
+# ── Renderer fingerprint — invalidates cache when this file changes ───────────
+
+_RENDERER_HASH = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()[:16]
+
+
 # ── Cache helpers ─────────────────────────────────────────────────────────────
 
 def _content_hash(*parts: str) -> str:
@@ -185,7 +190,7 @@ def _generate(generator):
     out_base.mkdir(parents=True, exist_ok=True)
 
     # Homepage
-    hp_hash = _content_hash(site_title, site_desc, domain, author)
+    hp_hash = _content_hash(_RENDERER_HASH, site_title, site_desc, domain, author)
     hp_out  = out_base / 'homepage.webp'
     if not _is_current(hp_out, hp_hash):
         img = Image.new('RGB', (W, H), COLOR_BG)
@@ -204,7 +209,7 @@ def _generate(generator):
         out_path = out_base / f'{slug}.webp'
         out_path.parent.mkdir(parents=True, exist_ok=True)
 
-        art_hash = _content_hash(article.title or slug, slug, summary)
+        art_hash = _content_hash(_RENDERER_HASH, article.title or slug, slug, summary)
         if not _is_current(out_path, art_hash):
             img = Image.new('RGB', (W, H), COLOR_BG)
             _draw_article(

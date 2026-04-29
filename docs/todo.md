@@ -7,7 +7,7 @@ Updated state after senior review. Issues closed in previous rounds are archived
 | #  | Severity  | Issue                                                                                                  | Location                                              | Status |
 | -- | --------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | ------ |
 | 34 | High      | `_episode_number` + `or 0` pattern rejected in #33 but replicated in `insight_categories.py` (4 spots) | plugins/insight_categories.py:80, 86, 88, 92          | ✅ Done |
-| 35 | High      | `og_images.py` cache hash does not include rendering version: edits to `_draw_*` don't invalidate cache | plugins/og_images.py                                  | Open   |
+| 35 | High      | `og_images.py` cache hash does not include rendering version: edits to `_draw_*` don't invalidate cache | plugins/og_images.py                                  | ✅ Done |
 | 36 | High      | `InsightMarkdownReader` subclasses `MarkdownReader` but never calls `super().read()`: fake inheritance | plugins/insight_reader.py                             | Open   |
 | 37 | Medium    | #26 fix changed tag display in archive: buttons now always render lowercase, regardless of source tag  | themes/insight/templates/archives.html                | ✅ Done |
 | 38 | Medium    | `CategoryPageGenerator`: child article sort happens only in `generate_output`, not in `generate_context` | plugins/insight_categories.py                       | Open   |
@@ -55,14 +55,16 @@ art_hash = _content_hash(article.title or slug, slug, summary)
 
 The hash depends only on content. If you change `_draw_article` (font, layout, palette, dimensions), the cache stays "current" and images are not regenerated until `make rebuild`. On CI it's not a problem (`DELETE_OUTPUT_DIRECTORY = True`), locally it is.
 
-**Fix:** add a version tag to the module:
+**Implemented:** hash the contents of `og_images.py` itself, computed once at module load time and prepended to every cache key:
 
 ```python
-_RENDERER_VERSION = "v1"  # bump when you change _draw_*
-hp_hash = _content_hash(_RENDERER_VERSION, site_title, ...)
+_RENDERER_HASH = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()[:16]
+
+hp_hash  = _content_hash(_RENDERER_HASH, site_title, site_desc, domain, author)
+art_hash = _content_hash(_RENDERER_HASH, article.title or slug, slug, summary)
 ```
 
-Or more robust: hash the contents of `og_images.py` itself (computed once at load time).
+Any edit to the plugin (font, layout, palette, drawing logic) changes `_RENDERER_HASH`, which makes every `.sha256` stale and forces full regeneration on the next local build. No manual version bump required.
 
 ---
 
