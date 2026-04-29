@@ -4,18 +4,24 @@ PELICAN   ?= $(VENV_BIN)/pelican
 PORT      ?= 4000
 
 .DEFAULT_GOAL := help
-.PHONY: help setup setup-dev build serve preview rebuild clean
+.PHONY: help setup setup-dev compile build serve preview rebuild clean
 
 help:
 	@echo "Usage: make <target>"
 	@echo ""
 	@echo "  setup      Create .venv and install Python dependencies"
 	@echo "  setup-dev  Like setup, but also install test dependencies"
+	@echo "  compile    Recompile *.txt from *.in (run after editing a .in file)"
 	@echo "  build      Check front matter and build with Pelican"
 	@echo "  serve      Build then start Pelican live-reload on port $(PORT)"
 	@echo "  preview    Build then serve _site/ statically on port $(PORT)"
 	@echo "  rebuild    Clean and rebuild"
 	@echo "  clean      Remove _site/"
+
+compile:
+	uv pip compile requirements.in     --generate-hashes -o requirements.txt
+	uv pip compile requirements-dev.in --generate-hashes -o requirements-dev.txt
+	@echo "Requirements compiled. Run 'make setup' or 'make setup-dev' to reinstall."
 
 setup:
 	uv venv --clear .venv
