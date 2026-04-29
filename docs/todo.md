@@ -19,7 +19,7 @@ Updated state after senior review. Issues closed in previous rounds are archived
 | 44 | Low       | `archives.js`: no debounce on search input; expensive recomputation on every keystroke                 | assets/js/archives.js                                 | ✅ Done |
 | 46 | Note      | #31 marked "Done" but only partial: `HOMEPAGE_INTRO` still in `pelicanconf.py`, not in `src/`          | pelicanconf.py                                        | ✅ Done |
 | 47 | Note      | OG image generation runs single-threaded; ~10s on 250 articles                                         | plugins/og_images.py                                  | ✅ Done |
-| 48 | Note      | `ensure_frontmatter.py` parses YAML and rewrites the file, then `InsightMarkdownReader` reparses it    | scripts/ensure_frontmatter.py + plugins/insight_reader.py | Open |
+| 48 | Note      | `ensure_frontmatter.py` parses YAML and rewrites the file, then `InsightMarkdownReader` reparses it    | scripts/ensure_frontmatter.py + plugins/insight_reader.py | ✅ Done |
 | 49 | Note      | `make check-links` and CI need `CHECK_PORT` documented in `local-development.md` (default 4567)        | Makefile + docs/local-development.md                  | Open   |
 
 ---

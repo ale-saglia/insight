@@ -3,15 +3,34 @@ InsightMarkdownReader — reads Markdown files with YAML frontmatter,
 mapping Jekyll field names to Pelican equivalents.
 """
 
+import json
 import logging
 import os
 from copy import copy
 from datetime import date, datetime
+from pathlib import Path
 
 from markdown import Markdown
 from pelican.readers import BaseReader
 
-from ._frontmatter import parse_frontmatter
+from ._frontmatter import parse_frontmatter, split_body
+
+_REPO_ROOT = Path(__file__).parent.parent
+_CACHE_PATH = _REPO_ROOT / '.frontmatter-cache.json'
+_cache: dict | None = None
+
+
+def _load_cache():
+    global _cache
+    if _cache is not None:
+        return
+    if _CACHE_PATH.exists():
+        try:
+            _cache = json.loads(_CACHE_PATH.read_text(encoding='utf-8'))
+        except (json.JSONDecodeError, OSError):
+            _cache = {}
+    else:
+        _cache = {}
 
 logger = logging.getLogger(__name__)
 
@@ -40,10 +59,20 @@ class InsightMarkdownReader(BaseReader):
         with open(source_path, encoding='utf-8') as f:
             raw = f.read()
 
-        fm_meta, body = parse_frontmatter(
-            raw,
-            on_error=lambda _: _build_error(source_path, 'YAML frontmatter is malformed — article will have no metadata'),
-        )
+        _load_cache()
+        try:
+            rel_key = Path(source_path).relative_to(_REPO_ROOT).as_posix()
+            entry = _cache.get(rel_key)
+            if entry and abs(Path(source_path).stat().st_mtime - entry['mtime']) < 0.001:
+                fm_meta = entry['meta']
+                body = split_body(raw)
+            else:
+                raise KeyError
+        except (KeyError, ValueError, OSError):
+            fm_meta, body = parse_frontmatter(
+                raw,
+                on_error=lambda _: _build_error(source_path, 'YAML frontmatter is malformed — article will have no metadata'),
+            )
 
         # Validate required frontmatter fields
         if not fm_meta.get('created'):

@@ -1,5 +1,6 @@
 # --- Build Artifacts ---
 _site/
+.frontmatter-cache.json
 
 # --- Python ---
 .venv/

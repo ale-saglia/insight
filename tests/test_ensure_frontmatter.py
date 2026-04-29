@@ -20,6 +20,7 @@ def reset_state(monkeypatch):
     monkeypatch.setattr(ef, '_warn_count', 0)
     monkeypatch.setattr(ef, '_error_count', 0)
     monkeypatch.setattr(ef, '_update_count', 0)
+    monkeypatch.setattr(ef, '_cache', {})
     monkeypatch.setattr(ef, '_first_commit_date', lambda _: date(2024, 1, 1))
 
 

@@ -14,6 +14,7 @@ Body normalisation: leading blank lines stripped, duplicate H1 removed when
 it matches the title, trailing blank lines stripped. EOF newline preserved.
 """
 
+import json
 import logging
 import os
 import subprocess
@@ -29,6 +30,7 @@ _KNOWN_FIELDS = ['title', 'created', 'modified', 'keywords', 'excerpt']
 _warn_count = 0
 _error_count = 0
 _update_count = 0
+_cache: dict = {}
 
 
 def _emit(level, path, msg):
@@ -107,6 +109,18 @@ def _normalize_body(body, strip_h1=None):
     return '\n'.join(lines)
 
 
+def _meta_to_json(meta):
+    result = {}
+    for k, v in meta.items():
+        if isinstance(v, datetime):
+            result[k] = v.isoformat()
+        elif isinstance(v, date):
+            result[k] = v.isoformat()
+        else:
+            result[k] = v
+    return result
+
+
 def _write(path, meta, body, trailing_newline):
     global _update_count
     ordered = {k: meta[k] for k in _KNOWN_FIELDS if k in meta}
@@ -176,6 +190,8 @@ def _process(path):
     if fields_changed or body != expected_body_section:
         _write(path, meta, normalized, trailing_newline)
 
+    _cache[path.as_posix()] = {'mtime': path.stat().st_mtime, 'meta': _meta_to_json(meta)}
+
 
 def main():
     if subprocess.run(['git', 'rev-parse', '--git-dir'], capture_output=True).returncode != 0:
@@ -187,6 +203,9 @@ def main():
             continue
         _process(md_file)
 
+    Path('.frontmatter-cache.json').write_text(
+        json.dumps(_cache, ensure_ascii=False, indent=2), encoding='utf-8'
+    )
     print(
         f'Front matter check complete. '
         f'Updated: {_update_count}. Warnings: {_warn_count}. Errors: {_error_count}.'
