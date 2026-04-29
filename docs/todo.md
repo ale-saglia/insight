@@ -8,7 +8,7 @@ Updated state after senior review. Issues closed in previous rounds are archived
 | -- | --------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | ------ |
 | 34 | High      | `_episode_number` + `or 0` pattern rejected in #33 but replicated in `insight_categories.py` (4 spots) | plugins/insight_categories.py:80, 86, 88, 92          | ✅ Done |
 | 35 | High      | `og_images.py` cache hash does not include rendering version: edits to `_draw_*` don't invalidate cache | plugins/og_images.py                                  | ✅ Done |
-| 36 | High      | `InsightMarkdownReader` subclasses `MarkdownReader` but never calls `super().read()`: fake inheritance | plugins/insight_reader.py                             | Open   |
+| 36 | High      | `InsightMarkdownReader` subclasses `MarkdownReader` but never calls `super().read()`: fake inheritance | plugins/insight_reader.py                             | ✅ Done |
 | 37 | Medium    | #26 fix changed tag display in archive: buttons now always render lowercase, regardless of source tag  | themes/insight/templates/archives.html                | ✅ Done |
 | 38 | Medium    | `CategoryPageGenerator`: child article sort happens only in `generate_output`, not in `generate_context` | plugins/insight_categories.py                       | Open   |
 | 39 | Medium    | `_enrich_article` returns silently on failed precondition: no log, debugging impossible                | plugins/insight_articles.py:91                        | ✅ Done |

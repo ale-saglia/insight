@@ -106,7 +106,7 @@ Wires three Pelican signals:
 
 ### `insight_reader.py` — `InsightMarkdownReader`
 
-Subclasses Pelican's `MarkdownReader`. Parses the YAML frontmatter block itself (using `pyyaml`) rather than relying on Pelican's key=value metadata format. Maps field names and passes processed metadata back to Pelican's standard pipeline.
+Subclasses Pelican's `BaseReader`. Parses the YAML frontmatter block itself (using `pyyaml`) rather than relying on Pelican's key=value metadata format. Maps field names and passes processed metadata back to Pelican's standard pipeline.
 
 ### `insight_articles.py` — `process_articles` / `_enrich_article`
 

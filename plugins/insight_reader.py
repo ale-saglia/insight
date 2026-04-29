@@ -9,7 +9,7 @@ from copy import copy
 from datetime import date, datetime
 
 from markdown import Markdown
-from pelican.readers import MarkdownReader
+from pelican.readers import BaseReader
 
 from ._frontmatter import parse_frontmatter
 
@@ -30,10 +30,11 @@ def _build_error(source_path, msg):
         logger.error('%s: %s', source_path, msg)
 
 
-class InsightMarkdownReader(MarkdownReader):
+class InsightMarkdownReader(BaseReader):
     """Reads Markdown files with YAML frontmatter, mapping Jekyll field names."""
 
-    enabled = MarkdownReader.enabled
+    enabled = True
+    file_extensions = ['md', 'markdown', 'mkd', 'mdown']
 
     def read(self, source_path):
         with open(source_path, encoding='utf-8') as f:
