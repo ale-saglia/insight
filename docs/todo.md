@@ -4,7 +4,7 @@
 
 | #   | Severity | Issue                                                                                | Location                                  | Status     |
 | --- | -------- | ------------------------------------------------------------------------------------ | ----------------------------------------- | ---------- |
-| 23  | Critical | Three different ways to install dependencies (uv hashed / pip plain / wipe & reinstall) | Dockerfile, devcontainer.json, Makefile   | ⬜ Open    |
+| 23  | Critical | Three different ways to install dependencies (uv hashed / pip plain / wipe & reinstall) | Dockerfile, devcontainer.json, Makefile   | ✅ Done    |
 | 24  | Medium   | Pelican plugins have no tests (slug, breadcrumbs, category gen, OG cache)            | tests/, plugins/                          | ⬜ Open    |
 | 25  | Medium   | No internal link checker in CI: renaming an `article_id` silently breaks inbound links | .github/workflows/, src/*.md cross-refs   | ⬜ Open    |
 | 26  | Medium   | `tag_counts` does not lowercase tag names; `archives.html` filter compares with `lower()` → potential mismatch | plugins/insight_articles.py, themes/insight/templates/archives.html | ⬜ Open    |

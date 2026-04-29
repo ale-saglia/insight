@@ -8,7 +8,7 @@
   "remoteEnv": {
     "DEVCONTAINER": "true"
   },
-  "postCreateCommand": "rm -rf .venv && python3 -m venv .venv && .venv/bin/pip install --upgrade pip && .venv/bin/pip install -r requirements-dev.txt",
+  "postCreateCommand": "uv venv --clear .venv && uv pip install --require-hashes -r requirements-dev.txt",
   "customizations": {
     "vscode": {
       "extensions": [

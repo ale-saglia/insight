@@ -26,6 +26,6 @@ USER $USERNAME
 
 # Crea la virtualenv e installa le dipendenze Python
 WORKDIR /workspaces/insight
-COPY requirements.txt .
+COPY requirements.txt requirements-dev.txt ./
 RUN uv venv .venv \
- && uv pip install --require-hashes -r requirements.txt
+ && uv pip install --require-hashes -r requirements-dev.txt
