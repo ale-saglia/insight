@@ -14,6 +14,7 @@ Body normalisation: leading blank lines stripped, duplicate H1 removed when
 it matches the title, trailing blank lines stripped. EOF newline preserved.
 """
 
+import logging
 import os
 import subprocess
 import sys
@@ -78,6 +79,9 @@ def _first_commit_date(path):
          '--format=%ad', '--date=format:%Y-%m-%d', '--', str(path)],
         capture_output=True, text=True,
     )
+    if result.returncode != 0:
+        logging.getLogger(__name__).warning('git log failed for %s: %s', path, result.stderr.strip())
+        return None
     lines = result.stdout.strip().splitlines()
     return datetime.strptime(lines[-1], '%Y-%m-%d').date() if lines else None
 

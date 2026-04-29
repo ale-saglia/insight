@@ -13,8 +13,8 @@ Updated state after senior review. Issues closed in previous rounds are archived
 | 38 | Medium    | `CategoryPageGenerator`: child article sort happens only in `generate_output`, not in `generate_context` | plugins/insight_categories.py                       | Open   |
 | 39 | Medium    | `_enrich_article` returns silently on failed precondition: no log, debugging impossible                | plugins/insight_articles.py:91                        | ✅ Done |
 | 40 | Medium    | No E2E build test: nothing guarantees `_site/index.html` is generated correctly                        | tests/                                                | ✅ Done |
-| 41 | Low       | `_build_git_date_map` reads the entire git history, not just `src/`                                    | plugins/insight_articles.py:14                        | Open   |
-| 42 | Low       | `_first_commit_date` doesn't check `result.returncode`: git error indistinguishable from new file      | scripts/ensure_frontmatter.py                         | Open   |
+| 41 | Low       | `_build_git_date_map` reads the entire git history, not just `src/`                                    | plugins/insight_articles.py:14                        | ✅ Done |
+| 42 | Low       | `_first_commit_date` doesn't check `result.returncode`: git error indistinguishable from new file      | scripts/ensure_frontmatter.py                         | ✅ Done |
 | 43 | Low       | `nav.js` uses `setTimeout(checkLayout, 100)` as font fallback: dropdown flicker on slow connections    | assets/js/nav.js                                      | Open   |
 | 44 | Low       | `archives.js`: no debounce on search input; expensive recomputation on every keystroke                 | assets/js/archives.js                                 | Open   |
 | 46 | Note      | #31 marked "Done" but only partial: `HOMEPAGE_INTRO` still in `pelicanconf.py`, not in `src/`          | pelicanconf.py                                        | Open   |

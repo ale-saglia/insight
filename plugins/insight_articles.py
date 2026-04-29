@@ -16,7 +16,7 @@ def _build_git_date_map():
     """Return {relative_path: date} from a single git log pass."""
     try:
         result = subprocess.run(
-            ['git', 'log', '--name-only', '--format=COMMIT %cd', '--date=format:%Y-%m-%d'],
+            ['git', 'log', '--name-only', '--format=COMMIT %cd', '--date=format:%Y-%m-%d', '--', 'src/'],
             capture_output=True, text=True, timeout=30,
         )
         if result.returncode != 0:
