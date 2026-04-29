@@ -71,7 +71,8 @@ def process_articles(generator):
     tag_counts = {}
     for article in generator.articles:
         for tag in getattr(article, 'tags', None) or []:
-            tag_counts[tag.name] = tag_counts.get(tag.name, 0) + 1
+            key = tag.name.lower()
+            tag_counts[key] = tag_counts.get(key, 0) + 1
     generator.context['tag_counts'] = tag_counts
 
 
