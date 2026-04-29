@@ -1,11 +1,9 @@
 # --- Build Artifacts ---
 _site/
-assets/og-images/
 
 # --- Python ---
 .venv/
 __pycache__/
-**/__pycache__/
 
 # --- Editor/Tooling ---
 .claude/
