@@ -3,10 +3,13 @@ Article enrichment — custom slugs, breadcrumbs, reading time, git dates,
 and series navigation (prev_episode / next_episode).
 """
 
+import logging
 import re
 import subprocess
 from datetime import datetime
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 def _build_git_date_map():
@@ -86,6 +89,7 @@ def _enrich_article(article, git_dates):
     parts = Path(source_rel).parts  # ('src', 'infrastructure', 'zero-to-homelab', '0-why.md')
 
     if len(parts) < 3 or parts[0] != 'src':
+        logger.warning('Article %s skipped: path does not match src/<category>/<file>', source_rel)
         return
 
     # Strip leading underscore from path segments (handles _general → general)

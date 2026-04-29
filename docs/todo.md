@@ -11,7 +11,7 @@ Updated state after senior review. Issues closed in previous rounds are archived
 | 36 | High      | `InsightMarkdownReader` subclasses `MarkdownReader` but never calls `super().read()`: fake inheritance | plugins/insight_reader.py                             | Open   |
 | 37 | Medium    | #26 fix changed tag display in archive: buttons now always render lowercase, regardless of source tag  | themes/insight/templates/archives.html                | Open   |
 | 38 | Medium    | `CategoryPageGenerator`: child article sort happens only in `generate_output`, not in `generate_context` | plugins/insight_categories.py                       | Open   |
-| 39 | Medium    | `_enrich_article` returns silently on failed precondition: no log, debugging impossible                | plugins/insight_articles.py:91                        | Open   |
+| 39 | Medium    | `_enrich_article` returns silently on failed precondition: no log, debugging impossible                | plugins/insight_articles.py:91                        | ✅ Done |
 | 40 | Medium    | No E2E build test: nothing guarantees `_site/index.html` is generated correctly                        | tests/                                                | Open   |
 | 41 | Low       | `_build_git_date_map` reads the entire git history, not just `src/`                                    | plugins/insight_articles.py:14                        | Open   |
 | 42 | Low       | `_first_commit_date` doesn't check `result.returncode`: git error indistinguishable from new file      | scripts/ensure_frontmatter.py                         | Open   |
