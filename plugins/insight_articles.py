@@ -71,6 +71,8 @@ def process_articles(generator):
                 nxt = sorted_series[i + 1]
                 article.next_episode = {'url': nxt.slug + '/', 'title': nxt.title}
 
+    # Tags are normalised to lowercase: merges variants ("Python" / "python")
+    # and keeps button display consistent regardless of source capitalisation.
     tag_counts = {}
     for article in generator.articles:
         for tag in getattr(article, 'tags', None) or []:

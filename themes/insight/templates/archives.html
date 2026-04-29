@@ -30,8 +30,9 @@
   <div class="archive-keywords">
     <p class="section-label">Filter by keywords</p>
     <div class="keyword-filters" id="keyword-filters">
+      {# tag_counts keys are pre-normalised to lowercase in the plugin; kw is displayed as-is (lowercase by design). #}
       {% for kw, count in tag_counts.items() %}
-        <button class="keyword-btn" data-keyword="{{ kw | lower }}" data-count="{{ count }}">{{ kw }} <span class="count">({{ count }})</span></button>
+        <button class="keyword-btn" data-keyword="{{ kw }}" data-count="{{ count }}">{{ kw }} <span class="count">({{ count }})</span></button>
       {% endfor %}
     </div>
   </div>
