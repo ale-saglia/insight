@@ -1,2 +1,3 @@
 -r requirements.in
 pytest==9.0.3
+linkchecker==10.6.0

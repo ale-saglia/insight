@@ -2,6 +2,7 @@ VENV_BIN  ?= .venv/bin
 PYTHON    ?= $(VENV_BIN)/python
 PELICAN   ?= $(VENV_BIN)/pelican
 PORT      ?= 4000
+CHECK_PORT   ?= 4567
 
 .DEFAULT_GOAL := help
 .PHONY: help setup setup-dev compile build serve preview rebuild clean check-links
@@ -54,8 +55,20 @@ rebuild: clean build
 
 check-links:
 	@test -d _site || { echo "_site/ not found — run: make build"; exit 1; }
-	@command -v lychee >/dev/null 2>&1 || { echo "lychee not found — run: brew install lychee"; exit 1; }
-	lychee --offline --root-dir $(CURDIR)/_site --exclude "^mailto:" --no-progress "_site/**/*.html"
+	@test -x $(LINKCHECKER) || { echo "linkchecker not found — run: make setup-dev"; exit 1; }
+	@echo "Starting check server on port $(CHECK_PORT)..."
+	@$(PYTHON) -m http.server $(CHECK_PORT) --directory _site --bind 127.0.0.1 > /dev/null 2>&1 & \
+	  SERVER_PID=$$!; \
+	  trap "kill $$SERVER_PID 2>/dev/null" EXIT INT TERM; \
+	  sleep 1; \
+	  $(LINKCHECKER) \
+	    --no-warnings \
+	    --ignore-url='^https?://(?!127\.0\.0\.1)' \
+	    --ignore-url='^mailto:' \
+	    http://127.0.0.1:$(CHECK_PORT)/; \
+	  RESULT=$$?; \
+	  kill $$SERVER_PID 2>/dev/null; \
+	  exit $$RESULT
 
 clean:
 	rm -rf _site

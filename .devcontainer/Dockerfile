@@ -14,10 +14,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 
-RUN ARCH=$(uname -m) && \
-    curl -sSL "https://github.com/lycheeverse/lychee/releases/latest/download/lychee-${ARCH}-unknown-linux-gnu.tar.gz" \
-    | tar -xz -C /usr/local/bin lychee
-
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=1000

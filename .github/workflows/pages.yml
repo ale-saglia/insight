@@ -46,21 +46,18 @@ jobs:
       - name: Build with Pelican
         run: pelican --settings publishconf.py
 
-      - name: Check internal links
-        uses: lycheeverse/lychee-action@v2
-        with:
-          args: >-
-            --offline
-            --root-dir ${{ github.workspace }}/_site
-            --exclude "^mailto:"
-            --no-progress
-            "_site/**/*.html"
-          fail: true
+      - name: Start check server
+        run: |
+          python -m http.server 4567 --directory _site --bind 127.0.0.1 &
+          sleep 2
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
+      - name: Check internal links
+        run: |
+          .venv/bin/linkchecker \
+            --no-warnings \
+            --ignore-url='^https?://(?!127\.0\.0\.1)' \
+            --ignore-url='^mailto:' \
+            http://127.0.0.1:4567/
 
   deploy:
     environment:

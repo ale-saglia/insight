@@ -68,7 +68,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Lychee: Check internal links",
+      "label": "LinkChecker: Check internal links",
       "type": "shell",
       "command": "make check-links",
       "group": "test",
