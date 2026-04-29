@@ -21,4 +21,4 @@ make setup-dev                              # includes pytest
 
 **`publishconf.py`** is used by CI only. Local builds always use `pelicanconf.py` (via `make build` / `make serve`).
 
-**Python version** is authoritative in `.devcontainer/Dockerfile`. When changing it, update both `versions.env` and `.python-version` to keep CI happy (`check-versions.yml` verifies the sync).
+**Python version** is authoritative in `.python-version`. When changing it, also update `.devcontainer/Dockerfile` to keep them in sync (`check-versions.yml` runs `scripts/sync_python_version.py` to verify).
