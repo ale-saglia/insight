@@ -12,7 +12,6 @@ PAGE_PATHS = []
 
 TIMEZONE = 'UTC'
 DEFAULT_LANG = 'en'
-DEFAULT_DATE_FORMAT = '%d %b %Y'
 
 THEME = 'themes/insight'
 PLUGIN_PATHS = ['.']

@@ -13,7 +13,7 @@
 | 29  | Low      | `ensure_frontmatter.py` validates `category` and `permalink` but no article uses these fields anymore | scripts/ensure_frontmatter.py             | ✅ Done    |
 | 30  | Low      | `robots.txt` hardcodes `https://insight.ale-saglia.com/sitemap.xml` instead of using `SITEURL` | robots.txt, pelicanconf.py                | ✅ Done    |
 | 31  | Low      | Homepage intro hardcoded in template instead of a content file                       | themes/insight/templates/index.html       | ✅ Done    |
-| 32  | Note     | `DEFAULT_DATE_FORMAT` likely unused (templates call `strftime` directly)             | pelicanconf.py                            | ⬜ Open    |
+| 32  | Note     | `DEFAULT_DATE_FORMAT` likely unused (templates call `strftime` directly)             | pelicanconf.py                            | ✅ Done    |
 | 33  | Note     | `_episode_number(...) or 0` is dead defensive code: in `series_groups` the value is never `None` | plugins/insight_articles.py               | ⬜ Open    |
 
 ---
@@ -123,14 +123,6 @@ Every other URL in the build is derived from `SITEURL`. This one is hardcoded, w
 The opening paragraph in `themes/insight/templates/index.html:5` ("There is a threshold where engineering becomes governance...") is a piece of editorial content embedded in a Jinja2 template. Editing it means touching the theme.
 
 **Fix:** move it to a content file (`src/_general/_intro.md` or similar), load via the page system or a template variable. Editorial content lives in `src/`, not in `themes/`.
-
----
-
-### 32. `DEFAULT_DATE_FORMAT` likely unused
-
-`pelicanconf.py:13` sets `DEFAULT_DATE_FORMAT = '%d %b %Y'`. Templates call `article.date.strftime('%d %b %Y')` directly everywhere — they don't go through the Pelican locale formatting pipeline.
-
-**Fix:** verify by deleting the line and rebuilding. If output is identical, remove permanently.
 
 ---
 
