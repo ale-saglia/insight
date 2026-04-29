@@ -46,6 +46,17 @@ jobs:
       - name: Build with Pelican
         run: pelican --settings publishconf.py
 
+      - name: Check internal links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --offline
+            --root-dir ${{ github.workspace }}/_site
+            --exclude "^mailto:"
+            --no-progress
+            "_site/**/*.html"
+          fail: true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

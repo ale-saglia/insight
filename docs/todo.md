@@ -6,7 +6,7 @@
 | --- | -------- | ------------------------------------------------------------------------------------ | ----------------------------------------- | ---------- |
 | 23  | Critical | Three different ways to install dependencies (uv hashed / pip plain / wipe & reinstall) | Dockerfile, devcontainer.json, Makefile   | ✅ Done    |
 | 24  | Medium   | Pelican plugins have no tests (slug, breadcrumbs, category gen, OG cache)            | tests/, plugins/                          | ✅ Done    |
-| 25  | Medium   | No internal link checker in CI: renaming an `article_id` silently breaks inbound links | .github/workflows/, src/*.md cross-refs   | ⬜ Open    |
+| 25  | Medium   | No internal link checker in CI: renaming an `article_id` silently breaks inbound links | .github/workflows/, src/*.md cross-refs   | ✅ Done    |
 | 26  | Medium   | `tag_counts` does not lowercase tag names; `archives.html` filter compares with `lower()` → potential mismatch | plugins/insight_articles.py, themes/insight/templates/archives.html | ⬜ Open    |
 | 27  | Low      | LICENSE references Jekyll-era files (`_layouts/`, `_includes/`) that don't exist in this repo | LICENSE                                   | ⬜ Open    |
 | 28  | Low      | `.gitignore` ignores `assets/og-images/` but the plugin now writes into `_site/assets/og-images/` | .gitignore                                | ⬜ Open    |
@@ -46,9 +46,7 @@ This is the worst of both worlds: the Dockerfile does work that gets thrown away
 
 ### 25. No internal link checker in CI
 
-Articles cross-reference each other heavily (`/digital-governance/build-compliance-tool-before-i-know-compliance/`, `/infrastructure/zero-to-homelab/gitops-and-secrets/`). If an `article_id` is renamed or an article moves between categories, inbound links break silently. For a site that frames editorial stability as a value, this is a blind spot.
-
-**Fix:** add a CI step running [lychee](https://github.com/lycheeverse/lychee-action) or similar against `_site/` after the build. ~20 lines of YAML. Catches broken internal links and dead anchors before deploy.
+✅ **Done** — added `lycheeverse/lychee-action@v2` step in `.github/workflows/pages.yml` after the Pelican build, before the artifact upload. Runs offline (no HTTP requests), resolves absolute paths against `_site/`, excludes `mailto:` links. Breaks CI before deploy if any internal link is dead.
 
 ---
 

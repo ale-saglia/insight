@@ -4,7 +4,7 @@ PELICAN   ?= $(VENV_BIN)/pelican
 PORT      ?= 4000
 
 .DEFAULT_GOAL := help
-.PHONY: help setup setup-dev compile build serve preview rebuild clean
+.PHONY: help setup setup-dev compile build serve preview rebuild clean check-links
 
 help:
 	@echo "Usage: make <target>"
@@ -16,6 +16,7 @@ help:
 	@echo "  serve      Build then start Pelican live-reload on port $(PORT)"
 	@echo "  preview    Build then serve _site/ statically on port $(PORT)"
 	@echo "  rebuild    Clean and rebuild"
+	@echo "  check-links Check internal links in _site/ (requires lychee: brew install lychee)"
 	@echo "  clean      Remove _site/"
 
 compile:
@@ -50,6 +51,11 @@ preview: build
 	$(PYTHON) -m http.server $(PORT) --directory _site
 
 rebuild: clean build
+
+check-links:
+	@test -d _site || { echo "_site/ not found — run: make build"; exit 1; }
+	@command -v lychee >/dev/null 2>&1 || { echo "lychee not found — run: brew install lychee"; exit 1; }
+	lychee --offline --root-dir $(CURDIR)/_site --exclude "^mailto:" --no-progress "_site/**/*.html"
 
 clean:
 	rm -rf _site
