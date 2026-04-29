@@ -14,8 +14,12 @@ if (keywordFiltersContainer) {
   btnsArray.forEach(btn => keywordFiltersContainer.appendChild(btn));
 }
 
+let searchDebounceTimer;
 searchInput.addEventListener('input', function(e) {
-  filterItems(e.target.value.toLowerCase(), currentYearFilter, currentKeywordFilters);
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(() => {
+    filterItems(e.target.value.toLowerCase(), currentYearFilter, currentKeywordFilters);
+  }, 100);
 });
 
 function updateURL() {
