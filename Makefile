@@ -1,6 +1,7 @@
 VENV_BIN  ?= .venv/bin
 PYTHON    ?= $(VENV_BIN)/python
 PELICAN   ?= $(VENV_BIN)/pelican
+LINKCHECKER  ?= $(VENV_BIN)/linkchecker
 PORT      ?= 4000
 CHECK_PORT   ?= 4567
 
