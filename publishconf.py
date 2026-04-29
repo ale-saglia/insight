@@ -5,4 +5,4 @@ from pelicanconf import *
 SITEURL = 'https://insight.ale-saglia.com'
 FEED_DOMAIN = SITEURL
 RELATIVE_URLS = False
-DELETE_OUTPUT_DIRECTORY = True
+DELETE_OUTPUT_DIRECTORY = False  # _site/ managed by CI cache step; fresh runner = no stale content

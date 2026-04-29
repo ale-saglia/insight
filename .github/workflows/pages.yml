@@ -37,6 +37,14 @@ jobs:
       - name: Install Python dependencies
         run: uv pip install --require-hashes -r requirements-dev.txt --system
 
+      - name: Restore OG image cache
+        uses: actions/cache@v4
+        with:
+          path: _site/assets/og-images
+          key: og-images-${{ hashFiles('plugins/og_images.py') }}-${{ hashFiles('src/**/*.md') }}
+          restore-keys: |
+            og-images-${{ hashFiles('plugins/og_images.py') }}-
+
       - name: Ensure article front matter
         run: python scripts/ensure_frontmatter.py
 

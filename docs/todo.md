@@ -227,7 +227,7 @@ After migrating from lychee to linkchecker (#45), `make check-links` spins up a 
 
 | # | Trigger | Action |
 | - | ------- | ------ |
-| L1 | Article count > 50 | Cache `_site/assets/og-images/` in CI via `actions/cache` |
+| L1 | Article count > 50 | Cache `_site/assets/og-images/` in CI via `actions/cache` | ✅ Done |
 | L2 | Article count > 100 | Multiprocess OG generation (#47) |
 | L3 | Article count > 250 | Debounce + virtualization in archives.js (#44) |
 | L4 | Pelican major upgrade | E2E build test (#40) becomes mandatory, not optional |
