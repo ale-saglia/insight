@@ -6,8 +6,8 @@ This repository uses two different licenses depending on the content type.
 
 ## 1. WEBSITE STRUCTURE & CODE - MIT License
 
-**Applies to:** Jekyll configuration, layouts, scripts, stylesheets, assets,
-build tools, and all technical infrastructure of the website.
+**Applies to:** Pelican configuration, themes, plugins, scripts, stylesheets,
+assets, build tools, and all technical infrastructure of the website.
 
 Copyright (c) 2026 Alessandro Saglia
 
@@ -29,8 +29,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-**Files covered:** `_config.yml`, `_layouts/`, `_includes/`, `scripts/`,
-`assets/` (stylesheets, build files), `README.md` (project setup documentation)
+**Files covered:** `themes/`, `plugins/`, `scripts/`, `assets/`,
+`pelicanconf.py`, `publishconf.py`, `Makefile`, `.github/`, `.devcontainer/`,
+`README.md` (project setup documentation)
 
 ---
 
@@ -57,7 +58,7 @@ International License. To view a copy of this license, visit:
 - No additional restrictions — You may not apply legal terms or technological
   measures that legally restrict others from doing anything the license permits
 
-**Files covered:** `_posts/`, `src/`, and all content under it
+**Files covered:** `src/`, and all content under it
 
 ---
 

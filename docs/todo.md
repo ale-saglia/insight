@@ -8,7 +8,7 @@
 | 24  | Medium   | Pelican plugins have no tests (slug, breadcrumbs, category gen, OG cache)            | tests/, plugins/                          | ✅ Done    |
 | 25  | Medium   | No internal link checker in CI: renaming an `article_id` silently breaks inbound links | .github/workflows/, src/*.md cross-refs   | ✅ Done    |
 | 26  | Medium   | `tag_counts` does not lowercase tag names; `archives.html` filter compares with `lower()` → potential mismatch | plugins/insight_articles.py, themes/insight/templates/archives.html | ✅ Done    |
-| 27  | Low      | LICENSE references Jekyll-era files (`_layouts/`, `_includes/`) that don't exist in this repo | LICENSE                                   | ⬜ Open    |
+| 27  | Low      | LICENSE references Jekyll-era files (`_layouts/`, `_includes/`) that don't exist in this repo | LICENSE                                   | ✅ Done    |
 | 28  | Low      | `.gitignore` ignores `assets/og-images/` but the plugin now writes into `_site/assets/og-images/` | .gitignore                                | ⬜ Open    |
 | 29  | Low      | `ensure_frontmatter.py` validates `category` and `permalink` but no article uses these fields anymore | scripts/ensure_frontmatter.py             | ⬜ Open    |
 | 30  | Low      | `robots.txt` hardcodes `https://insight.ale-saglia.com/sitemap.xml` instead of using `SITEURL` | robots.txt, pelicanconf.py                | ✅ Done    |
