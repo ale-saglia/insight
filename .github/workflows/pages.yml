@@ -53,7 +53,7 @@ jobs:
 
       - name: Check internal links
         run: |
-          .venv/bin/linkchecker \
+          linkchecker \
             --no-warnings \
             --ignore-url='^https?://(?!127\.0\.0\.1)' \
             --ignore-url='^mailto:' \
