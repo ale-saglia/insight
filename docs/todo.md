@@ -5,7 +5,7 @@
 | #   | Severity | Issue                                                                                | Location                                  | Status     |
 | --- | -------- | ------------------------------------------------------------------------------------ | ----------------------------------------- | ---------- |
 | 23  | Critical | Three different ways to install dependencies (uv hashed / pip plain / wipe & reinstall) | Dockerfile, devcontainer.json, Makefile   | ✅ Done    |
-| 24  | Medium   | Pelican plugins have no tests (slug, breadcrumbs, category gen, OG cache)            | tests/, plugins/                          | ⬜ Open    |
+| 24  | Medium   | Pelican plugins have no tests (slug, breadcrumbs, category gen, OG cache)            | tests/, plugins/                          | ✅ Done    |
 | 25  | Medium   | No internal link checker in CI: renaming an `article_id` silently breaks inbound links | .github/workflows/, src/*.md cross-refs   | ⬜ Open    |
 | 26  | Medium   | `tag_counts` does not lowercase tag names; `archives.html` filter compares with `lower()` → potential mismatch | plugins/insight_articles.py, themes/insight/templates/archives.html | ⬜ Open    |
 | 27  | Low      | LICENSE references Jekyll-era files (`_layouts/`, `_includes/`) that don't exist in this repo | LICENSE                                   | ⬜ Open    |
@@ -36,11 +36,11 @@ This is the worst of both worlds: the Dockerfile does work that gets thrown away
 
 ### 24. Pelican plugins have no tests
 
-`ensure_frontmatter.py` has ~30 tests, idempotency included. The Pelican plugins — which do the non-trivial work (slug computation with `_` prefix stripping, breadcrumbs, series ordering, category page generation via filesystem walk, OG image hash caching) — have zero tests.
+✅ **Done** (commit `8ecbb71`) — 66 new tests in three files:
 
-The risk/coverage ratio is inverted. If a path edge case breaks `_enrich_article`, or a malformed `README.md` brings down `CategoryPageGenerator`, it surfaces in CI or — worse — after merge.
-
-**Fix:** start with `_enrich_article` (most branches), then `CategoryPageGenerator` (filesystem walk, parent resolution), then OG cache invalidation. Same fixture-based pattern already used in `tests/test_ensure_frontmatter.py`.
+- `tests/test_insight_articles.py` — `_episode_number`, `_enrich_article` (slug, underscore stripping, breadcrumbs, reading time, git date, series placeholders)
+- `tests/test_insight_categories.py` — `CategoryPage`, `CategoryPageGenerator.generate_context` (filesystem walk, parent resolution, child_categories)
+- `tests/test_og_images.py` — `_content_hash`, `_is_current`, `_save_image`
 
 ---
 
