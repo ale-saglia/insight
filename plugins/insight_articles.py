@@ -57,7 +57,7 @@ def process_articles(generator):
             series_groups.setdefault(parent, []).append(article)
 
     for articles in series_groups.values():
-        sorted_series = sorted(articles, key=lambda a: _episode_number(a.get_relative_source_path()) or 0)
+        sorted_series = sorted(articles, key=lambda a: _episode_number(a.get_relative_source_path()))
         for i, article in enumerate(sorted_series):
             article.prev_episode = None
             article.next_episode = None

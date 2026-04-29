@@ -14,7 +14,7 @@
 | 30  | Low      | `robots.txt` hardcodes `https://insight.ale-saglia.com/sitemap.xml` instead of using `SITEURL` | robots.txt, pelicanconf.py                | ✅ Done    |
 | 31  | Low      | Homepage intro hardcoded in template instead of a content file                       | themes/insight/templates/index.html       | ✅ Done    |
 | 32  | Note     | `DEFAULT_DATE_FORMAT` likely unused (templates call `strftime` directly)             | pelicanconf.py                            | ✅ Done    |
-| 33  | Note     | `_episode_number(...) or 0` is dead defensive code: in `series_groups` the value is never `None` | plugins/insight_articles.py               | ⬜ Open    |
+| 33  | Note     | `_episode_number(...) or 0` is dead defensive code: in `series_groups` the value is never `None` | plugins/insight_articles.py               | ✅ Done    |
 
 ---
 
