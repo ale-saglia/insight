@@ -1,6 +1,6 @@
 # Code Review — Pelican Template "Insight"
 
-Updated state after AI agent senior review. Issues closed in previous rounds are archived at the bottom for historical reference.
+Updated state after senior review. Issues closed in previous rounds are archived at the bottom for historical reference.
 
 ## Priority Summary
 
@@ -17,10 +17,10 @@ Updated state after AI agent senior review. Issues closed in previous rounds are
 | 42 | Low       | `_first_commit_date` doesn't check `result.returncode`: git error indistinguishable from new file      | scripts/ensure_frontmatter.py                         | Open   |
 | 43 | Low       | `nav.js` uses `setTimeout(checkLayout, 100)` as font fallback: dropdown flicker on slow connections    | assets/js/nav.js                                      | Open   |
 | 44 | Low       | `archives.js`: no debounce on search input; expensive recomputation on every keystroke                 | assets/js/archives.js                                 | Open   |
-| 45 | Low       | `Dockerfile`: lychee downloaded from `latest` without checksum, inconsistent with Python hash-pinning  | .devcontainer/Dockerfile                              | Open   |
 | 46 | Note      | #31 marked "Done" but only partial: `HOMEPAGE_INTRO` still in `pelicanconf.py`, not in `src/`          | pelicanconf.py                                        | Open   |
 | 47 | Note      | OG image generation runs single-threaded; ~10s on 250 articles                                         | plugins/og_images.py                                  | Open   |
 | 48 | Note      | `ensure_frontmatter.py` parses YAML and rewrites the file, then `InsightMarkdownReader` reparses it    | scripts/ensure_frontmatter.py + plugins/insight_reader.py | Open |
+| 49 | Note      | `make check-links` and CI need `CHECK_PORT` documented in `local-development.md` (default 4567)        | Makefile + docs/local-development.md                  | Open   |
 
 ---
 
@@ -195,18 +195,6 @@ At 250 articles, every keystroke recomputes the count on N year buttons + N keyw
 
 ---
 
-### 45. `Dockerfile` pulls lychee from `latest`
-
-```dockerfile
-RUN ARCH=$(uname -m) && \
-    curl -sSL "https://github.com/lycheeverse/lychee/releases/latest/..." \
-    | tar -xz -C /usr/local/bin lychee
-```
-
-Inconsistent with the rest: you hash-pin Python requirements, you grab a binary with no checksum. Pin to a specific version + verify SHA256.
-
----
-
 ### 46. #31 is only partial
 
 You moved `HOMEPAGE_INTRO` from `index.html` into `pelicanconf.py`. Better, but it's still "editorial content inside a config file". Full resolution is reading it from `src/_general/_intro.md` (or similar). For the current site volume, accepting the compromise and marking #31 as "partial" is honest.
@@ -222,6 +210,14 @@ You moved `HOMEPAGE_INTRO` from `index.html` into `pelicanconf.py`. Better, but 
 ### 48. Double YAML parsing
 
 `ensure_frontmatter.py` parses YAML on every `.md`, normalizes, rewrites. Then `InsightMarkdownReader` parses the same YAML again. At current volume the cost is invisible. Future evolution: the pre-step could expose already-parsed metadata via a cache file (e.g. `.frontmatter-cache.json`) that the reader consumes directly.
+
+---
+
+### 49. Document the `CHECK_PORT` choice for link checking
+
+After migrating from lychee to linkchecker (#45), `make check-links` spins up a local HTTP server because linkchecker on `file://` does not resolve absolute paths like `/feed.xml`. The check server runs on port `CHECK_PORT` (default `4567`), deliberately distinct from `PORT` (default `4000`, used by `make serve`/`make preview`) to avoid collisions when a preview is already running in another shell.
+
+**Fix:** document the new variable in `docs/local-development.md` and in the `make help` output. Edge case to mention: if `CHECK_PORT` is already in use on the developer's machine, `make check-links CHECK_PORT=NNNN` is the override.
 
 ---
 
@@ -245,9 +241,10 @@ By impact / effort:
 3. **#37** Explicit decision on lowercase tag display — documentation or UI fix.
 4. **#35** Versioned OG hash — local-build robustness, 10 minutes.
 5. **#41, #42** Git ops polish — 10 minutes total.
-6. **#36** Refactor `InsightMarkdownReader` — riskier, do after writing #40.
-7. **#40** E2E build test — serious investment, but unlocks all future refactors.
-8. **#38, #43, #44, #45, #47, #48** — incidental polish, as before.
+6. **#49** Document `CHECK_PORT` — closing the loop on the linkchecker migration, 5 minutes.
+7. **#36** Refactor `InsightMarkdownReader` — riskier, do after writing #40.
+8. **#40** E2E build test — serious investment, but unlocks all future refactors.
+9. **#38, #43, #44, #47, #48** — incidental polish, as before.
 
 ---
 
@@ -266,3 +263,4 @@ By impact / effort:
 | 31  | Homepage intro hardcoded in template | ⚠️ Partial (see #46) |
 | 32  | `DEFAULT_DATE_FORMAT` unused | ✅ Done |
 | 33  | Dead `or 0` defensive code in series sort | ✅ Done (but see #34) |
+| 45  | `Dockerfile` pulled lychee from `latest` without checksum | ✅ Done — migrated to `linkchecker` (Python, hash-pinned via `requirements-dev.txt`); see #49 for the documentation follow-up |
