@@ -2,31 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Pelican: Setup",
-      "type": "shell",
-      "command": "make setup",
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Pelican: Setup (with test deps)",
+      "label": "Pelican: Setup (install deps)",
       "type": "shell",
       "command": "make setup-dev",
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Python: Compile requirements (*.in → *.txt)",
-      "type": "shell",
-      "command": "make compile",
       "group": "build",
       "presentation": {
         "reveal": "always",
@@ -46,9 +24,9 @@
       "problemMatcher": []
     },
     {
-      "label": "Pelican: Serve (localhost:4000)",
+      "label": "Pelican: Preview (localhost:4000)",
       "type": "shell",
-      "command": "make serve",
+      "command": "make preview",
       "group": "build",
       "presentation": {
         "reveal": "always",
@@ -59,19 +37,8 @@
     {
       "label": "Pelican: Clean & Build",
       "type": "shell",
-      "command": "make rebuild",
+      "command": "make clean && make build",
       "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "LinkChecker: Check internal links",
-      "type": "shell",
-      "command": "make check-links",
-      "group": "test",
       "presentation": {
         "reveal": "always",
         "panel": "shared"
