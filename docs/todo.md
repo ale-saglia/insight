@@ -6,7 +6,7 @@ Updated state after senior review. Issues closed in previous rounds are archived
 
 | #  | Severity  | Issue                                                                                                  | Location                                              | Status |
 | -- | --------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- | ------ |
-| 34 | High      | `_episode_number` + `or 0` pattern rejected in #33 but replicated in `insight_categories.py` (4 spots) | plugins/insight_categories.py:80, 86, 88, 92          | Open   |
+| 34 | High      | `_episode_number` + `or 0` pattern rejected in #33 but replicated in `insight_categories.py` (4 spots) | plugins/insight_categories.py:80, 86, 88, 92          | ✅ Done |
 | 35 | High      | `og_images.py` cache hash does not include rendering version: edits to `_draw_*` don't invalidate cache | plugins/og_images.py                                  | Open   |
 | 36 | High      | `InsightMarkdownReader` subclasses `MarkdownReader` but never calls `super().read()`: fake inheritance | plugins/insight_reader.py                             | Open   |
 | 37 | Medium    | #26 fix changed tag display in archive: buttons now always render lowercase, regardless of source tag  | themes/insight/templates/archives.html                | Open   |
@@ -263,4 +263,5 @@ By impact / effort:
 | 31  | Homepage intro hardcoded in template | ⚠️ Partial (see #46) |
 | 32  | `DEFAULT_DATE_FORMAT` unused | ✅ Done |
 | 33  | Dead `or 0` defensive code in series sort | ✅ Done (but see #34) |
+| 34  | `or 0` replicated in `insight_categories.py` | ✅ Done |
 | 45  | `Dockerfile` pulled lychee from `latest` without checksum | ✅ Done — migrated to `linkchecker` (Python, hash-pinned via `requirements-dev.txt`); see #49 for the documentation follow-up |

@@ -112,7 +112,7 @@ class CategoryPageGenerator(Generator):
             direct = arts_by_path.get(page.category_path, [])
             # Sort: episodes by number, others by date descending
             if any(getattr(a, 'episode_num', None) is not None for a in direct):
-                direct = sorted(direct, key=lambda a: getattr(a, 'episode_num', 0) or 0)
+                direct = sorted(direct, key=lambda a: a.episode_num if a.episode_num is not None else 0)
             else:
                 direct = sorted(direct, key=lambda a: a.date, reverse=True)
 
@@ -121,7 +121,7 @@ class CategoryPageGenerator(Generator):
                 child_arts = arts_by_path.get(child.category_path, [])
                 if any(getattr(a, 'episode_num', None) is not None for a in child_arts):
                     child.direct_articles = sorted(
-                        child_arts, key=lambda a: getattr(a, 'episode_num', 0) or 0
+                        child_arts, key=lambda a: a.episode_num if a.episode_num is not None else 0
                     )
                 else:
                     child.direct_articles = sorted(
