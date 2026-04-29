@@ -162,8 +162,8 @@ Items not urgent now but worth revisiting as the site grows.
 
 By impact / effort ratio:
 
-1. **#23 Unify dependency setup** — unblocks onboarding coherence. A few minutes if the Dockerfile installs `requirements-dev.txt` directly and `postCreateCommand` becomes a no-op or `make` sanity check.
-2. **#25 Link checker in CI** — ~20 lines of YAML, high defensive value for the editorial model.
-3. **#24 Plugin tests** — not urgent but closes the asymmetry. Start with `_enrich_article` (most branches).
+1. ~~**#23 Unify dependency setup**~~ ✅
+2. ~~**#25 Link checker in CI**~~ ✅
+3. ~~**#24 Plugin tests**~~ ✅
 4. **#26 Tag case-normalization** — latent bug, two-line fix.
 5. **#27–#33** — incidental polish during normal work.
