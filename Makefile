@@ -6,7 +6,7 @@ PORT     	?= 4000
 CHECK_PORT  ?= 4567
 
 .DEFAULT_GOAL := help
-.PHONY: help setup setup-dev compile build serve preview rebuild clean check-links
+.PHONY: help setup setup-dev compile build serve preview rebuild clean check-links test
 
 help:
 	@echo "Usage: make <target>"
@@ -19,6 +19,7 @@ help:
 	@echo "  preview    Build then serve _site/ statically on port $(PORT)"
 	@echo "  rebuild    Clean and rebuild"
 	@echo "  check-links Check internal links in _site/ on port $(CHECK_PORT) (override: CHECK_PORT=NNNN)"
+	@echo "  test       Run the test suite (requires: make setup-dev)"
 	@echo "  clean      Remove _site/"
 
 compile:
@@ -70,6 +71,9 @@ check-links:
 	  RESULT=$$?; \
 	  kill $$SERVER_PID 2>/dev/null; \
 	  exit $$RESULT
+
+test:
+	$(VENV_BIN)/pytest
 
 clean:
 	rm -rf _site

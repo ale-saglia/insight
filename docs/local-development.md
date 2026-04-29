@@ -4,7 +4,7 @@ This document describes how to build and preview the site locally using Python.
 
 ## Prerequisites
 
-- Python — version pinned in `.devcontainer/Dockerfile` (authoritative source)
+- Python — version pinned in `.python-version` (authoritative source); `.devcontainer/Dockerfile` is kept in sync by `check-versions.yml`
 - Recommended: use the VS Code dev container, which sets up the environment automatically
 
 ## First-time setup
@@ -91,6 +91,19 @@ make check-links CHECK_PORT=9000
 
 The same check runs automatically in CI after every push.
 
+## Run tests
+
+```bash
+make setup-dev   # includes pytest
+make test        # run the full test suite
+```
+
+To run a single file directly:
+
+```bash
+.venv/bin/pytest tests/test_og_images.py
+```
+
 ## Clean
 
 ```bash
@@ -102,7 +115,7 @@ Removes `_site/` only. Does not touch `.venv/`.
 ## Config files
 
 - **`pelicanconf.py`**: Base config used for local builds (`RELATIVE_URLS = True`).
-- **`publishconf.py`**: Production overrides (`SITEURL`, `RELATIVE_URLS = False`, `DELETE_OUTPUT_DIRECTORY = True`). Used by CI only.
+- **`publishconf.py`**: Production overrides (`SITEURL`, `RELATIVE_URLS = False`, `DELETE_OUTPUT_DIRECTORY = False`). Used by CI only.
 
 ## Notes
 
