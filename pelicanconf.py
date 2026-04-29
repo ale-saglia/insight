@@ -46,14 +46,13 @@ INDEX_SAVE_AS = 'index.html'
 
 RELATIVE_URLS = True
 
-STATIC_PATHS = ['assets', 'robots.txt']
-EXTRA_PATH_METADATA = {
-    'robots.txt': {'path': 'robots.txt'},
-}
+STATIC_PATHS = ['assets']
+EXTRA_PATH_METADATA = {}
 
 TEMPLATE_PAGES = {
     'sitemap.xml': 'sitemap.xml',
     '404.html': '404.html',
+    'robots.txt': 'robots.txt',
 }
 
 MARKDOWN = {
