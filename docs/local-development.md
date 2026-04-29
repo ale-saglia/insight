@@ -79,7 +79,17 @@ Recompiles `requirements.txt` and `requirements-dev.txt` from their `.in` source
 make check-links
 ```
 
-Runs lychee in offline mode against `_site/`. Requires a prior build and lychee installed (`brew install lychee`). The same check runs automatically in CI after every push.
+Requires a prior build and dev dependencies (`make setup-dev`).
+
+Spins up a temporary HTTP server on `CHECK_PORT` (default `4567`) and runs linkchecker against it. A local server is needed because linkchecker does not resolve absolute paths (e.g. `/feed.xml`) on `file://` URLs. Port `4567` is intentionally different from `PORT` (`4000`) so the check can run while a preview server is already up.
+
+To override the port:
+
+```bash
+make check-links CHECK_PORT=9000
+```
+
+The same check runs automatically in CI after every push.
 
 ## Clean
 

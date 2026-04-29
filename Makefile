@@ -18,7 +18,7 @@ help:
 	@echo "  serve      Build then start Pelican live-reload on port $(PORT)"
 	@echo "  preview    Build then serve _site/ statically on port $(PORT)"
 	@echo "  rebuild    Clean and rebuild"
-	@echo "  check-links Check internal links in _site/ (requires lychee: brew install lychee)"
+	@echo "  check-links Check internal links in _site/ on port $(CHECK_PORT) (override: CHECK_PORT=NNNN)"
 	@echo "  clean      Remove _site/"
 
 compile:
