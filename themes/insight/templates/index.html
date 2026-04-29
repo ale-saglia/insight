@@ -2,7 +2,7 @@
 {% from "_macros.html" import breadcrumb_label %}
 
 {% block content %}
-<p>There is a threshold where engineering becomes governance and infrastructure becomes policy. It is rarely marked, often crossed without noticing. I write here to think at that boundary: the hidden mechanics of digital public systems, the friction between technical possibility and institutional reality, and the quiet decisions that shape both.</p>
+<p>{{ HOMEPAGE_INTRO }}</p>
 
 {% set sorted_articles = articles | sort(attribute='date', reverse=True) %}
 {% set latest = sorted_articles | first %}

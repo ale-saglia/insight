@@ -1,5 +1,6 @@
 SITENAME = 'Insight Notes'
 SITESUBTITLE = 'Exploring the invisible architectures where code meets regulation.'
+HOMEPAGE_INTRO = 'There is a threshold where engineering becomes governance and infrastructure becomes policy. It is rarely marked, often crossed without noticing. I write here to think at that boundary: the hidden mechanics of digital public systems, the friction between technical possibility and institutional reality, and the quiet decisions that shape both.'
 SITEURL = ''
 AUTHOR = 'Alessandro Saglia'
 AUTHOR_URL = 'https://ale-saglia.com'

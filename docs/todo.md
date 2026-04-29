@@ -12,7 +12,7 @@
 | 28  | Low      | `.gitignore` ignores `assets/og-images/` but the plugin now writes into `_site/assets/og-images/` | .gitignore                                | ✅ Done    |
 | 29  | Low      | `ensure_frontmatter.py` validates `category` and `permalink` but no article uses these fields anymore | scripts/ensure_frontmatter.py             | ✅ Done    |
 | 30  | Low      | `robots.txt` hardcodes `https://insight.ale-saglia.com/sitemap.xml` instead of using `SITEURL` | robots.txt, pelicanconf.py                | ✅ Done    |
-| 31  | Low      | Homepage intro hardcoded in template instead of a content file                       | themes/insight/templates/index.html       | ⬜ Open    |
+| 31  | Low      | Homepage intro hardcoded in template instead of a content file                       | themes/insight/templates/index.html       | ✅ Done    |
 | 32  | Note     | `DEFAULT_DATE_FORMAT` likely unused (templates call `strftime` directly)             | pelicanconf.py                            | ⬜ Open    |
 | 33  | Note     | `_episode_number(...) or 0` is dead defensive code: in `series_groups` the value is never `None` | plugins/insight_articles.py               | ⬜ Open    |
 
