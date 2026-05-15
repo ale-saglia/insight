@@ -24,8 +24,4 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 USER $USERNAME
 
-# Crea la virtualenv e installa le dipendenze Python
 WORKDIR /workspaces/insight
-COPY requirements.txt requirements-dev.txt ./
-RUN uv venv .venv \
- && uv pip install --require-hashes -r requirements-dev.txt
