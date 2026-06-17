@@ -1,11 +1,11 @@
 ---
-title: Data in the Digital Transition of Italian Public Administration
+title: Data in the digital transition of Italian public administration
 created: 2026-06-17
 keywords: digital governance, public administration, GDPR, data sharing, organizational
   capacity
 excerpt: Analysis of the persistent gap between digital governance normative frameworks
   and organizational implementation capacity in Italian public administration.
-category: general
+category: digital-governance
 article_id: data-pa-digital-transition
 ---
 
@@ -68,3 +68,7 @@ Until that capacity is built, the gap will persist. And legislation alone will n
 ---
  
 *This is a summary of my bachelor's thesis "Il dato nella transizione digitale della PA", completed at the University of Turin (L-16, Digital Public Administration), supervised by Prof. Matteo Arrotta, academic year 2025/2026.*
+
+---
+
+*Editor's note: The practical reuse of public data - turning an open dataset into something usable where the work actually happens - is one of the gaps behind this analysis. [cup-check](/digital-governance/cup-check-public-data-reuse/) is a small, concrete attempt in that direction.*
