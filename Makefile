@@ -6,7 +6,7 @@ PORT     	?= 4000
 CHECK_PORT  ?= 4567
 
 .DEFAULT_GOAL := help
-.PHONY: help setup setup-dev compile build serve preview rebuild clean check-links test
+.PHONY: help setup setup-dev compile build serve preview rebuild clean check-links link-checks test
 
 help:
 	@echo "Usage: make <target>"
@@ -18,7 +18,7 @@ help:
 	@echo "  serve      Build then start Pelican live-reload on port $(PORT)"
 	@echo "  preview    Build then serve _site/ statically on port $(PORT)"
 	@echo "  rebuild    Clean and rebuild"
-	@echo "  check-links Check internal links in _site/ on port $(CHECK_PORT) (override: CHECK_PORT=NNNN)"
+	@echo "  check-links Check internal links after building _site/ on port $(CHECK_PORT) (override: CHECK_PORT=NNNN)"
 	@echo "  test       Run the test suite (requires: make setup-dev)"
 	@echo "  clean      Remove _site/"
 
@@ -55,7 +55,7 @@ preview: build
 
 rebuild: clean build
 
-check-links:
+check-links: build
 	@test -d _site || { echo "_site/ not found — run: make build"; exit 1; }
 	@test -x $(LINKCHECKER) || { echo "linkchecker not found — run: make setup-dev"; exit 1; }
 	@echo "Starting check server on port $(CHECK_PORT)..."
@@ -71,6 +71,8 @@ check-links:
 	  RESULT=$$?; \
 	  kill $$SERVER_PID 2>/dev/null; \
 	  exit $$RESULT
+
+link-checks: check-links
 
 test:
 	$(VENV_BIN)/pytest

@@ -79,7 +79,7 @@ Recompiles `requirements.txt` and `requirements-dev.txt` from their `.in` source
 make check-links
 ```
 
-Requires a prior build and dev dependencies (`make setup-dev`).
+Requires dev dependencies (`make setup-dev`). The target rebuilds `_site/` before checking links, so it does not inspect stale output.
 
 Spins up a temporary HTTP server on `CHECK_PORT` (default `4567`) and runs linkchecker against it. A local server is needed because linkchecker does not resolve absolute paths (e.g. `/feed.xml`) on `file://` URLs. Port `4567` is intentionally different from `PORT` (`4000`) so the check can run while a preview server is already up.
 

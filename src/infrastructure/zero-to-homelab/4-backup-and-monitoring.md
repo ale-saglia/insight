@@ -1,11 +1,11 @@
 ---
-layout: article
-title: "What Breaks, What Survives"
+title: What Breaks, What Survives
 created: 2026-05-23
-category: homelab
-keywords: backup, monitoring, Proxmox Backup Server, Borg, 3-2-1, observability, disaster recovery
-excerpt: Backup and monitoring are not separate concerns. Monitoring tells you when something breaks; backup determines how far back you can go. Together, they form the operational contract that makes the rest of the infrastructure sustainable.
-permalink: /homelab/backup-and-monitoring/
+keywords: backup, monitoring, Proxmox Backup Server, Borg, 3-2-1, observability, disaster
+  recovery
+excerpt: Backup and monitoring are not separate concerns. Monitoring tells you when
+  something breaks; backup determines how far back you can go. Together, they form
+  the operational contract that makes the rest of the infrastructure sustainable.
 series: From Zero to Homelab
 series_episode: 4
 ---

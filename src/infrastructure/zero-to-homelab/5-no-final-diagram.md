@@ -1,11 +1,11 @@
 ---
-layout: article
-title: "No Final Diagram"
+title: No Final Diagram
 created: 2026-05-23
-category: homelab
-keywords: homelab, architecture evolution, Docker, infrastructure lifecycle, operational sustainability
-excerpt: Every stage of this homelab simplified something the previous stage made too complex. The next one will do the same. Infrastructure does not converge on a final state. It converges on a clearer understanding of what you actually need.
-permalink: /homelab/no-final-diagram/
+keywords: homelab, architecture evolution, Docker, infrastructure lifecycle, operational
+  sustainability
+excerpt: Every stage of this homelab simplified something the previous stage made
+  too complex. The next one will do the same. Infrastructure does not converge on
+  a final state. It converges on a clearer understanding of what you actually need.
 series: From Zero to Homelab
 series_episode: 5
 ---
@@ -16,7 +16,7 @@ The original plan had four nodes. A network node, a compute node, a storage node
 
 Power consumption killed the four-node design. The compute node was absorbed into the storage node. The backup node became a virtual machine. The architecture contracted from four physical machines to two, and the homelab became something I could actually afford to run continuously.
 
-That was [Episode 2](/homelab/compute-architecture/). At the time, it felt like the architecture had found its shape. Two nodes, clear role separation, sustainable power draw. The design was clean.
+That was [Episode 2](/infrastructure/zero-to-homelab/compute-architecture/). At the time, it felt like the architecture had found its shape. Two nodes, clear role separation, sustainable power draw. The design was clean.
 
 It was also, I now realise, the beginning of the next simplification.
 
@@ -28,7 +28,7 @@ The network node works. OPNsense, the reverse proxy, the SSO layer, the network 
 
 The GitOps pipeline works. A private repository as single source of truth, encrypted secrets, a convergent deploy process. The philosophy of treating every change as a commit is not tied to the current tooling. It is a principle that survives any implementation change.
 
-The backup strategy works. PBS for the virtualisation layer, Borg for application-level datasets, offsite replication, automated verification. [Episode 4](/homelab/backup-and-monitoring/) covered why this matters. The strategy adapts to whatever runs underneath it.
+The backup strategy works. PBS for the virtualisation layer, Borg for application-level datasets, offsite replication, automated verification. [Episode 4](/infrastructure/zero-to-homelab/backup-and-monitoring/) covered why this matters. The strategy adapts to whatever runs underneath it.
 
 What does not work as well is the layer between these things and the services they support.
 
@@ -44,7 +44,7 @@ Meanwhile, the LXC layer adds overhead without adding proportional value. The co
 
 The friction is tangible. Every LXC container needs its own Docker installation, its own deploy tooling, its own update cycle. Debugging a connectivity issue means tracing through Docker bridge networks, LXC network interfaces, and VLAN tagging on the hypervisor. Deploying the same change across multiple containers means repeating the same operation in each one. The grouping is useful, but the mechanism is heavier than it needs to be.
 
-The monitoring problem described in [Episode 4](/homelab/backup-and-monitoring/) is a symptom of this. More containers means more things to watch. More layers means more places where something can break without being visible. The instinct to add observability tools is a response to complexity that should not have been there in the first place.
+The monitoring problem described in [Episode 4](/infrastructure/zero-to-homelab/backup-and-monitoring/) is a symptom of this. More containers means more things to watch. More layers means more places where something can break without being visible. The instinct to add observability tools is a response to complexity that should not have been there in the first place.
 
 ---
 
@@ -56,7 +56,7 @@ This is not simplification without security consequences. It is a trade that mak
 
 The network node stays exactly as it is. It was the most conservative design in the homelab, and that conservatism is paying off now. The workload architecture changes; the network architecture does not.
 
-The backup strategy adapts rather than changes. PBS remains relevant for any virtualised workloads that survive the transition, while application-level recovery increasingly depends on Borg, declarative Compose files, and tested restore paths. The principle from [Episode 4](/homelab/backup-and-monitoring/) holds: what matters is that every dataset has a verified, restorable copy offsite.
+The backup strategy adapts rather than changes. PBS remains relevant for any virtualised workloads that survive the transition, while application-level recovery increasingly depends on Borg, declarative Compose files, and tested restore paths. The principle from [Episode 4](/infrastructure/zero-to-homelab/backup-and-monitoring/) holds: what matters is that every dataset has a verified, restorable copy offsite.
 
 The specifics of the implementation are still open. The operating system is an implementation detail: it may be a minimal Linux host, or Proxmox used in a more restrained, Docker-native way. The GitOps pipeline will follow the same philosophy, though the tooling may change if a container management platform handles deployment more cleanly than custom scripts. These are implementation choices, not architectural ones. The principle remains: every service is declared in code, every change is versioned, every secret is encrypted at rest.
 
@@ -66,15 +66,15 @@ I am not going to describe the final architecture in this episode, because it do
 
 ## What each stage actually taught
 
-[Episode 0](/homelab/why-homelab-matters/) was about understanding why you build infrastructure at all. The answer was not independence for its own sake. It was the operational visibility that comes from being responsible for every layer of the stack.
+[Episode 0](/infrastructure/zero-to-homelab/why-homelab-matters/) was about understanding why you build infrastructure at all. The answer was not independence for its own sake. It was the operational visibility that comes from being responsible for every layer of the stack.
 
-[Episode 1](/homelab/home-network-design/) was about designing a network you can reason about. The lesson was that you understand systems by breaking them, and that a residential network can be segmented and governed like a professional one if you are willing to accept the complexity.
+[Episode 1](/infrastructure/zero-to-homelab/home-network-design/) was about designing a network you can reason about. The lesson was that you understand systems by breaking them, and that a residential network can be segmented and governed like a professional one if you are willing to accept the complexity.
 
-[Episode 2](/homelab/compute-architecture/) was about constraints. Power, noise, maintenance burden. The lesson was that good architecture is what survives contact with real operating costs, not what looks cleanest in the first diagram.
+[Episode 2](/infrastructure/zero-to-homelab/compute-architecture/) was about constraints. Power, noise, maintenance burden. The lesson was that good architecture is what survives contact with real operating costs, not what looks cleanest in the first diagram.
 
-[Episode 3](/homelab/gitops-and-secrets/) was about control. If you cannot reproduce your infrastructure from a repository, you do not control it. You are merely running it.
+[Episode 3](/infrastructure/zero-to-homelab/gitops-and-secrets/) was about control. If you cannot reproduce your infrastructure from a repository, you do not control it. You are merely running it.
 
-[Episode 4](/homelab/backup-and-monitoring/) was about trust. Backup and monitoring are the proof that your infrastructure takes its own continuity seriously. Without them, everything else is provisional.
+[Episode 4](/infrastructure/zero-to-homelab/backup-and-monitoring/) was about trust. Backup and monitoring are the proof that your infrastructure takes its own continuity seriously. Without them, everything else is provisional.
 
 This episode is about the recognition that none of these lessons point to a final state. Each one produces an architecture that is better than the last, which also means each one eventually reveals the friction that the next stage will resolve.
 
