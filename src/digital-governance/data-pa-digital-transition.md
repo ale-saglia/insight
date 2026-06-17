@@ -1,6 +1,6 @@
 ---
 title: Data in the digital transition of Italian public administration
-created: 2026-06-17
+created: 2026-06-16
 keywords: digital governance, public administration, GDPR, data sharing, organizational
   capacity
 excerpt: Analysis of the persistent gap between digital governance normative frameworks
