@@ -31,7 +31,10 @@ def _create_fixture(tmp: Path) -> None:
         "excerpt: A minimal article for the E2E build test.\n"
         "article_id: hello-e2e-world\n"
         "---\n\n"
-        "This is the article body.\n"
+        "This is the article body [1].\n\n"
+        "## Sources\n\n"
+        "All sources accessed 30 June 2026.\n\n"
+        "1. Example Publisher, \"Fixture source\". https://example.com/source\n"
     )
 
 
@@ -141,6 +144,18 @@ def test_article_page_contains_body(site):
     html = (site / "test-cat" / "hello-e2e-world" / "index.html").read_text()
     assert "Hello E2E World" in html
     assert "This is the article body" in html
+
+
+
+def test_article_page_contains_source_popover(site):
+    html = (site / "test-cat" / "hello-e2e-world" / "index.html").read_text()
+    assert "source-ref" in html
+    assert "source-popover" in html
+    assert "Fixture source" in html
+    assert "https://example.com/source" in html
+    assert "target=\"_blank\"" in html
+    assert "Open source" not in html
+    assert "<h2 id=\"sources\">" not in html
 
 
 def test_category_page_exists(site):

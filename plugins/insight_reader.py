@@ -14,6 +14,7 @@ from markdown import Markdown
 from pelican.readers import BaseReader
 
 from ._frontmatter import parse_frontmatter, split_body
+from .insight_sources import prepare_article_sources
 
 _REPO_ROOT = Path(__file__).parent.parent
 _CACHE_PATH = _REPO_ROOT / '.frontmatter-cache.json'
@@ -127,6 +128,9 @@ class InsightMarkdownReader(BaseReader):
         processed = {}
         for key, value in meta_strings.items():
             processed[key] = self.process_metadata(key, value)
+
+        # Convert a terminal ## Sources block into inline source popovers.
+        body, _sources = prepare_article_sources(body)
 
         # Render body through Markdown
         md_config = copy(self.settings.get('MARKDOWN', {}))

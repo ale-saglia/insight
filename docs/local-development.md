@@ -104,6 +104,24 @@ To run a single file directly:
 .venv/bin/pytest tests/test_og_images.py
 ```
 
+## Article Sources
+
+Articles can end with a structured `## Sources` block. During the Pelican build, the block is removed from the rendered article and each inline reference such as `[1]` becomes a source popover. The popover shows the source title, the shared access note, and the source URL; long URLs are visually truncated and open in a new tab.
+
+Use this shape in Markdown:
+
+```markdown
+A claim that needs a source [1].
+
+## Sources
+
+All sources accessed 30 June 2026.
+
+1. Publisher, "Source title". https://example.com/source
+```
+
+References inside inline code, fenced code blocks, or Markdown reference definitions are left unchanged.
+
 ## Clean
 
 ```bash
