@@ -67,7 +67,7 @@ Until that capacity is built, the gap will persist. And legislation alone will n
  
 ---
  
-*This is a summary of my bachelor's thesis "Il dato nella transizione digitale della PA", completed at the University of Turin (L-16, Digital Public Administration), supervised by Prof. Matteo Arrotta, academic year 2025/2026.*
+*This is a summary of my bachelor's thesis "Il dato nella transizione digitale della PA", completed at the University of Turin (L-16, Digital Public Administration), supervised by Prof. Matteo Arrotta, academic year 2025/2026, DOI [10.5281/zenodo.21102766](https://doi.org/10.5281/zenodo.21102766).*
 
 ---
 
