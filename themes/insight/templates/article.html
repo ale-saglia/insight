@@ -19,6 +19,7 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
+  "@id": "{{ SITEURL }}/{{ article.url }}#article",
   "headline": {{ article.title | tojson }},
   "description": {{ article.summary | striptags | tojson }},
   "datePublished": "{{ article.date.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}",
@@ -27,13 +28,16 @@
   {% endif %}
   "url": "{{ SITEURL }}/{{ article.url }}",
   "image": "{{ SITEURL }}/assets/og-images/{{ article.slug }}.webp",
+  "isPartOf": { "@id": "{{ SITEURL }}/#website" },
   "author": {
     "@type": "Person",
+    "@id": "{{ AUTHOR_URL }}/#person",
     "name": {{ AUTHOR | tojson }},
     "url": {{ AUTHOR_URL | tojson }}
   },
   "publisher": {
     "@type": "Person",
+    "@id": "{{ AUTHOR_URL }}/#person",
     "name": {{ AUTHOR | tojson }},
     "url": {{ AUTHOR_URL | tojson }}
   },

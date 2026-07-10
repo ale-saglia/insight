@@ -1,6 +1,30 @@
 {% extends "base.html" %}
 {% from "_macros.html" import breadcrumb_label %}
 
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "{{ SITEURL }}/#website",
+      "url": "{{ SITEURL }}/",
+      "name": {{ SITENAME | tojson }},
+      "description": {{ SITESUBTITLE | tojson }},
+      "publisher": { "@id": "{{ AUTHOR_URL }}/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "{{ AUTHOR_URL }}/#person",
+      "name": {{ AUTHOR | tojson }},
+      "url": {{ AUTHOR_URL | tojson }}
+    }
+  ]
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <p class="homepage-intro">{{ HOMEPAGE_INTRO }}</p>
 

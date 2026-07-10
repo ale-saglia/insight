@@ -4,7 +4,9 @@ Runs once per module via a module-scoped fixture; individual tests assert
 specific outputs without re-invoking the build.
 """
 
+import json
 import os
+import re
 from pathlib import Path
 
 import pytest
@@ -168,3 +170,29 @@ def test_article_page_contains_source_popover(site):
 
 def test_category_page_exists(site):
     assert (site / "test-cat" / "index.html").exists()
+
+
+def _json_ld_blocks(path):
+    html = path.read_text()
+    blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.DOTALL)
+    return [json.loads(block) for block in blocks]
+
+
+def test_all_structured_data_is_valid_json(site):
+    pages = [
+        site / "index.html",
+        site / "test-cat" / "index.html",
+        site / "test-cat" / "hello-e2e-world" / "index.html",
+    ]
+    for page in pages:
+        assert _json_ld_blocks(page)
+
+
+def test_homepage_identifies_website_and_author(site):
+    graph = _json_ld_blocks(site / "index.html")[0]["@graph"]
+    assert {item["@type"] for item in graph} == {"WebSite", "Person"}
+
+
+def test_category_has_collection_page_metadata(site):
+    data = _json_ld_blocks(site / "test-cat" / "index.html")[0]
+    assert data["@type"] == "CollectionPage"

@@ -4,6 +4,21 @@
 {% block description %}{{ page.summary if page.summary else SITESUBTITLE }}{% endblock %}
 {% block page_path %}{{ page.url }}{% endblock %}
 
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "{{ SITEURL }}/{{ page.url }}#collection",
+  "url": "{{ SITEURL }}/{{ page.url }}",
+  "name": {{ page.title | tojson }},
+  "description": {{ (page.summary if page.summary else SITESUBTITLE) | tojson }},
+  "isPartOf": { "@id": "{{ SITEURL }}/#website" },
+  "author": { "@id": "{{ AUTHOR_URL }}/#person" }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <section class="article">
   <header class="article-header">
