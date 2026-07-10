@@ -19,6 +19,7 @@ class CategoryPage:
         self.source_path = source_path
         self.title = ''
         self.summary = ''
+        self.series_status = ''
         self.content = ''
         self.category_path = ''   # e.g. 'infrastructure/zero-to-homelab'
         self.slug = ''
@@ -40,6 +41,9 @@ class CategoryPage:
 
         self.title = str(fm_meta.get('title', ''))
         self.summary = str(fm_meta.get('summary', ''))
+        self.series_status = str(fm_meta.get('series_status', '')).lower()
+        if self.series_status not in ('', 'ongoing', 'complete'):
+            raise ValueError(f'Invalid series_status {self.series_status!r} in {self.source_path}')
 
         if body.strip():
             md = Markdown()

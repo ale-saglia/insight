@@ -14,6 +14,9 @@
     {% endif %}
     <h1>{{ page.title }}</h1>
     {% if page.summary %}<p class="article-excerpt">{{ page.summary }}</p>{% endif %}
+    {% if page.series_status %}
+      <p class="series-meta"><span>{{ page.series_status | capitalize }} series</span> · {{ direct_articles | length }} {% if direct_articles | length == 1 %}part{% else %}parts{% endif %} · Presented in reading order.</p>
+    {% endif %}
   </header>
 
   {% if page.content %}{{ page.content }}{% endif %}

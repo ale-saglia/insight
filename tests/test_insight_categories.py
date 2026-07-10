@@ -29,6 +29,22 @@ class TestCategoryPage:
         assert page.title == 'Infrastructure'
         assert page.summary == 'Homelab stuff'
 
+    def test_series_status_parsed(self, tmp_path, monkeypatch):
+        monkeypatch.chdir(tmp_path)
+        directory = tmp_path / 'src' / 'infrastructure' / 'series'
+        directory.mkdir(parents=True)
+        (directory / 'README.md').write_text('---\ntitle: Series\nsummary: Test\nseries_status: complete\n---\n')
+        page = CategoryPage('src/infrastructure/series/README.md')
+        assert page.series_status == 'complete'
+
+    def test_invalid_series_status_rejected(self, tmp_path, monkeypatch):
+        monkeypatch.chdir(tmp_path)
+        directory = tmp_path / 'src' / 'infrastructure' / 'series'
+        directory.mkdir(parents=True)
+        (directory / 'README.md').write_text('---\ntitle: Series\nseries_status: paused\n---\n')
+        with pytest.raises(ValueError, match='Invalid series_status'):
+            CategoryPage('src/infrastructure/series/README.md')
+
     def test_markdown_body_rendered_to_html(self, tmp_path, monkeypatch):
         monkeypatch.chdir(tmp_path)
         _write_readme(tmp_path / 'src' / 'infrastructure', title='T', body='Some **bold** text.')
