@@ -239,6 +239,10 @@ h3 {
   line-height: 1.5;
 }
 
+.homepage-intro {
+  margin-top: 1.2rem;
+}
+
 .home-section {
   display: flex;
   flex-direction: column;
@@ -346,6 +350,7 @@ h3 {
 }
 
 .article-list .article-excerpt {
+  display: block;
   color: var(--text);
   font-size: 0.92rem;
   margin-top: 0.2rem;
@@ -513,6 +518,20 @@ h3 {
   color: var(--muted);
   font-size: 0.95rem;
   margin: 0.3rem 0 0 0;
+}
+
+.article > p,
+.article > ul:not(.article-list),
+.article > ol,
+.article > blockquote,
+.article > dl,
+.homepage-intro,
+.section-description,
+.featured-article-excerpt,
+.article-list .article-excerpt {
+  hyphens: auto;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .episode-nav {

@@ -2,7 +2,7 @@
 {% from "_macros.html" import breadcrumb_label %}
 
 {% block content %}
-<p>{{ HOMEPAGE_INTRO }}</p>
+<p class="homepage-intro">{{ HOMEPAGE_INTRO }}</p>
 
 {% set sorted_articles = articles | sort(attribute='date', reverse=True) %}
 {% set latest = sorted_articles | first %}
