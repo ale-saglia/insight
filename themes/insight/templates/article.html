@@ -10,6 +10,7 @@
 {% block page_image %}assets/og-images/{{ article.slug }}.webp{% endblock %}
 {% block og_article_meta %}
   <meta property="article:published_time" content="{{ article.date.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}" />
+  {% if article.modified %}<meta property="article:modified_time" content="{{ article.modified.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}" />{% endif %}
   {% if article.category_top %}<meta property="article:section" content="{{ article.category_top }}" />{% endif %}
 {% endblock %}
 
@@ -39,6 +40,30 @@
   "articleSection": {{ (category_by_path[article.category_top].title if article.category_top in category_by_path else article.category_top | replace('-', ' ') | title) | tojson }}
 }
 </script>
+{% if article.breadcrumbs %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {% for crumb in article.breadcrumbs %}
+    {
+      "@type": "ListItem",
+      "position": {{ loop.index }},
+      "name": {{ (category_by_path[crumb.url.rstrip('/')].title if crumb.url.rstrip('/') in category_by_path else crumb.label) | tojson }},
+      "item": "{{ SITEURL }}/{{ crumb.url }}"
+    },
+    {% endfor %}
+    {
+      "@type": "ListItem",
+      "position": {{ article.breadcrumbs | length + 1 }},
+      "name": {{ article.title | tojson }},
+      "item": "{{ SITEURL }}/{{ article.url }}"
+    }
+  ]
+}
+</script>
+{% endif %}
 {% endblock %}
 
 {% block content %}

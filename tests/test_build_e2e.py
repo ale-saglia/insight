@@ -27,6 +27,7 @@ def _create_fixture(tmp: Path) -> None:
         "---\n"
         "title: Hello E2E World\n"
         "created: 2026-01-15\n"
+        "modified: 2026-02-01\n"
         "keywords: testing, e2e\n"
         "excerpt: A minimal article for the E2E build test.\n"
         "article_id: hello-e2e-world\n"
@@ -138,6 +139,13 @@ def test_archive_exists(site):
 
 def test_article_page_exists(site):
     assert (site / "test-cat" / "hello-e2e-world" / "index.html").exists()
+
+
+def test_article_has_modified_and_breadcrumb_metadata(site):
+    html = (site / "test-cat" / "hello-e2e-world" / "index.html").read_text()
+    assert 'property="article:modified_time"' in html
+    assert '"@type": "BreadcrumbList"' in html
+    assert '"name": "Test Category"' in html
 
 
 def test_article_page_contains_body(site):
