@@ -16,13 +16,18 @@
     <input type="text" id="search-input" class="search-field" placeholder="Search articles..." aria-label="Search articles" />
   </div>
 
+  <div class="archive-status">
+    <p id="archive-result-count" role="status" aria-live="polite"></p>
+    <button type="button" id="clear-filters" class="archive-clear" hidden>Clear filters</button>
+  </div>
+
   {% set sorted_articles = articles | sort(attribute='date', reverse=True) %}
   {% set year_groups = sorted_articles | groupby(attribute='date.year') | reverse | list %}
 
   <div class="archive-filters">
-    <button class="filter-btn filter-btn-active" data-year="">All Years <span class="count">({{ sorted_articles | length }})</span></button>
+    <button class="filter-btn filter-btn-active" data-year="" aria-pressed="true">All Years <span class="count">({{ sorted_articles | length }})</span></button>
     {% for year_group in year_groups %}
-      <button class="filter-btn" data-year="{{ year_group.grouper }}">{{ year_group.grouper }} <span class="count">({{ year_group.list | length }})</span></button>
+      <button class="filter-btn" data-year="{{ year_group.grouper }}" aria-pressed="false">{{ year_group.grouper }} <span class="count">({{ year_group.list | length }})</span></button>
     {% endfor %}
   </div>
 
@@ -32,7 +37,7 @@
     <div class="keyword-filters" id="keyword-filters">
       {# tag_counts keys are pre-normalised to lowercase in the plugin; kw is displayed as-is (lowercase by design). #}
       {% for kw, count in tag_counts.items() %}
-        <button class="keyword-btn" data-keyword="{{ kw }}" data-count="{{ count }}">{{ kw }} <span class="count">({{ count }})</span></button>
+        <button class="keyword-btn" data-keyword="{{ kw }}" data-count="{{ count }}" aria-pressed="false">{{ kw }} <span class="count">({{ count }})</span></button>
       {% endfor %}
     </div>
   </div>

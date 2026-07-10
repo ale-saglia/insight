@@ -5,6 +5,8 @@ const filterBtns = document.querySelectorAll('.filter-btn');
 const keywordBtns = document.querySelectorAll('.keyword-btn');
 const keywordFiltersContainer = document.getElementById('keyword-filters');
 const noResultsMessage = document.getElementById('archive-no-results');
+const resultCount = document.getElementById('archive-result-count');
+const clearFiltersButton = document.getElementById('clear-filters');
 let currentYearFilter = '';
 let currentKeywordFilters = new Set();
 
@@ -19,11 +21,14 @@ searchInput.addEventListener('input', function(e) {
   clearTimeout(searchDebounceTimer);
   searchDebounceTimer = setTimeout(() => {
     filterItems(e.target.value.toLowerCase(), currentYearFilter, currentKeywordFilters);
+    updateURL();
   }, 100);
 });
 
 function updateURL() {
   const params = new URLSearchParams();
+  const query = searchInput.value.trim();
+  if (query) params.set('q', query);
   if (currentYearFilter) params.set('year', currentYearFilter);
   if (currentKeywordFilters.size > 0) params.set('keyword', Array.from(currentKeywordFilters).join(','));
   const search = params.toString();
@@ -35,8 +40,12 @@ if (archiveFiltersContainer) {
   archiveFiltersContainer.addEventListener('click', function(e) {
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
-    filterBtns.forEach(b => b.classList.remove('filter-btn-active'));
+    filterBtns.forEach(b => {
+      b.classList.remove('filter-btn-active');
+      b.setAttribute('aria-pressed', 'false');
+    });
     btn.classList.add('filter-btn-active');
+    btn.setAttribute('aria-pressed', 'true');
     currentYearFilter = btn.dataset.year;
     filterItems(searchInput.value.toLowerCase(), currentYearFilter, currentKeywordFilters);
     updateURL();
@@ -48,6 +57,7 @@ if (keywordFiltersContainer) {
     const btn = e.target.closest('.keyword-btn');
     if (!btn) return;
     btn.classList.toggle('keyword-btn-active');
+    btn.setAttribute('aria-pressed', btn.classList.contains('keyword-btn-active') ? 'true' : 'false');
     const keyword = btn.dataset.keyword;
     if (btn.classList.contains('keyword-btn-active')) {
       currentKeywordFilters.add(keyword);
@@ -99,20 +109,53 @@ function filterItems(query, yearFilter, keywordFilters) {
   });
   const visibleItems = Array.from(items).filter(item => item.style.display !== 'none').length;
   if (noResultsMessage) noResultsMessage.hidden = visibleItems !== 0;
+  if (resultCount) resultCount.textContent = visibleItems + ` of ` + items.length + ` articles`;
+  if (clearFiltersButton) clearFiltersButton.hidden = !(query || yearFilter || keywordFilters.size > 0);
 }
 
 const urlParams = new URLSearchParams(location.search);
+const urlQuery = urlParams.get('q') || '';
 const urlYear = urlParams.get('year') || '';
 const urlKeywords = urlParams.get('keyword') ? urlParams.get('keyword').split(',') : [];
 if (urlYear) {
   currentYearFilter = urlYear;
-  filterBtns.forEach(btn => btn.classList.toggle('filter-btn-active', btn.dataset.year === urlYear));
+  filterBtns.forEach(btn => {
+    const active = btn.dataset.year === urlYear;
+    btn.classList.toggle('filter-btn-active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
 }
 urlKeywords.forEach(kw => {
   const trimmed = kw.trim();
   if (trimmed) {
     currentKeywordFilters.add(trimmed);
-    keywordBtns.forEach(btn => { if (btn.dataset.keyword === trimmed) btn.classList.add('keyword-btn-active'); });
+    keywordBtns.forEach(btn => {
+      if (btn.dataset.keyword === trimmed) {
+        btn.classList.add('keyword-btn-active');
+        btn.setAttribute('aria-pressed', 'true');
+      }
+    });
   }
 });
+searchInput.value = urlQuery;
 filterItems(searchInput.value.toLowerCase(), currentYearFilter, currentKeywordFilters);
+
+if (clearFiltersButton) {
+  clearFiltersButton.addEventListener('click', function() {
+    searchInput.value = '';
+    currentYearFilter = '';
+    currentKeywordFilters.clear();
+    filterBtns.forEach(btn => {
+      const active = btn.dataset.year === '';
+      btn.classList.toggle('filter-btn-active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    keywordBtns.forEach(btn => {
+      btn.classList.remove('keyword-btn-active');
+      btn.setAttribute('aria-pressed', 'false');
+    });
+    filterItems('', '', currentKeywordFilters);
+    updateURL();
+    searchInput.focus();
+  });
+}

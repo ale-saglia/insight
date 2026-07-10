@@ -383,8 +383,35 @@ h3 {
 }
 
 .archive-search {
-  margin-bottom: 2rem;
+  margin-bottom: 0.75rem;
 }
+
+.archive-status {
+  min-height: 2rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.archive-status p { margin: 0; }
+
+.archive-clear {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  cursor: pointer;
+  font: inherit;
+  white-space: nowrap;
+}
+
+.archive-clear:hover,
+.archive-clear:focus { text-decoration: underline; }
 
 .archive-empty-state {
   margin: 1.5rem 0 0;
