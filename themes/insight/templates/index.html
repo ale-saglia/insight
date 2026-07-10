@@ -9,7 +9,7 @@
 
 {% if latest %}
   <section class="featured-article" aria-labelledby="featured-article-title">
-    <p class="section-label">Start Here</p>
+    <p class="section-label">Latest</p>
     <a class="featured-article-card" href="{{ SITEURL }}/{{ latest.url }}">
       <div class="featured-article-content">
         <p class="featured-article-meta">{{ latest.date.strftime('%d %b %Y') }}{% if latest.category_top != 'general' %} · <span class="featured-article-category">{{ breadcrumb_label(latest, category_by_path) }}</span>{% endif %}</p>
