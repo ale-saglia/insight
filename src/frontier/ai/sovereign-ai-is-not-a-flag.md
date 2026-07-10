@@ -3,6 +3,8 @@ title: Sovereign AI Is Not a Flag
 created: 2026-06-30
 modified: 2026-06-30
 keywords: digital sovereignty, dependency management, institutional capacity
+related:
+  - infrastructure/infrastructure-you-cannot-copy
 excerpt: Sovereign AI is often discussed as ownership of a model. The more useful question is what dependencies remain when the model changes, is withheld, copied or orchestrated.
 article_id: sovereign-ai-is-not-a-flag
 ---

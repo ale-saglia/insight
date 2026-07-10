@@ -2,6 +2,9 @@
 title: Data in the digital transition of Italian public administration
 created: 2026-06-16
 keywords: data governance, institutional capacity, organisational alignment
+related:
+  - digital-governance/single-source-truth-no-tech-problem
+  - digital-governance/cup-check-public-data-reuse
 excerpt: Analysis of the persistent gap between digital governance normative frameworks
   and organizational implementation capacity in Italian public administration.
 category: digital-governance

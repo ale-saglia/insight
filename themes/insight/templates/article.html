@@ -78,6 +78,17 @@
 
   {{ article.content }}
 
+  {% if article.related_articles %}
+  <aside class="related-reading" aria-labelledby="related-reading-title">
+    <p class="section-label" id="related-reading-title">Related reading</p>
+    <ul>
+      {% for related in article.related_articles %}
+      <li><a href="{{ SITEURL }}/{{ related.url }}">{{ related.title }}</a>{% if related.summary %}<span>{{ related.summary | striptags }}</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </aside>
+  {% endif %}
+
   {% if article.prev_episode or article.next_episode %}
   <nav class="episode-nav">
     {% if article.prev_episode %}

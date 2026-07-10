@@ -2,6 +2,8 @@
 title: Building compliance tools before I knew what governance meant
 created: 2026-03-28
 keywords: process governance, institutional capacity, compliance by design
+related:
+  - digital-governance/process-you-know-but-cannot-describe
 excerpt: Two software projects that taught me more about digital transformation through
   failure than any textbook could. A retrospective on naive tool-building.
 article_id: build-compliance-tool-before-i-know-compliance

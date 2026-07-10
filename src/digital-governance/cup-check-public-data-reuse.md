@@ -2,6 +2,8 @@
 title: Reusing public data at the point of friction
 created: 2026-06-17
 keywords: data governance, institutional capacity, control and autonomy
+related:
+  - digital-governance/data-pa-digital-transition
 excerpt: How cup-check turns OpenCUP data into a local-first operational control,
   and why the design choices matter for public-sector software.
 category: digital-governance

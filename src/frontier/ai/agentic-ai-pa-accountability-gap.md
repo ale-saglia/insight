@@ -2,6 +2,9 @@
 title: The accountability satisfies the citizen, not the agent
 created: 2026-04-14
 keywords: accountability, institutional capacity, compliance by design
+related:
+  - digital-governance/data-pa-digital-transition
+  - digital-governance/build-compliance-tool-before-i-know-compliance
 excerpt: Agentic AI promises to transform government. But in a system built on explainability
   and open government, where every decision must be traceable and attributed, where
   does the agent end and the bureaucrat begin?

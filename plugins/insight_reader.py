@@ -120,6 +120,11 @@ class InsightMarkdownReader(BaseReader):
             kw = fm_meta['keywords']
             meta_strings['tags'] = kw if isinstance(kw, str) else ', '.join(str(k) for k in kw)
 
+        # related preserves an editorial list of article slugs for build-time resolution
+        if 'related' in fm_meta and fm_meta['related']:
+            related = fm_meta['related']
+            meta_strings['related'] = related if isinstance(related, str) else ', '.join(str(item) for item in related)
+
         # article_id preserved for slug computation in process_articles
         if 'article_id' in fm_meta:
             meta_strings['article_id'] = str(fm_meta['article_id'])

@@ -50,6 +50,8 @@ def process_articles(generator):
     for article in generator.articles:
         _enrich_article(article, git_dates)
 
+    _resolve_related_articles(generator.articles)
+
     # Series navigation: group numbered articles by parent directory
     series_groups = {}
     for article in generator.articles:
@@ -79,6 +81,27 @@ def process_articles(generator):
             key = tag.name.lower()
             tag_counts[key] = tag_counts.get(key, 0) + 1
     generator.context['tag_counts'] = tag_counts
+
+
+def _resolve_related_articles(articles):
+    """Resolve editorial related slugs to article objects."""
+    article_by_slug = {article.slug: article for article in articles}
+
+    for article in articles:
+        article.related_articles = []
+        raw_related = getattr(article, "related", None)
+        if not raw_related:
+            continue
+
+        references = raw_related if isinstance(raw_related, (list, tuple)) else str(raw_related).split(",")
+        for reference in references:
+            slug = str(reference).strip().strip("/")
+            related = article_by_slug.get(slug)
+            if not related or related is article:
+                logger.warning("Article %s has invalid related reference %s", article.slug, slug)
+                continue
+            if related not in article.related_articles:
+                article.related_articles.append(related)
 
 
 def _enrich_article(article, git_dates):

@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from plugins.insight_articles import _enrich_article, _episode_number
+from plugins.insight_articles import _enrich_article, _episode_number, _resolve_related_articles
 
 
 class FakeArticle:
@@ -193,3 +193,30 @@ class TestEnrichArticle:
         art = self._make('src/infra/my.md')
         _enrich_article(art, {})
         assert not getattr(art, 'modified', None)
+
+
+# ---------------------------------------------------------------------------
+# related articles
+# ---------------------------------------------------------------------------
+
+class TestResolveRelatedArticles:
+    def test_resolves_comma_separated_slugs(self):
+        source = FakeArticle("src/topic/source.md", related="topic/target, missing")
+        source.slug = "topic/source"
+        target = FakeArticle("src/topic/target.md")
+        target.slug = "topic/target"
+
+        _resolve_related_articles([source, target])
+
+        assert source.related_articles == [target]
+        assert target.related_articles == []
+
+    def test_ignores_self_references_and_duplicates(self):
+        article = FakeArticle("src/topic/article.md", related="topic/article, topic/other, topic/other")
+        article.slug = "topic/article"
+        other = FakeArticle("src/topic/other.md")
+        other.slug = "topic/other"
+
+        _resolve_related_articles([article, other])
+
+        assert article.related_articles == [other]

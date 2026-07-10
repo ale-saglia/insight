@@ -3,6 +3,8 @@ title: The Infrastructure You Cannot Copy
 created: 2026-06-30
 modified: 2026-06-30
 keywords: digital sovereignty, dependency management, institutional capacity
+related:
+  - frontier/ai/sovereign-ai-is-not-a-flag
 excerpt: A companion to "Sovereign AI Is Not a Flag". At the model layer, sovereignty is fragile because everything copies. At the physical layer, dependence becomes harder to escape because almost nothing does.
 article_id: infrastructure-you-cannot-copy
 ---
