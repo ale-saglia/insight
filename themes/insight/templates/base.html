@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="{{ SITEURL }}/assets/styles.css" />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <header class="site-header">
       <div class="wrap">
         <p class="site-title"><a href="{{ SITEURL }}/">{{ SITENAME }}</a></p>
@@ -45,7 +46,7 @@
       </div>
     </header>
 
-    <main class="wrap" aria-label="Content">
+    <main class="wrap" id="main-content" aria-label="Content" tabindex="-1">
       {% block content %}{% endblock %}
     </main>
 
