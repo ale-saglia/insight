@@ -316,3 +316,36 @@ class TestProcess:
         assert meta['created'] == date(2020, 5, 10)
         assert meta['keywords'] == 'existing'
         assert meta['excerpt'] == 'existing summary'
+
+
+# ---------------------------------------------------------------------------
+# editorial taxonomy
+# ---------------------------------------------------------------------------
+
+class TestEditorialTaxonomy:
+    def test_loads_editable_registry(self, tmp_path):
+        registry = tmp_path / "taxonomy.yml"
+        registry.write_text("max_tags_per_article: 3\ntags:\n  governance: A deliberate tag.\n")
+        taxonomy = ef._load_taxonomy(registry)
+        assert taxonomy == {"tags": {"governance"}, "max_tags_per_article": 3}
+
+    def test_accepts_tag_added_to_registry(self):
+        taxonomy = {"tags": {"existing", "new editorial tag"}, "max_tags_per_article": 3}
+        ef._validate_keywords(Path("article.md"), "existing, new editorial tag", taxonomy)
+        assert ef._error_count == 0
+
+    def test_rejects_unknown_tag(self):
+        taxonomy = {"tags": {"accountability"}, "max_tags_per_article": 3}
+        ef._validate_keywords(Path("article.md"), "accountability, typo", taxonomy)
+        assert ef._error_count == 1
+
+    def test_rejects_more_than_configured_maximum(self):
+        taxonomy = {"tags": {"one", "two", "three", "four"}, "max_tags_per_article": 3}
+        ef._validate_keywords(Path("article.md"), "one, two, three, four", taxonomy)
+        assert ef._error_count == 1
+
+    def test_rejects_invalid_registry_shape(self, tmp_path):
+        registry = tmp_path / "taxonomy.yml"
+        registry.write_text("max_tags_per_article: 0\ntags: {}\n")
+        with pytest.raises(ValueError, match="non-empty tags mapping"):
+            ef._load_taxonomy(registry)

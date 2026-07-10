@@ -25,6 +25,7 @@ from pathlib import Path
 import yaml
 
 SRC = Path('src')
+TAXONOMY_PATH = Path(__file__).parent.parent / 'config' / 'editorial-taxonomy.yml'
 _KNOWN_FIELDS = ['title', 'created', 'modified', 'keywords', 'excerpt']
 
 _warn_count = 0
@@ -88,6 +89,42 @@ def _first_commit_date(path):
     return datetime.strptime(lines[-1], '%Y-%m-%d').date() if lines else None
 
 
+def _load_taxonomy(path=TAXONOMY_PATH):
+    """Load the editable editorial tag registry."""
+    try:
+        config = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError) as exc:
+        raise ValueError(f"cannot read editorial taxonomy: {exc}") from exc
+
+    tags = config.get("tags")
+    max_tags = config.get("max_tags_per_article")
+    if not isinstance(tags, dict) or not tags:
+        raise ValueError("editorial taxonomy must define a non-empty tags mapping")
+    if not isinstance(max_tags, int) or max_tags < 1:
+        raise ValueError("editorial taxonomy max_tags_per_article must be a positive integer")
+
+    invalid_names = [name for name in tags if not isinstance(name, str) or name != name.strip().lower()]
+    if invalid_names:
+        raise ValueError(f"editorial taxonomy tag names must be lowercase and trimmed: {invalid_names}")
+
+    return {"tags": set(tags), "max_tags_per_article": max_tags}
+
+
+def _validate_keywords(path, keywords, taxonomy):
+    """Validate an article keyword list against the editorial registry."""
+    if not keywords:
+        return
+    tags = keywords if isinstance(keywords, list) else str(keywords).split(",")
+    tags = [str(tag).strip() for tag in tags if str(tag).strip()]
+
+    if len(tags) > taxonomy["max_tags_per_article"]:
+        _error(path, f"keywords has {len(tags)} tags; maximum is {taxonomy['max_tags_per_article']}")
+
+    unknown = [tag for tag in tags if tag not in taxonomy["tags"]]
+    if unknown:
+        _error(path, f"unknown editorial tags: {', '.join(unknown)}; add deliberate new tags to config/editorial-taxonomy.yml")
+
+
 def _extract_h1(body):
     for line in body.splitlines():
         if line.startswith('# '):
@@ -135,7 +172,7 @@ def _write(path, meta, body, trailing_newline):
     _update_count += 1
 
 
-def _process(path):
+def _process(path, taxonomy=None):
     text = path.read_text(encoding='utf-8')
     trailing_newline = text.endswith('\n')
     meta, body = _parse_frontmatter(text)
@@ -179,6 +216,9 @@ def _process(path):
         meta['excerpt'] = ''
         _warn(path, 'excerpt missing: inserted empty placeholder')
 
+    if taxonomy is not None:
+        _validate_keywords(path, meta.get('keywords'), taxonomy)
+
     # Determine H1 to strip (strip when it duplicates the title)
     title_val = str(meta.get('title', ''))
     strip_h1 = h1 if (h1 and h1 == title_val) else None
@@ -198,10 +238,16 @@ def main():
         print('ERROR: not a git repository', file=sys.stderr)
         sys.exit(1)
 
+    try:
+        taxonomy = _load_taxonomy()
+    except ValueError as exc:
+        print(f"ERROR: {TAXONOMY_PATH}: {exc}", file=sys.stderr)
+        sys.exit(1)
+
     for md_file in sorted(SRC.rglob('*.md')):
         if md_file.name == 'README.md':
             continue
-        _process(md_file)
+        _process(md_file, taxonomy)
 
     Path('.frontmatter-cache.json').write_text(
         json.dumps(_cache, ensure_ascii=False, indent=2), encoding='utf-8'

@@ -1,0 +1,12 @@
+max_tags_per_article: 3
+tags:
+  accountability: Responsibility, traceability, and answerability for decisions and outcomes.
+  institutional capacity: The ability of institutions to implement, operate, and sustain change.
+  digital sovereignty: Effective control over digital capabilities and strategic dependencies.
+  data governance: Authority, quality, access, and responsibility across the data lifecycle.
+  process governance: How organisational processes are defined, owned, and changed.
+  organisational alignment: Coordination between structures, incentives, responsibilities, and systems.
+  operational resilience: The ability to anticipate, absorb, recover from, and learn from disruption.
+  dependency management: Understanding and governing reliance on external systems or capabilities.
+  control and autonomy: The practical ability to inspect, choose, change, and operate a system.
+  compliance by design: Embedding rules and controls directly into processes and systems.

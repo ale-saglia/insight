@@ -18,6 +18,8 @@ Content is authored in Markdown, enriched by a custom Python plugin layer, and d
 ### Content as code
 Articles live in version-controlled Markdown files with structured YAML frontmatter. The same discipline applied to software — commit history, diffs, deliberate changes — applies to writing. Editorial evolution is explicit and reproducible.
 
+The governance-first article tags use an explicit, editable registry; see [Editorial taxonomy](docs/editorial-taxonomy.md). The build rejects accidental tag drift while keeping deliberate additions straightforward.
+
 ### Static by default
 No database, no server runtime, no CMS. The entire site is a set of pre-rendered HTML files. This eliminates operational surface area and makes the output auditable: what you deploy is exactly what you built.
 
