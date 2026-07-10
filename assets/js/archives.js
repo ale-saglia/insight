@@ -159,3 +159,6 @@ if (clearFiltersButton) {
     searchInput.focus();
   });
 }
+
+const archiveControls = document.getElementById('archive-controls');
+if (archiveControls) archiveControls.hidden = false;

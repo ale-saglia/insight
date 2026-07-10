@@ -205,3 +205,10 @@ def test_homepage_identifies_website_and_author(site):
 def test_category_has_collection_page_metadata(site):
     data = _json_ld_blocks(site / "test-cat" / "index.html")[0]
     assert data["@type"] == "CollectionPage"
+
+
+def test_archive_controls_require_javascript(site):
+    html = (site / "archive" / "index.html").read_text()
+    assert 'id="archive-controls" hidden' in html
+    assert 'class="search-item"' in html
+    assert 'style="display: none"' not in html

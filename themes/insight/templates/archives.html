@@ -12,17 +12,18 @@
 
   <p>Browse all published articles by year.</p>
 
-  <div class="archive-search">
-    <input type="text" id="search-input" class="search-field" placeholder="Search articles..." aria-label="Search articles" />
+  {% set sorted_articles = articles | sort(attribute='date', reverse=True) %}
+  {% set year_groups = sorted_articles | groupby(attribute='date.year') | reverse | list %}
+
+  <div id="archive-controls" hidden>
+    <div class="archive-search">
+      <input type="text" id="search-input" class="search-field" placeholder="Search articles..." aria-label="Search articles" />
   </div>
 
   <div class="archive-status">
     <p id="archive-result-count" role="status" aria-live="polite"></p>
     <button type="button" id="clear-filters" class="archive-clear" hidden>Clear filters</button>
   </div>
-
-  {% set sorted_articles = articles | sort(attribute='date', reverse=True) %}
-  {% set year_groups = sorted_articles | groupby(attribute='date.year') | reverse | list %}
 
   <div class="archive-filters">
     <button class="filter-btn filter-btn-active" data-year="" aria-pressed="true">All Years <span class="count">({{ sorted_articles | length }})</span></button>
@@ -41,7 +42,7 @@
       {% endfor %}
     </div>
   </div>
-
+  </div>
   {% for year_group in year_groups %}
     <h2 class="archive-year">{{ year_group.grouper }}</h2>
     <ul class="article-list">
