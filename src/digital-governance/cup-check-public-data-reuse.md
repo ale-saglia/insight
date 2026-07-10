@@ -1,8 +1,7 @@
 ---
 title: Reusing public data at the point of friction
 created: 2026-06-17
-keywords: digital governance, public administration, open data, OpenCUP, CUP,
-  software reuse, local-first
+keywords: data governance, institutional capacity, control and autonomy
 excerpt: How cup-check turns OpenCUP data into a local-first operational control,
   and why the design choices matter for public-sector software.
 category: digital-governance

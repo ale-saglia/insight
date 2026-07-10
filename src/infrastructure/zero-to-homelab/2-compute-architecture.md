@@ -1,8 +1,7 @@
 ---
 title: Two Nodes, One Lesson in Constraint
 created: 2026-04-15
-keywords: Proxmox VE, virtualization, LXC, VM, compute architecture, energy efficiency,
-  ZFS, NFS
+keywords: institutional capacity, operational resilience, control and autonomy
 excerpt: From a four-node plan to a two-node reality. How energy costs, operational
   complexity, and data management shaped the compute layer.
 article_id: compute-architecture

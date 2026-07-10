@@ -1,8 +1,7 @@
 ---
 title: What Breaks, What Survives
 created: 2026-05-23
-keywords: backup, monitoring, Proxmox Backup Server, Borg, 3-2-1, observability, disaster
-  recovery
+keywords: operational resilience, accountability, control and autonomy
 excerpt: Backup and monitoring are not separate concerns. Monitoring tells you when
   something breaks; backup determines how far back you can go. Together, they form
   the operational contract that makes the rest of the infrastructure sustainable.

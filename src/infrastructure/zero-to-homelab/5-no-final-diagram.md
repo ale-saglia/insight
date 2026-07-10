@@ -1,8 +1,7 @@
 ---
 title: No Final Diagram
 created: 2026-05-23
-keywords: homelab, architecture evolution, Docker, infrastructure lifecycle, operational
-  sustainability
+keywords: operational resilience, dependency management, control and autonomy
 excerpt: Every stage of this homelab simplified something the previous stage made
   too complex. The next one will do the same. Infrastructure does not converge on
   a final state. It converges on a clearer understanding of what you actually need.
