@@ -135,6 +135,15 @@ def test_index_contains_article_title(site):
     assert "Hello E2E World" in (site / "index.html").read_text()
 
 
+def test_pages_do_not_emit_meta_keywords(site):
+    pages = [
+        site / "index.html",
+        site / "test-cat" / "hello-e2e-world" / "index.html",
+    ]
+    for page in pages:
+        assert '<meta name="keywords"' not in page.read_text()
+
+
 def test_archive_exists(site):
     assert (site / "archive" / "index.html").exists()
 

@@ -3,7 +3,6 @@
 
 {% block title %}{{ article.title }} | {{ SITENAME }}{% endblock %}
 {% block description %}{{ article.summary | striptags | truncate(160, False, '') }}{% endblock %}
-{% block meta_keywords %}{{ article.category_top }}{% if article.tags %}, {% for tag in article.tags %}{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}, infrastructure, technology, systems{% endblock %}
 
 {% block page_path %}{{ article.url }}{% endblock %}
 {% block og_type %}article{% endblock %}
